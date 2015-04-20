@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +17,8 @@ namespace CiresonPortalAPI
 
     public class AuthorizationToken
     {
+        const string AUTHORIZATION_ENDPOINT = "/api/V3/Authorization/GetToken/";
+
         private string _sUserName;
         private string _sDomain;
         private string _sLanguageCode;
@@ -33,9 +37,62 @@ namespace CiresonPortalAPI
             _sAuthToken    = authToken;
         }
 
-        public static AuthorizationToken GetToken(string userName, string domain, string password, string languageCode)
+        private void AddCredentialsToVault(string userName, string domain, SecureString password)
+        {
+        }
+
+        public static AuthorizationToken GetToken(string userName, string domain, string password, string languageCode, string portalUrl, bool remember)
         {
             return new AuthorizationToken(userName, domain, languageCode, "");
+        }
+    }
+
+    public static class AuthorizationExtensions
+    {
+        /// <summary>
+        /// Extends System.String to include a method to convert a regular string to a SecureString
+        /// </summary>
+        /// <param name="unsecStr">Unsecure string to convert</param>
+        /// <returns></returns>
+        public static SecureString ConvertToSecureString(this string unsecStr)
+        {
+            if (unsecStr == null)
+                throw new ArgumentNullException("unsecStr");
+
+            unsafe
+            {
+                // Read in the string as a character array
+                fixed(char* stringChars = unsecStr)
+                {
+                    var secStr = new SecureString(stringChars, unsecStr.Length);
+                    secStr.MakeReadOnly();
+                    return secStr;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Extends System.Security.SecureString to include a method to convert a SecureString to a regular string
+        /// </summary>
+        /// <param name="secStr">Secure string to convert</param>
+        /// <returns></returns>
+        public static string ConvertToInsecureString(this SecureString secStr)
+        {
+            if (secStr == null)
+                throw new ArgumentNullException("secStr");
+
+            // Marshal the SecureString to a pointer and convert
+            IntPtr unmanagedString = IntPtr.Zero;
+            try
+            {
+                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(secStr);
+                return Marshal.PtrToStringUni(unmanagedString);
+            }
+            finally
+            {
+                // Flush the native buffer to zero out the password
+                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
+            }
         }
     }
 }
