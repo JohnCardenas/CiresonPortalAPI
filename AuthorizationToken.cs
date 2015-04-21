@@ -5,6 +5,7 @@ using System.Security;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using CredentialManagement;
 
 namespace CiresonPortalAPI
 {
@@ -17,7 +18,7 @@ namespace CiresonPortalAPI
 
     public class AuthorizationToken
     {
-        const string AUTHORIZATION_ENDPOINT = "/api/V3/Authorization/GetToken/";
+        const string AUTHORIZATION_ENDPOINT = "/api/V3/Authorization/GetToken";
 
         private string _sUserName;
         private string _sDomain;
@@ -37,17 +38,16 @@ namespace CiresonPortalAPI
             _sAuthToken    = authToken;
         }
 
-        private void AddCredentialsToVault(string userName, string domain, SecureString password)
-        {
-        }
-
         public static AuthorizationToken GetToken(string userName, string domain, string password, string languageCode, string portalUrl, bool remember)
         {
             return new AuthorizationToken(userName, domain, languageCode, "");
         }
     }
 
-    public static class AuthorizationExtensions
+    /// <summary>
+    /// Extension methods to the System.String and System.Security.SecureString classes
+    /// </summary>
+    public static class StringExtensions
     {
         /// <summary>
         /// Extends System.String to include a method to convert a regular string to a SecureString
