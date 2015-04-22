@@ -38,9 +38,9 @@ namespace CiresonPortalAPI
             _sAuthToken    = authToken;
         }
 
-        public static AuthorizationToken GetToken(string userName, string domain, string password, string languageCode, string portalUrl, bool remember)
+        public static AuthorizationToken GetToken(Credential userCreds, string domain, string languageCode)
         {
-            return new AuthorizationToken(userName, domain, languageCode, "");
+            return new AuthorizationToken(userCreds.Username, domain, languageCode, "");
         }
     }
 
