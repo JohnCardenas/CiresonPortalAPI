@@ -21,26 +21,23 @@ namespace CiresonPortalAPI
         const string AUTHORIZATION_ENDPOINT = "/api/V3/Authorization/GetToken";
 
         private string _sUserName;
-        private string _sDomain;
         private string _sLanguageCode;
         private string _sAuthToken;
 
         public string UserName     { get { return _sUserName;     } }
-        public string Domain       { get { return _sDomain;       } }
         public string LanguageCode { get { return _sLanguageCode; } }
         public string AuthToken    { get { return _sAuthToken;    } }
 
-        private AuthorizationToken(string userName, string domain, string languageCode, string authToken)
+        private AuthorizationToken(string userName, string languageCode, string authToken)
         {
             _sUserName     = userName;
-            _sDomain       = domain;
             _sLanguageCode = languageCode;
             _sAuthToken    = authToken;
         }
 
-        public static AuthorizationToken GetToken(Credential userCreds, string domain, string languageCode)
+        public static AuthorizationToken GetToken(Credential userCreds, string languageCode)
         {
-            return new AuthorizationToken(userCreds.Username, domain, languageCode, "");
+            return new AuthorizationToken(userCreds.Username, languageCode, "");
         }
     }
 
