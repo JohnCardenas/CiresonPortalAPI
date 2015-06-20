@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using CredentialManagement;
+using CiresonPortalAPI;
 
 namespace CiresonPortalAPI
 {
@@ -35,18 +36,20 @@ namespace CiresonPortalAPI
         private DateTime _oExpirationTime;
 
         private HttpClient _oHttpClient;
+        private Credential _credentials;
 
-        public   string     UserName     { get { return _sUserName;     } }
-        public   string     Domain       { get { return _sDomain;       } }
         public   string     LanguageCode { get { return _sLanguageCode; } }
         public   string     PortalUrl    { get { return _sPortalUrl;    } }
         internal string     AuthToken    { get { return _sAuthToken;    } }
         internal HttpClient HttpClient   { get { return _oHttpClient;   } }
+        internal Credential Credentials  { get { return _credentials;   } }
 
-        private PortalSession(string userName, string domain, string languageCode, string portalUrl, string authToken, HttpClient httpClient)
+        public string UserName { get { return GetUserName(_credentials.Username);   } }
+        public string Domain   { get { return GetDomainName(_credentials.Username); } }
+
+        private PortalSession(Credential credentials, string languageCode, string portalUrl, string authToken, HttpClient httpClient)
         {
-            _sUserName       = userName;
-            _sDomain         = domain;
+            _credentials     = credentials;
             _sLanguageCode   = languageCode;
             _sAuthToken      = authToken;
             _sPortalUrl      = portalUrl;
@@ -159,7 +162,7 @@ namespace CiresonPortalAPI
                     }
                 }
 
-                return new PortalSession(userName, domain, languageCode, portalUrl, result, client);
+                return new PortalSession(userCreds, languageCode, portalUrl, result, client);
             }
         }
     }
