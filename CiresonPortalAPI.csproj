@@ -49,9 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CiresonApiException.cs" />
+    <Compile Include="PortalCredentials.cs" />
+    <Compile Include="PortalHttpHelper.cs" />
     <Compile Include="EnumConstants.cs" />
     <Compile Include="Enumeration.cs" />
-    <Compile Include="PortalSession.cs" />
+    <Compile Include="AuthorizationToken.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubstringExtensions.cs" />
   </ItemGroup>
