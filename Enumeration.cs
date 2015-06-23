@@ -23,7 +23,7 @@ namespace CiresonPortalAPI
         public string  Name    { get { return _name;    } }
         public decimal Ordinal { get { return _ordinal; } }
 
-        public static async Task<List<Enumeration>> GetEnumList(Guid enumList, PortalSession session)
+        public static async Task<List<Enumeration>> GetEnumList(Guid enumList, AuthorizationToken session)
         {
             if (session.IsValid)
             {

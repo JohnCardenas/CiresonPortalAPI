@@ -23,40 +23,38 @@ namespace CiresonPortalAPI
         public CiresonApiException(string message, Exception inner) : base(message, inner) { }
     }
 
-    public class PortalSession
+    public class AuthorizationToken
     {
         const string AUTHORIZATION_ENDPOINT = "/api/V3/Authorization/GetToken";
         const int EXPIRATION_SECONDS = 300;
 
-        private string   _sUserName;
-        private string   _sDomain;
         private string   _sLanguageCode;
         private string   _sPortalUrl;
         private string   _sAuthToken;
         private DateTime _oExpirationTime;
 
-        private HttpClient _oHttpClient;
         private Credential _credentials;
 
         public   string     LanguageCode { get { return _sLanguageCode; } }
         public   string     PortalUrl    { get { return _sPortalUrl;    } }
         internal string     AuthToken    { get { return _sAuthToken;    } }
-        internal HttpClient HttpClient   { get { return _oHttpClient;   } }
         internal Credential Credentials  { get { return _credentials;   } }
 
         public string UserName { get { return GetUserName(_credentials.Username);   } }
         public string Domain   { get { return GetDomainName(_credentials.Username); } }
 
-        private PortalSession(Credential credentials, string languageCode, string portalUrl, string authToken, HttpClient httpClient)
+        private AuthorizationToken(Credential credentials, string languageCode, string portalUrl, string authToken)
         {
             _credentials     = credentials;
             _sLanguageCode   = languageCode;
             _sAuthToken      = authToken;
             _sPortalUrl      = portalUrl;
-            _oHttpClient     = httpClient;
             _oExpirationTime = DateTime.Now.AddSeconds(EXPIRATION_SECONDS);
         }
 
+        /// <summary>
+        /// Checks the state of the AuthorizationToken
+        /// </summary>
         public bool IsValid
         {
             get
@@ -99,13 +97,7 @@ namespace CiresonPortalAPI
             return string.Empty;
         }
 
-        ~PortalSession()
-        {
-            if (_oHttpClient != null)
-                _oHttpClient.Dispose();
-        }
-
-        public static async Task<PortalSession> GetSession(Credential userCreds, string languageCode, string portalUrl)
+        public static async Task<AuthorizationToken> GetAuthorizationToken(Credential userCreds, string languageCode, string portalUrl)
         {
             string domain = GetDomainName(userCreds.Username);
             string userName = GetUserName(userCreds.Username);
@@ -118,11 +110,12 @@ namespace CiresonPortalAPI
             HttpClientHandler handler = new HttpClientHandler();
             handler.Credentials = cache;
 
-            // Create and set _oHttpClient
+            // Create the HTTP client
             HttpClient client = new HttpClient(handler);
             client.BaseAddress = new Uri(portalUrl);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+            // Do the heavy lifting
             using (HttpResponseMessage response = await client.PostAsync(AUTHORIZATION_ENDPOINT, new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new {UserName = userCreds.Username, Password = userCreds.Password, LanguageCode = languageCode}))))
             {
                 string result = string.Empty;
@@ -162,7 +155,7 @@ namespace CiresonPortalAPI
                     }
                 }
 
-                return new PortalSession(userCreds, languageCode, portalUrl, result, client);
+                return new AuthorizationToken(userCreds, languageCode, portalUrl, result);
             }
         }
     }
