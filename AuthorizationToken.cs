@@ -77,6 +77,9 @@ namespace CiresonPortalAPI
                 PortalHttpHelper helper = new PortalHttpHelper(portalUrl, userCreds);
                 string result = await helper.PostAsync(AUTHORIZATION_ENDPOINT, JsonConvert.SerializeObject(new {UserName = userCreds.Username, Password = userCreds.Password, LanguageCode = languageCode}));
 
+                // Strip off beginning and ending quotes
+                result = result.TrimStart('\"').TrimEnd('\"');
+
                 return new AuthorizationToken(userCreds, languageCode, portalUrl, result);
             }
             catch (Exception e)
