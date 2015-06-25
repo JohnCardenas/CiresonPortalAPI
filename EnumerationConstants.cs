@@ -9,7 +9,7 @@ namespace CiresonPortalAPI
     /// <summary>
     /// Enumerations built into Service Manager
     /// </summary>
-    public static class EnumConstants
+    public static class EnumerationConstants
     {
         /// <summary>
         /// Enumerations for Incidents
