@@ -24,6 +24,9 @@ namespace CiresonPortalAPI
         public decimal Ordinal;
     }
 
+    /// <summary>
+    /// IComparer for an Enumeration object
+    /// </summary>
     public class EnumerationComparer : IComparer<Enumeration>
     {
         public int Compare(Enumeration a, Enumeration b)
@@ -37,6 +40,9 @@ namespace CiresonPortalAPI
         }
     }
 
+    /// <summary>
+    /// Represents an enumeration in Service Manager
+    /// </summary>
     public class Enumeration
     {
         const string LIST_ENDPOINT_TREE = "/api/V3/Enum/GetList";
@@ -57,6 +63,14 @@ namespace CiresonPortalAPI
         public string  Name    { get { return _name;    } }
         public decimal Ordinal { get { return _ordinal; } }
 
+        /// <summary>
+        /// Fetches a list of enumerations from the server
+        /// </summary>
+        /// <param name="portalUrl">URL of the Cireson Portal</param>
+        /// <param name="authToken">Authorization token</param>
+        /// <param name="enumList">Enumeration list to fetch</param>
+        /// <param name="flatten">If true, flatten the entire enumeration tree into one list; if false, only return the first-level items</param>
+        /// <returns></returns>
         public static async Task<List<Enumeration>> GetEnumerationList(string portalUrl, AuthorizationToken authToken, Guid enumList, bool flatten)
         {
             if (!authToken.IsValid)
