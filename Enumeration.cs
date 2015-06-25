@@ -31,12 +31,30 @@ namespace CiresonPortalAPI
     {
         public int Compare(Enumeration a, Enumeration b)
         {
-            if (a.Ordinal < b.Ordinal)
+            // Null value comparison
+            if (a == null && b != null)
                 return -1;
-            else if (a.Ordinal > b.Ordinal)
-                return 1;
-            else
+            else if (a == null && b == null)
                 return 0;
+            else if (a != null && b == null)
+                return 1;
+
+            // Non-null value comparison
+            if (a.Ordinal == 0 && b.Ordinal == 0)
+            {
+                // Text comparison
+                return string.Compare(a.ToString(), b.ToString());
+            }
+            else
+            {
+                // Ordinal property comparison
+                if (a.Ordinal < b.Ordinal)
+                    return -1;
+                else if (a.Ordinal > b.Ordinal)
+                    return 1;
+                else
+                    return 0;
+            }
         }
     }
 
