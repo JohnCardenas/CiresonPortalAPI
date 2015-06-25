@@ -22,22 +22,22 @@ namespace CiresonPortalAPI
             public static class Lists
             {
                 /// <summary>IncidentClassificationEnum</summary>
-                public static Guid Classification { get { return new Guid("{1f77f0ce-9e43-340f-1fd5-b11cc36c9cba}"); } }
+                public static const Guid Classification = new Guid("{1f77f0ce-9e43-340f-1fd5-b11cc36c9cba}");
 
                 /// <summary>System.WorkItem.TroubleTicket.ImpactEnum</summary>
-                public static Guid Impact { get { return new Guid("{11756265-f18e-e090-eed2-3aa923a4c872}"); } }
+                public static const Guid Impact = new Guid("{11756265-f18e-e090-eed2-3aa923a4c872}");
 
                 /// <summary>System.WorkItem.TroubleTicket.UrgencyEnum</summary>
-                public static Guid Urgency { get { return new Guid("{04b28bfb-8898-9af3-009b-979e58837852}"); } }
+                public static const Guid Urgency = new Guid("{04b28bfb-8898-9af3-009b-979e58837852}");
 
                 /// <summary>IncidentSourceEnum</summary>
-                public static Guid Source { get { return new Guid("{5d59071e-69b3-7ef4-6dee-aacc5b36d898}"); } }
+                public static const Guid Source = new Guid("{5d59071e-69b3-7ef4-6dee-aacc5b36d898}");
 
                 /// <summary>IncidentStatusEnum</summary>
-                public static Guid Status { get { return new Guid("{89b34802-671e-e422-5e38-7dae9a413ef8}"); } }
+                public static const Guid Status = new Guid("{89b34802-671e-e422-5e38-7dae9a413ef8}");
 
                 /// <summary>IncidentTierQueuesEnum</summary>
-                public static Guid TierQueues { get { return new Guid("{c3264527-a501-029f-6872-31300080b3bf}"); } }
+                public static const Guid TierQueues = new Guid("{c3264527-a501-029f-6872-31300080b3bf}");
             }
             /// <summary>
             /// Incident enumeration built-in values
@@ -50,13 +50,13 @@ namespace CiresonPortalAPI
                 public static class Impact
                 {
                     /// <summary>System.WorkItem.TroubleTicket.ImpactEnum.High</summary>
-                    public static Guid High { get { return new Guid("{d2b5e816-2d24-8e7d-a61f-2cceaeac2664}"); } }
+                    public static const Guid High = new Guid("{d2b5e816-2d24-8e7d-a61f-2cceaeac2664}");
 
                     /// <summary>System.WorkItem.TroubleTicket.ImpactEnum.Medium</summary>
-                    public static Guid Medium { get { return new Guid("{80cc222b-2653-2f68-8cee-3a7dd3b723c1}"); } }
+                    public static const Guid Medium = new Guid("{80cc222b-2653-2f68-8cee-3a7dd3b723c1}");
 
                     /// <summary>System.WorkItem.TroubleTicket.ImpactEnum.Low</summary>
-                    public static Guid Low { get { return new Guid("{8f1a713e-53aa-9d8a-31b9-a9540074f305}"); } }
+                    public static const Guid Low = new Guid("{8f1a713e-53aa-9d8a-31b9-a9540074f305}");
                 }
 
                 /// <summary>
@@ -65,13 +65,13 @@ namespace CiresonPortalAPI
                 public static class Urgency
                 {
                     /// <summary>System.WorkItem.TroubleTicket.UrgencyEnum.High</summary>
-                    public static Guid High { get { return new Guid("{2f8f0747-b6cb-7996-fd4a-84d09743f218}"); } }
+                    public static const Guid High = new Guid("{2f8f0747-b6cb-7996-fd4a-84d09743f218}");
 
                     /// <summary>System.WorkItem.TroubleTicket.UrgencyEnum.Medium</summary>
-                    public static Guid Medium { get { return new Guid("{02625c30-08c6-4181-b2ed-222fa473280e}"); } }
+                    public static const Guid Medium = new Guid("{02625c30-08c6-4181-b2ed-222fa473280e}");
 
                     /// <summary>System.WorkItem.TroubleTicket.UrgencyEnum.Low</summary>
-                    public static Guid Low { get { return new Guid("{725a4cad-088c-4f55-a845-000db8872e01}"); } }
+                    public static const Guid Low = new Guid("{725a4cad-088c-4f55-a845-000db8872e01}");
                 }
 
                 /// <summary>
@@ -80,25 +80,25 @@ namespace CiresonPortalAPI
                 public static class Source
                 {
                     /// <summary>IncidentSourceEnum.Console</summary>
-                    public static Guid Console { get { return new Guid("{76480d55-a19d-7cef-4446-0f1ccaef11ce}"); } }
+                    public static const Guid Console = new Guid("{76480d55-a19d-7cef-4446-0f1ccaef11ce}");
 
                     /// <summary>IncidentSourceEnum.DCM</summary>
-                    public static Guid DCM { get { return new Guid("{551ed1e6-0a12-9f2b-a057-528b115e17e3}"); } }
+                    public static const Guid DCM = new Guid("{551ed1e6-0a12-9f2b-a057-528b115e17e3}");
 
                     /// <summary>IncidentSourceEnum.Email</summary>
-                    public static Guid Email { get { return new Guid("{92b68e4f-c5bf-52ec-9bda-f55b43a9f4b5}"); } }
+                    public static const Guid Email = new Guid("{92b68e4f-c5bf-52ec-9bda-f55b43a9f4b5}");
 
                     /// <summary>IncidentSourceEnum.Phone</summary>
-                    public static Guid Phone { get { return new Guid("{7b417fee-0516-a75a-c62c-426905fda768}"); } }
+                    public static const Guid Phone = new Guid("{7b417fee-0516-a75a-c62c-426905fda768}");
 
                     /// <summary>IncidentSourceEnum.Portal</summary>
-                    public static Guid Portal { get { return new Guid("{6ef191ce-3124-2974-94fb-020c677f4017}"); } }
+                    public static const Guid Portal = new Guid("{6ef191ce-3124-2974-94fb-020c677f4017}");
 
                     /// <summary>IncidentSourceEnum.SCOM</summary>
-                    public static Guid SCOM { get { return new Guid("{564c1afc-6453-4b25-5564-b46d84155545}"); } }
+                    public static const Guid SCOM = new Guid("{564c1afc-6453-4b25-5564-b46d84155545}");
 
                     /// <summary>IncidentSourceEnum.System</summary>
-                    public static Guid System { get { return new Guid("{615778d5-485a-752f-3c5d-f412f806e624}"); } }
+                    public static const Guid System = new Guid("{615778d5-485a-752f-3c5d-f412f806e624}");
                 }
 
                 /// <summary>
@@ -107,16 +107,16 @@ namespace CiresonPortalAPI
                 public static class Status
                 {
                     /// <summary>IncidentStatusEnum.Active</summary>
-                    public static Guid Active { get { return new Guid("{5e2d3932-ca6d-1515-7310-6f58584df73e}"); } }
+                    public static const Guid Active = new Guid("{5e2d3932-ca6d-1515-7310-6f58584df73e}");
 
                     /// <summary>IncidentStatusEnum.Active.Pending</summary>
-                    public static Guid Active_Pending { get { return new Guid("{b6679968-e84e-96fa-1fec-8cd4ab39c3de}"); } }
+                    public static const Guid Active_Pending = new Guid("{b6679968-e84e-96fa-1fec-8cd4ab39c3de}");
 
                     /// <summary>IncidentStatusEnum.Closed</summary>
-                    public static Guid Closed { get { return new Guid("{bd0ae7c4-3315-2eb3-7933-82dfc482dbaf}"); } }
+                    public static const Guid Closed = new Guid("{bd0ae7c4-3315-2eb3-7933-82dfc482dbaf}");
 
                     /// <summary>IncidentStatusEnum.Resolved</summary>
-                    public static Guid Resolved { get { return new Guid("{2b8830b6-59f0-f574-9c2a-f4b4682f1681}"); } }
+                    public static const Guid Resolved = new Guid("{2b8830b6-59f0-f574-9c2a-f4b4682f1681}");
                 }
             }
         }
