@@ -9,7 +9,7 @@ namespace CiresonPortalAPI
     /// <summary>
     /// Type Projections built into Service Manager
     /// </summary>
-    public static class ProjectionConstants
+    public static class TypeProjectionConstants
     {
         /// <summary>
         /// Build (advanced)
