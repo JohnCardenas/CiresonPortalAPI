@@ -52,11 +52,13 @@
     <Compile Include="CiresonApiException.cs" />
     <Compile Include="PortalCredentials.cs" />
     <Compile Include="PortalHttpHelper.cs" />
-    <Compile Include="EnumConstants.cs" />
+    <Compile Include="EnumerationConstants.cs" />
     <Compile Include="Enumeration.cs" />
     <Compile Include="AuthorizationToken.cs" />
+    <Compile Include="TypeProjectionConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubstringExtensions.cs" />
+    <Compile Include="TemplateConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
