@@ -66,20 +66,20 @@ namespace CiresonPortalAPI
         const string LIST_ENDPOINT_TREE = "/api/V3/Enum/GetList";
         const string LIST_ENDPOINT_FLAT = "/api/V3/Enum/GetFlatList";
 
-        private Guid    _id;
-        private string  _text;
-        private string  _name;
-        private bool    _childrenLoaded = false;
-        private bool    _isFlat;
-        private bool    _hasChildren;
-        private decimal _ordinal;
+        private Guid    _oId;
+        private string  _sText;
+        private string  _sName;
+        private bool    _bChildrenLoaded = false;
+        private bool    _bIsFlat;
+        private bool    _bHasChildren;
+        private decimal _dOrdinal;
 
-        private List<Enumeration> _children;
+        private List<Enumeration> _lChildren;
 
-        public Guid    Id      { get { return _id;      } }
-        public string  Text    { get { return _text;    } }
-        public string  Name    { get { return _name;    } }
-        public decimal Ordinal { get { return _ordinal; } }
+        public Guid    Id      { get { return _oId;      } }
+        public string  Text    { get { return _sText;    } }
+        public string  Name    { get { return _sName;    } }
+        public decimal Ordinal { get { return _dOrdinal; } }
 
         /// <summary>
         /// Fetches a list of enumerations from the server
@@ -140,17 +140,17 @@ namespace CiresonPortalAPI
 
         private Enumeration(string id, string text, string name, bool isFlat, bool hasChildren, decimal ordinal = 0)
         {
-            _id = new Guid(id);
-            _text = text;
-            _name = name;
-            _isFlat = isFlat;
-            _hasChildren = hasChildren;
-            _ordinal = ordinal;
+            _oId = new Guid(id);
+            _sText = text;
+            _sName = name;
+            _bIsFlat = isFlat;
+            _bHasChildren = hasChildren;
+            _dOrdinal = ordinal;
         }
 
         public override string ToString()
         {
-            return _text;
+            return _sText;
         }
     }
 }
