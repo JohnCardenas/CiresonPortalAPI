@@ -50,17 +50,14 @@ namespace CiresonPortalAPI
         /// Overloaded constructor with an Authorization header; suitable for connecting to endpoints other than /Authorization/GetToken
         /// </summary>
         /// <param name="authToken">AuthorizationToken object</param>
-        /// <param name="buggedAuthEndpoint">Is this endpoint affected by the Authorization token bug?</param>
-        public PortalHttpHelper(AuthorizationToken authToken, bool buggedAuthEndpoint = false) : this(authToken.PortalUrl, authToken.Credentials, authToken.WindowsAuthEnabled)
+        public PortalHttpHelper(AuthorizationToken authToken) : this(authToken.PortalUrl, authToken.Credentials, authToken.WindowsAuthEnabled)
         {
             if (!authToken.IsValid)
             {
                 throw new CiresonApiException("Authorization token is not valid.");
             }
 
-            // FIXME: remove this when Cireson fixes their broken crap
-            if (!buggedAuthEndpoint)
-                _oHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", authToken.Token);
+            _oHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", authToken.Token);
         }
 
         /// <summary>
