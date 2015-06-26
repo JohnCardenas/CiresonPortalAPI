@@ -25,24 +25,36 @@ namespace CiresonPortalAPI
         private string            _sLanguageCode;
         private string            _sPortalUrl;
         private string            _sToken;
+        private bool              _bWindowsAuthEnabled;
         private DateTime          _oExpirationTime;
         private PortalCredentials _oCredentials;
 
-        public   string            LanguageCode { get { return _sLanguageCode; } }
-        public   string            PortalUrl    { get { return _sPortalUrl;    } }
-        internal string            Token        { get { return _sToken;        } }
-        internal PortalCredentials Credentials  { get { return _oCredentials;  } }
+        public   string            LanguageCode { get { return _sLanguageCode;  } }
+        public   string            PortalUrl    { get { return _sPortalUrl;     } }
+        internal string            Token        { get { return _sToken;         } }
+        internal PortalCredentials Credentials  { get { return _oCredentials;   } }
 
-        public string UserName { get { return _oCredentials.UserName; } }
-        public string Domain   { get { return _oCredentials.Domain;   } }
+        public string UserName { get { return _oCredentials.UserNameNoDomain; } }
+        public string Domain   { get { return _oCredentials.Domain;           } }
 
-        private AuthorizationToken(PortalCredentials credentials, string languageCode, string portalUrl, string token)
+        internal bool WindowsAuthEnabled { get { return _bWindowsAuthEnabled; } }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="portalUrl">URL to access</param>
+        /// <param name="credentials">Credentials</param>
+        /// <param name="languageCode">Language code of the Portal</param>
+        /// <param name="token">Authorization token</param>
+        /// <param name="windowsAuthEnabled">Is Windows Authentication enabled?</param>
+        private AuthorizationToken(string portalUrl, PortalCredentials credentials, string languageCode, string token, bool windowsAuthEnabled)
         {
-            _oCredentials    = credentials;
-            _sLanguageCode   = languageCode;
-            _sToken          = token;
-            _sPortalUrl      = portalUrl;
-            _oExpirationTime = DateTime.Now.AddSeconds(EXPIRATION_SECONDS);
+            _oCredentials        = credentials;
+            _sLanguageCode       = languageCode;
+            _sToken              = token;
+            _sPortalUrl          = portalUrl;
+            _oExpirationTime     = DateTime.Now.AddSeconds(EXPIRATION_SECONDS);
+            _bWindowsAuthEnabled = windowsAuthEnabled;
         }
 
         /// <summary>
@@ -63,24 +75,54 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>
+        /// Detects if the Portal is running Windows Authentication
+        /// </summary>
+        /// <returns></returns>
+        private static async Task<bool> DetectWindowsAuthentication(string portalUrl)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                using (HttpResponseMessage response = await client.GetAsync(portalUrl))
+                {
+                    // Headers to detect for Windows Authentication
+                    AuthenticationHeaderValue negotiate = new AuthenticationHeaderValue("Negotiate");
+                    AuthenticationHeaderValue ntlm = new AuthenticationHeaderValue("NTLM");
+                    AuthenticationHeaderValue kerberos = new AuthenticationHeaderValue("Kerberos");
+
+                    bool found = (response.Headers.WwwAuthenticate.Contains(negotiate) || response.Headers.WwwAuthenticate.Contains(ntlm) || response.Headers.WwwAuthenticate.Contains(kerberos));
+                    return found;
+                }
+            }
+        }
+
+        /// <summary>
         /// Retrieves an authorization token from the server
         /// </summary>
         /// <param name="portalUrl">URL of the Cireson Portal</param>
         /// <param name="userCreds">PortalCredentials object</param>
         /// <param name="languageCode">Portal language code</param>
         /// <returns></returns>
-        public static async Task<AuthorizationToken> GetAuthorizationToken(string portalUrl, PortalCredentials userCreds, string languageCode = "ENU")
+        public static async Task<AuthorizationToken> GetAuthorizationToken(string portalUrl, string userName, SecureString password, string languageCode = "ENU")
         {
             try
             {
+                // First check to see if we have Windows Authentication enabled
+                bool windowsAuthEnabled = await DetectWindowsAuthentication(portalUrl);
+
+                // Set up credentials
+                PortalCredentials credentials = new PortalCredentials();
+                credentials.Username = userName;
+                credentials.SecurePassword = password;
+
                 // Initialize the HTTP helper and do the heavy lifting
-                PortalHttpHelper helper = new PortalHttpHelper(portalUrl, userCreds);
-                string result = await helper.PostAsync(AUTHORIZATION_ENDPOINT, JsonConvert.SerializeObject(new {UserName = userCreds.Username, Password = userCreds.Password, LanguageCode = languageCode}));
+                PortalHttpHelper helper = new PortalHttpHelper(portalUrl, credentials, windowsAuthEnabled);
+                string result = await helper.PostAsync(AUTHORIZATION_ENDPOINT, JsonConvert.SerializeObject(new {UserName = credentials.Username, Password = credentials.Password, LanguageCode = languageCode}));
 
                 // Strip off beginning and ending quotes
                 result = result.TrimStart('\"').TrimEnd('\"');
 
-                return new AuthorizationToken(userCreds, languageCode, portalUrl, result);
+                // Return the authorization token
+                return new AuthorizationToken(portalUrl, credentials, languageCode, result, windowsAuthEnabled);
             }
             catch (Exception e)
             {

@@ -89,7 +89,7 @@ namespace CiresonPortalAPI
         /// <param name="enumList">Enumeration list to fetch</param>
         /// <param name="flatten">If true, flatten the entire enumeration tree into one list; if false, only return the first-level items</param>
         /// <returns></returns>
-        public static async Task<List<Enumeration>> GetEnumerationList(string portalUrl, AuthorizationToken authToken, Guid enumList, bool flatten)
+        public static async Task<List<Enumeration>> GetEnumerationList(AuthorizationToken authToken, Guid enumList, bool flatten)
         {
             if (!authToken.IsValid)
             {
@@ -102,7 +102,7 @@ namespace CiresonPortalAPI
             try
             {
                 // Initialize the HTTP helper and get going
-                PortalHttpHelper helper = new PortalHttpHelper(portalUrl, authToken);
+                PortalHttpHelper helper = new PortalHttpHelper(authToken);
                 string result = await helper.GetAsync(endpoint);
 
                 List<Enumeration> returnList = new List<Enumeration>();

@@ -7,10 +7,12 @@ using CredentialManagement;
 
 namespace CiresonPortalAPI
 {
-    public class PortalCredentials : Credential
+    internal class PortalCredentials : Credential
     {
-        public string UserName { get { return GetUserName(this.Username);   } }
-        public string Domain   { get { return GetDomainName(this.Username); } }
+        private string _sPortalUrl;
+
+        public string UserNameNoDomain { get { return GetUserName(this.Username); } }
+        public string Domain { get { return GetDomainName(this.Username); } }
 
         private static string GetUserName(string userNameDomainToken)
         {

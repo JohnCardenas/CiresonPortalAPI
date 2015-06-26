@@ -25,15 +25,20 @@ namespace CiresonPortalAPI
         /// </summary>
         /// <param name="portalUrl">URL of the Cireson Portal</param>
         /// <param name="credentials">PortalCredentials object</param>
-        public PortalHttpHelper(string portalUrl, PortalCredentials credentials)
+        /// <param name="windowsAuthEnabled">Does the portal have Windows Authentication enabled?</param>
+        public PortalHttpHelper(string portalUrl, PortalCredentials credentials, bool windowsAuthEnabled)
         {
-            // Create the network credential cache
-            CredentialCache cache = new CredentialCache();
-            cache.Add(new Uri(portalUrl), "Negotiate", new NetworkCredential(credentials.Username, credentials.SecurePassword, credentials.Domain));
-
             // Create the HttpClientHandler
             HttpClientHandler handler = new HttpClientHandler();
-            handler.Credentials = cache;
+
+            // Add credentials to the client handler if we're using Windows Auth
+            if (windowsAuthEnabled)
+            {
+                // Create the network credential cache and add it to the handler
+                CredentialCache cache = new CredentialCache();
+                cache.Add(new Uri(portalUrl), "Negotiate", new NetworkCredential(credentials.Username, credentials.SecurePassword, credentials.Domain));
+                handler.Credentials = cache;
+            }
 
             // Create the HTTP client
             _oHttpClient = new HttpClient(handler);
@@ -44,16 +49,18 @@ namespace CiresonPortalAPI
         /// <summary>
         /// Overloaded constructor with an Authorization header; suitable for connecting to endpoints other than /Authorization/GetToken
         /// </summary>
-        /// <param name="portalUrl">URL of the Cireson Portal</param>
         /// <param name="authToken">AuthorizationToken object</param>
-        public PortalHttpHelper(string portalUrl, AuthorizationToken authToken) : this(portalUrl, authToken.Credentials)
+        /// <param name="buggedAuthEndpoint">Is this endpoint affected by the Authorization token bug?</param>
+        public PortalHttpHelper(AuthorizationToken authToken, bool buggedAuthEndpoint = false) : this(authToken.PortalUrl, authToken.Credentials, authToken.WindowsAuthEnabled)
         {
             if (!authToken.IsValid)
             {
                 throw new CiresonApiException("Authorization token is not valid.");
             }
 
-            _oHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", authToken.Token);
+            // FIXME: remove this when Cireson fixes their broken crap
+            if (!buggedAuthEndpoint)
+                _oHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", authToken.Token);
         }
 
         /// <summary>
