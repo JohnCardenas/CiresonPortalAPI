@@ -17,11 +17,11 @@ namespace CiresonPortalAPI
         /// <summary>
         /// Fetches a list of enumerations from the server
         /// </summary>
-        /// <param name="portalUrl">URL of the Cireson Portal</param>
         /// <param name="authToken">Authorization token</param>
         /// <param name="enumList">Enumeration list to fetch</param>
         /// <param name="flatten">If true, flatten the entire enumeration tree into one list; if false, only return the first-level items</param>
         /// <returns></returns>
+        /// 
         public static async Task<List<Enumeration>> GetEnumerationList(AuthorizationToken authToken, Guid enumList, bool flatten)
         {
             if (!authToken.IsValid)
