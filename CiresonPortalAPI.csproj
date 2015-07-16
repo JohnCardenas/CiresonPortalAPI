@@ -55,6 +55,7 @@
     <Compile Include="EnumerationConstants.cs" />
     <Compile Include="Enumeration.cs" />
     <Compile Include="AuthorizationToken.cs" />
+    <Compile Include="QueryCriteria.cs" />
     <Compile Include="TypeProjection.cs" />
     <Compile Include="TypeProjectionConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
