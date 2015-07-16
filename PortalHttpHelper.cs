@@ -43,7 +43,7 @@ namespace CiresonPortalAPI
             // Create the HTTP client
             _oHttpClient = new HttpClient(handler);
             _oHttpClient.BaseAddress = new Uri(portalUrl);
-            _oHttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            _oHttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
         /// <summary>
