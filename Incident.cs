@@ -27,7 +27,7 @@ namespace CiresonPortalAPI
             List<ExpandoObject> rawIncidentList = await TypeProjectionController.GetProjectionByCriteria(authToken, criteria);
             foreach (ExpandoObject rawIncident in rawIncidentList)
             {
-                returnList.Add(CreateIncidentFromDynamicObject(rawIncident));
+                returnList.Add(new Incident(rawIncident));
             }
 
             return returnList;
@@ -56,137 +56,189 @@ namespace CiresonPortalAPI
             if (rawIncident.Count == 0)
                 return null;
 
-            return CreateIncidentFromDynamicObject(rawIncident[0]);
-        }
-
-        internal static Incident CreateIncidentFromDynamicObject(dynamic obj)
-        {
-            Incident returnObj = new Incident(true);
-
-            returnObj.Classification = new Enumeration(obj.Classification.Id, obj.Classification.Name, obj.Classification.Name, true, false);
-            returnObj.ClosedDate = obj.ClosedDate;
-            returnObj.DisplayName = obj.DisplayName;
-            returnObj.LastModifiedDate = obj.LastModified;
-
-            returnObj._bObjectInitialized = true;
-            return returnObj;
+            return new Incident(rawIncident[0]);
         }
     }
 
     public class Incident : BaseWorkItem
     {
-        #region Internal data objects
-        string _sDescription;
-        string _sDisplayName;
-        string _sID;
-        string _sResolutionDescription;
-        string _sTitle;
-
-        Nullable<DateTime> _dClosedDate;
-        Nullable<DateTime> _dCreatedDate;
-        Nullable<DateTime> _dFirstAssignedDate;
-        Nullable<DateTime> _dFirstResponseDate;
-        Nullable<DateTime> _dLastModifiedDate;
-        Nullable<DateTime> _dResolvedDate;
-        Nullable<DateTime> _dTargetResolutionTime;
-
-        Enumeration _oClassification;
-        Enumeration _oImpact;
-        Enumeration _oResolutionCategory;
-        Enumeration _oSource;
-        Enumeration _oStatus;
-        Enumeration _oTierQueue;
-        Enumeration _oUrgency;
-
-        bool _bEscalated;
-
-        int _iPriority;
-        #endregion Internal data objects
-
         #region Read-Only Properties
 
         /// <summary>Gets the date the Incident was closed. Read only.</summary>
-        public Nullable<DateTime> ClosedDate { get { return _dClosedDate; } internal set { _dClosedDate = value; } }
+        public Nullable<DateTime> ClosedDate { get { return _oCurrentObject.ClosedDate; } }
 
         /// <summary>Gets the date the Incident was created. Read only.</summary>
-        public Nullable<DateTime> CreatedDate { get { return _dCreatedDate; } internal set { _dCreatedDate = value; } }
+        public Nullable<DateTime> CreatedDate { get { return _oCurrentObject.CreatedDate; } }
 
         /// <summary>Gets the DisplayName of the Incident. Read only.</summary>
-        public string DisplayName { get { return _sDisplayName; } internal set { _sDisplayName = value; } }
+        public string DisplayName { get { return _oCurrentObject.DisplayName; } }
 
         /// <summary>Gets the date the Incident was first assigned. Read only.</summary>
-        public Nullable<DateTime> FirstAssignedDate { get { return _dFirstAssignedDate; } internal set { _dFirstAssignedDate = value; } }
+        public Nullable<DateTime> FirstAssignedDate { get { return _oCurrentObject.FirstAssignedDate; } }
 
         /// <summary>Gets the date the Incident was first responded to. Read only.</summary>
-        public Nullable<DateTime> FirstResponseDate { get { return _dFirstResponseDate; } internal set { _dFirstResponseDate = value; } }
+        public Nullable<DateTime> FirstResponseDate { get { return _oCurrentObject.FirstResponseDate; } }
 
         /// <summary>Gets the ID of the Incident. Read only.</summary>
-        public string ID { get { return _sID; } internal set { _sID = value; } }
+        public string ID { get { return _oCurrentObject.Id; } }
 
         /// <summary>Gets the date the Incident was last modified. Read only.</summary>
-        public Nullable<DateTime> LastModifiedDate { get { return _dLastModifiedDate; } internal set { _dLastModifiedDate = value; } }
+        public Nullable<DateTime> LastModifiedDate { get { return _oCurrentObject.LastModified; } }
 
         /// <summary>Gets the priority of this Incident. Read only.</summary>
-        public int Priority { get { return _iPriority; } internal set { _iPriority = value; } }
+        public int Priority { get { return _oCurrentObject.Priority; } }
 
         /// <summary>Gets the date the Incident was resolved. Read only.</summary>
-        public Nullable<DateTime> ResolvedDate { get { return _dResolvedDate; } internal set { _dResolvedDate = value; } }
+        public Nullable<DateTime> ResolvedDate { get { return _oCurrentObject.ResolvedDate; } }
 
         /// <summary>Gets the Incident's target resolution time. Read only.</summary>
-        public Nullable<DateTime> TargetResolutionTime { get { return _dTargetResolutionTime; } internal set { _dTargetResolutionTime = value; } }
+        public Nullable<DateTime> TargetResolutionTime { get { return _oCurrentObject.TargetResolutionTime; } }
 
         #endregion Read-Only Properties
 
         #region Read-Write Properties
 
         /// <summary>Gets or sets the Incident's description.</summary>
-        public string Description { get { return _sDescription; } set { SetDirtyBit(); _sDescription = value; } }
+        public string Description { get { return _oCurrentObject.Description; } set { _oCurrentObject.Description = value; SetDirtyBit(); } }
 
         /// <summary>Gets or sets the Incident's classification.</summary>
-        public Enumeration Classification { get { return _oClassification; } set { SetDirtyBit(); _oClassification = value; } }
+        public Enumeration Classification
+        {
+            get
+            {
+                return DeserializeEnumeration(_oCurrentObject.Classification.Id, _oCurrentObject.Classification.Name);
+            }
+            set
+            {
+                _oCurrentObject.Classification.Id = value.Id;
+                _oCurrentObject.Classification.Name = value.Name;
+                SetDirtyBit();
+            }
+        }
 
         /// <summary>Gets or sets the Incident's escalation status.</summary>
-        public bool Escalated { get { return _bEscalated; } set { SetDirtyBit(); _bEscalated = value; } }
+        public bool Escalated { get { return _oCurrentObject.Escalated; } set { _oCurrentObject.Escalated = value; SetDirtyBit(); } }
 
         /// <summary>Gets or sets the Incident's impact.</summary>
-        public Enumeration Impact { get { return _oImpact; } set { SetDirtyBit(); _oImpact = value; } }
+        public Enumeration Impact
+        {
+            get
+            {
+                return DeserializeEnumeration(_oCurrentObject.Impact.Id, _oCurrentObject.Impact.Name);
+            }
+            set
+            {
+                _oCurrentObject.Impact.Id = value.Id;
+                _oCurrentObject.Impact.Name = value.Name;
+                SetDirtyBit();
+            }
+        }
 
         /// <summary>Gets or sets the Incident's resolution category.</summary>
-        public Enumeration ResolutionCategory { get { return _oResolutionCategory; } set { SetDirtyBit(); _oResolutionCategory = value; } }
+        public Enumeration ResolutionCategory
+        {
+            get
+            {
+                return DeserializeEnumeration(_oCurrentObject.ResolutionCategory.Id, _oCurrentObject.ResolutionCategory.Name);
+            }
+            set
+            {
+                _oCurrentObject.ResolutionCategory.Id = value.Id;
+                _oCurrentObject.ResolutionCategory.Name = value.Name;
+                SetDirtyBit();
+            }
+        }
 
         /// <summary>Gets or sets the Incident's resolution description.</summary>
-        public string ResolutionDescription { get { return _sResolutionDescription; } set { SetDirtyBit(); _sResolutionDescription = value; } }
+        public string ResolutionDescription { get { return _oCurrentObject.ResolutionDescription; } set { _oCurrentObject.ResolutionDescription = value; SetDirtyBit(); } }
 
         /// <summary>Gets or sets the Incident's source.</summary>
-        public Enumeration Source { get { return _oSource; } set { SetDirtyBit(); _oSource = value; } }
+        public Enumeration Source
+        {
+            get
+            {
+                return DeserializeEnumeration(_oCurrentObject.Source.Id, _oCurrentObject.Source.Name);
+            }
+            set
+            {
+                _oCurrentObject.Source.Id = value.Id;
+                _oCurrentObject.Source.Name = value.Name;
+                SetDirtyBit();
+            }
+        }
 
         /// <summary>Gets or sets the Incident's status.</summary>
-        public Enumeration Status { get { return _oStatus; } set { SetDirtyBit(); _oStatus = value; } }
+        public Enumeration Status
+        {
+            get
+            {
+                return DeserializeEnumeration(_oCurrentObject.Status.Id, _oCurrentObject.Status.Name);
+            }
+            set
+            {
+                _oCurrentObject.Status.Id = value.Id;
+                _oCurrentObject.Status.Name = value.Name;
+                SetDirtyBit();
+            }
+        }
 
         /// <summary>Gets or sets the Incident's support group.</summary>
-        public Enumeration SupportGroup { get { return _oTierQueue; } set { SetDirtyBit(); _oTierQueue = value; } }
+        public Enumeration SupportGroup
+        {
+            get
+            {
+                return DeserializeEnumeration(_oCurrentObject.TierQueue.Id, _oCurrentObject.TierQueue.Name);
+            }
+            set
+            {
+                _oCurrentObject.TierQueue.Id = value.Id;
+                _oCurrentObject.TierQueue.Name = value.Name;
+                SetDirtyBit();
+            }
+        }
 
         /// <summary>Gets or sets the Incident's title.</summary>
-        public string Title { get { return _sTitle; } set { SetDirtyBit(); _sTitle = value; } }
+        public string Title { get { return _oCurrentObject.Title; } set { _oCurrentObject.Title = value; SetDirtyBit(); } }
 
         /// <summary>Gets or sets the Incident's urgency.</summary>
-        public Enumeration Urgency { get { return _oUrgency; } set { SetDirtyBit(); _oUrgency = value; } }
+        public Enumeration Urgency
+        {
+            get
+            {
+                return DeserializeEnumeration(_oCurrentObject.Urgency.Id, _oCurrentObject.Urgency.Name);
+            }
+            set
+            {
+                _oCurrentObject.Urgency.Id = value.Id;
+                _oCurrentObject.Urgency.Name = value.Name;
+                SetDirtyBit();
+            }
+        }
 
         #endregion Read-Write Properties
 
-        public Incident()
+        #region Constructors
+
+        /// <summary>
+        /// Constructor used internally when an existing object has been queried
+        /// </summary>
+        /// <param name="obj">Existing object</param>
+        internal Incident(dynamic obj)
         {
-            _bExistingObject = false;
+            _oOriginalObject = obj;
+            _oCurrentObject = obj;
         }
 
         /// <summary>
-        /// Create an Incident as an existing object, for internal use within the API library.
+        /// Creates a new Incident
         /// </summary>
-        /// <param name="existingObject"></param>
-        internal Incident(bool existingObject)
+        public Incident()
         {
-            _bExistingObject = existingObject;
+            _oOriginalObject = null;
+            _oCurrentObject = new ExpandoObject();
         }
+
+        #endregion Constructors
 
         public override string ToString()
         {
