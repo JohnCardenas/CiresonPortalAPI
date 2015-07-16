@@ -102,7 +102,7 @@ namespace CiresonPortalAPI
         /// <summary>
         /// The ID of the type projection we want to query
         /// </summary>
-        public Guid ProjectionID { get { return _oProjectionID; } }
+        public Guid ProjectionID { get { return _oProjectionID; } internal set { _oProjectionID = value; } }
 
         /// <summary>
         /// What type of grouping operator should be used?
