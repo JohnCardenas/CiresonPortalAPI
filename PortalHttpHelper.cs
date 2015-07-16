@@ -70,7 +70,7 @@ namespace CiresonPortalAPI
         {
             try
             {
-                using (HttpResponseMessage response = await _oHttpClient.PostAsync(url, new StringContent(payload)))
+                using (HttpResponseMessage response = await _oHttpClient.PostAsync(url, new StringContent(payload, Encoding.UTF8, "application/json")))
                 {
                     return await ProcessResponse(response);
                 }   
