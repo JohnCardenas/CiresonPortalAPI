@@ -124,7 +124,7 @@ namespace CiresonPortalAPI
         /// Serializes this QueryCriteria to a JSON string
         /// </summary>
         /// <returns></returns>
-        public string ToJson()
+        public override string ToString()
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
