@@ -20,7 +20,7 @@ namespace CiresonPortalAPI
         /// <param name="authToken">AuthenticationToken to use</param>
         /// <param name="criteria">QueryCriteria rules</param>
         /// <returns>List of ExpandoObjects</returns>
-        public static async Task<List<ExpandoObject>> GetProjectionByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
+        public static async Task<List<TypeProjection>> GetProjectionByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
             if (!authToken.IsValid)
             {
@@ -37,12 +37,139 @@ namespace CiresonPortalAPI
                 ExpandoObjectConverter converter = new ExpandoObjectConverter();
                 dynamic objectList = JsonConvert.DeserializeObject<List<ExpandoObject>>(result, converter);
 
-                return objectList;
+                // Convert the ExpandoObjects into proper TypeProjection objects
+                List<TypeProjection> returnList = new List<TypeProjection>();
+                foreach (var obj in objectList)
+                {
+                    returnList.Add(new TypeProjection(obj));
+                }
+
+                return returnList;
             }
             catch (Exception e)
             {
                 throw; // Rethrow exceptions
             }
+        }
+    }
+
+    /// <summary>
+    /// TypeProjection
+    /// </summary>
+    [JsonConverter(typeof(TypeProjectionSerializer))]
+    public class TypeProjection
+    {
+        protected internal bool _bDirtyObject = false;
+        protected internal dynamic _oOriginalObject;
+        protected internal dynamic _oCurrentObject;
+
+        /// <summary>
+        /// Called when a property changes to set the dirty object flag
+        /// </summary>
+        protected void SetDirtyBit()
+        {
+            _bDirtyObject = true;
+        }
+
+        /// <summary>
+        /// Attempts to update the type projection
+        /// </summary>
+        /// <returns>Returns true if successful, false if not.</returns>
+        public async Task<bool> Update()
+        {
+            if (_bDirtyObject == false)
+                return false;
+
+            return false;
+            //return await WriteObject();
+        }
+
+        /// <summary>
+        /// Creates a new type projection object based on an existing object
+        /// </summary>
+        /// <param name="obj"></param>
+        public TypeProjection(dynamic obj)
+        {
+            _oCurrentObject = obj;
+            _oOriginalObject = obj;
+        }
+
+        /// <summary>
+        /// Creates a new type projection for a new object
+        /// </summary>
+        public TypeProjection()
+        {
+            _oCurrentObject = new ExpandoObject();
+            _oOriginalObject = null;
+        }
+
+        protected Enumeration DeserializeEnumeration(string id, string name)
+        {
+            return new Enumeration(id, name, name, true, false);
+        }
+    }
+
+    /// <summary>
+    /// Serializer class for TypeProjections
+    /// </summary>
+    public class TypeProjectionSerializer : JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            TypeProjection workItem = (TypeProjection)value;
+
+            writer.WriteStartObject();
+
+            #region formJson object
+            {
+                writer.WritePropertyName("formJson");
+                writer.WriteStartObject();
+
+                writer.WritePropertyName("isDirty");
+                writer.WriteValue(workItem._bDirtyObject);
+
+                #region current object
+                writer.WritePropertyName("current");
+                writer.WriteStartObject();
+                writer.WriteValue(workItem._oCurrentObject);
+                writer.WriteEndObject();
+                #endregion current object
+
+                #region original object
+                writer.WritePropertyName("original");
+                writer.WriteStartObject();
+                writer.WriteValue(workItem._oOriginalObject);
+                writer.WriteEndObject();
+                #endregion original object
+
+                writer.WriteEndObject(); // formJson
+            }
+            #endregion formJsonObject
+
+            writer.WriteEndObject(); // JSON
+        }
+
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="objectType"></param>
+        /// <param name="existingValue"></param>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Not implemented.
+        /// </summary>
+        /// <param name="objectType"></param>
+        /// <returns></returns>
+        public override bool CanConvert(Type objectType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

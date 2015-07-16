@@ -24,10 +24,10 @@ namespace CiresonPortalAPI
             List<Incident> returnList = new List<Incident>();
 
             // Get the raw Incident TypeProjections and convert them
-            List<ExpandoObject> rawIncidentList = await TypeProjectionController.GetProjectionByCriteria(authToken, criteria);
-            foreach (ExpandoObject rawIncident in rawIncidentList)
+            List<TypeProjection> projectionList = await TypeProjectionController.GetProjectionByCriteria(authToken, criteria);
+            foreach (TypeProjection projection in projectionList)
             {
-                returnList.Add(new Incident(rawIncident));
+                returnList.Add(new Incident(projection));
             }
 
             return returnList;
@@ -51,16 +51,16 @@ namespace CiresonPortalAPI
             criteria.GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression;
             criteria.Expressions.Add(expression);
 
-            List<ExpandoObject> rawIncident = await TypeProjectionController.GetProjectionByCriteria(authToken, criteria);
+            List<TypeProjection> projectionList = await TypeProjectionController.GetProjectionByCriteria(authToken, criteria);
 
-            if (rawIncident.Count == 0)
+            if (projectionList.Count == 0)
                 return null;
 
-            return new Incident(rawIncident[0]);
+            return new Incident(projectionList[0]);
         }
     }
 
-    public class Incident : BaseWorkItem
+    public class Incident : TypeProjection
     {
         #region Read-Only Properties
 
@@ -222,21 +222,17 @@ namespace CiresonPortalAPI
         /// <summary>
         /// Constructor used internally when an existing object has been queried
         /// </summary>
-        /// <param name="obj">Existing object</param>
-        internal Incident(dynamic obj)
+        /// <param name="projection">Parent type projection</param>
+        internal Incident(TypeProjection projection)
         {
-            _oOriginalObject = obj;
-            _oCurrentObject = obj;
+            _oOriginalObject = projection._oOriginalObject;
+            _oCurrentObject = projection._oCurrentObject;
         }
 
         /// <summary>
         /// Creates a new Incident
         /// </summary>
-        public Incident()
-        {
-            _oOriginalObject = null;
-            _oCurrentObject = new ExpandoObject();
-        }
+        public Incident() : base() {}
 
         #endregion Constructors
 
