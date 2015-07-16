@@ -9,77 +9,10 @@ using Newtonsoft.Json;
 
 namespace CiresonPortalAPI
 {
-    internal class EnumJson
-    {
-        public string ID;
-        public string Text;
-        public string Name;
-        public bool HasChildren;
-
-        public EnumJson() { }
-    }
-
-    internal class EnumJsonOrdinal : EnumJson
-    {
-        public decimal Ordinal;
-    }
-
-    /// <summary>
-    /// IComparer for an Enumeration object
-    /// </summary>
-    public class EnumerationComparer : IComparer<Enumeration>
-    {
-        public int Compare(Enumeration a, Enumeration b)
-        {
-            // Null value comparison
-            if (a == null && b != null)
-                return -1;
-            else if (a == null && b == null)
-                return 0;
-            else if (a != null && b == null)
-                return 1;
-
-            // Non-null value comparison
-            if (a.Ordinal == 0 && b.Ordinal == 0)
-            {
-                // Text comparison
-                return string.Compare(a.ToString(), b.ToString());
-            }
-            else
-            {
-                // Ordinal property comparison
-                if (a.Ordinal < b.Ordinal)
-                    return -1;
-                else if (a.Ordinal > b.Ordinal)
-                    return 1;
-                else
-                    return 0;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Represents an enumeration in Service Manager
-    /// </summary>
-    public class Enumeration
+    public static partial class EnumerationController
     {
         const string LIST_ENDPOINT_TREE = "/api/V3/Enum/GetList";
         const string LIST_ENDPOINT_FLAT = "/api/V3/Enum/GetFlatList";
-
-        private Guid    _oId;
-        private string  _sText;
-        private string  _sName;
-        private bool    _bChildrenLoaded = false;
-        private bool    _bIsFlat;
-        private bool    _bHasChildren;
-        private decimal _dOrdinal;
-
-        private List<Enumeration> _lChildren;
-
-        public Guid    Id      { get { return _oId;      } }
-        public string  Text    { get { return _sText;    } }
-        public string  Name    { get { return _sName;    } }
-        public decimal Ordinal { get { return _dOrdinal; } }
 
         /// <summary>
         /// Fetches a list of enumerations from the server
@@ -137,8 +70,78 @@ namespace CiresonPortalAPI
                 throw; // Rethrow exceptions
             }
         }
+    }
 
-        private Enumeration(string id, string text, string name, bool isFlat, bool hasChildren, decimal ordinal = 0)
+    internal class EnumJson
+    {
+        public string ID;
+        public string Text;
+        public string Name;
+        public bool HasChildren;
+
+        public EnumJson() { }
+    }
+
+    internal class EnumJsonOrdinal : EnumJson
+    {
+        public decimal Ordinal;
+    }
+
+    /// <summary>
+    /// IComparer for an Enumeration object
+    /// </summary>
+    public class EnumerationComparer : IComparer<Enumeration>
+    {
+        public int Compare(Enumeration a, Enumeration b)
+        {
+            // Null value comparison
+            if (a == null && b != null)
+                return -1;
+            else if (a == null && b == null)
+                return 0;
+            else if (a != null && b == null)
+                return 1;
+
+            // Non-null value comparison
+            if (a.Ordinal == 0 && b.Ordinal == 0)
+            {
+                // Text comparison
+                return string.Compare(a.ToString(), b.ToString());
+            }
+            else
+            {
+                // Ordinal property comparison
+                if (a.Ordinal < b.Ordinal)
+                    return -1;
+                else if (a.Ordinal > b.Ordinal)
+                    return 1;
+                else
+                    return 0;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents an enumeration in Service Manager
+    /// </summary>
+    public class Enumeration
+    {
+        private Guid    _oId;
+        private string  _sText;
+        private string  _sName;
+        private bool    _bChildrenLoaded = false;
+        private bool    _bIsFlat;
+        private bool    _bHasChildren;
+        private decimal _dOrdinal;
+
+        private List<Enumeration> _lChildren;
+
+        public Guid    Id      { get { return _oId;      } }
+        public string  Text    { get { return _sText;    } }
+        public string  Name    { get { return _sName;    } }
+        public decimal Ordinal { get { return _dOrdinal; } }
+
+        internal Enumeration(string id, string text, string name, bool isFlat, bool hasChildren, decimal ordinal = 0)
         {
             _oId = new Guid(id);
             _sText = text;
