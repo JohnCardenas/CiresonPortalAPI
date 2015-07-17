@@ -94,6 +94,8 @@ namespace CiresonPortalAPI
     [JsonConverter(typeof(TypeProjectionSerializer))]
     public class TypeProjection
     {
+        const string COMMIT_ENDPOINT = "/api/V3/Projection/Commit";
+
         protected internal bool _bDirtyObject = false;
         protected internal dynamic _oOriginalObject = null;
         protected internal dynamic _oCurrentObject = null;
@@ -107,16 +109,41 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>
-        /// Attempts to update the type projection
+        /// Attempts to commit the type projection to the portal. Throws an exception if not successful.
         /// </summary>
-        /// <returns>Returns true if successful, false if not.</returns>
-        public async Task<bool> Update()
+        /// <param name="authToken">AuthorizationToken to use</param>
+        public async Task<bool> Commit(AuthorizationToken authToken)
         {
-            if (_bDirtyObject == false)
-                return false;
+            if (!authToken.IsValid)
+            {
+                throw new InvalidCredentialException("AuthorizationToken is not valid.");
+            }
 
-            return false;
-            //return await WriteObject();
+            if (!_bDirtyObject)
+                throw new CiresonApiException("Object is not dirty, Commit() aborted.");
+
+            try
+            {
+                string jsonObj = this.Serialize();
+
+                // Initialize the HTTP helper and get going
+                PortalHttpHelper helper = new PortalHttpHelper(authToken);
+                string result = await helper.PostAsync(COMMIT_ENDPOINT, jsonObj);
+
+                // Retrieve the result
+                ExpandoObjectConverter converter = new ExpandoObjectConverter();
+                dynamic resultObj = JsonConvert.DeserializeObject<ExpandoObject>(result, converter);
+
+                // Throw an exception if we didn't succeed
+                if (!resultObj.success)
+                    throw new CiresonApiException(resultObj.exception);
+            }
+            catch (Exception e)
+            {
+                throw; // Rethrow exceptions
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -144,7 +171,7 @@ namespace CiresonPortalAPI
         /// Converts this TypeProjection to a JSON string representation
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
+        public string Serialize()
         {
             return JsonConvert.SerializeObject(this);
         }
@@ -182,11 +209,11 @@ namespace CiresonPortalAPI
 
                 //"current" object
                 writer.WritePropertyName("current");
-                writer.WriteValue(JsonConvert.SerializeObject(projection._oCurrentObject));
+                writer.WriteRawValue(JsonConvert.SerializeObject(projection._oCurrentObject));
                 
                 //"original" object
                 writer.WritePropertyName("original");
-                writer.WriteValue(JsonConvert.SerializeObject(projection._oOriginalObject));
+                writer.WriteRawValue(JsonConvert.SerializeObject(projection._oOriginalObject));
 
                 writer.WriteEndObject(); // formJson
             }
