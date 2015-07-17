@@ -12,6 +12,12 @@ namespace CiresonPortalAPI
 {
     public static partial class IncidentController
     {
+        /// <summary>
+        /// Gets a list of Incidents based on the supplied criteria
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="criteria">QueryCriteria to search for</param>
+        /// <returns></returns>
         public static async Task<List<Incident>> GetIncidentsByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
             if (!authToken.IsValid)
@@ -57,6 +63,19 @@ namespace CiresonPortalAPI
                 return null;
 
             return new Incident(projectionList[0]);
+        }
+
+        /// <summary>
+        /// Creates a new Incident based on the supplied Template ID
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="templateId">TemplateID to use</param>
+        /// <param name="userId">ID of the user creating the Incident</param>
+        /// <returns></returns>
+        public static async Task<Incident> CreateNewIncident(AuthorizationToken authToken, Guid templateId, Guid userId)
+        {
+            TypeProjection projection = await TypeProjectionController.CreateProjectionByTemplate(authToken, templateId, userId);
+            return new Incident(projection);
         }
     }
 
@@ -228,11 +247,6 @@ namespace CiresonPortalAPI
             _oOriginalObject = projection._oOriginalObject;
             _oCurrentObject = projection._oCurrentObject;
         }
-
-        /// <summary>
-        /// Creates a new Incident
-        /// </summary>
-        public Incident() : base() {}
 
         #endregion Constructors
 
