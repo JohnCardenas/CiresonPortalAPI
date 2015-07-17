@@ -93,7 +93,6 @@ namespace CiresonPortalAPI
         private bool              _bWindowsAuthEnabled;
         private DateTime          _dExpirationTime;
         private PortalCredentials _oCredentials = null;
-        private ConsoleUser       _oConsoleUser = null;
 
         public   string            LanguageCode { get { return _sLanguageCode;  } }
         public   string            PortalUrl    { get { return _sPortalUrl;     } }
@@ -138,28 +137,6 @@ namespace CiresonPortalAPI
 
                 return true;
             }
-        }
-
-        /// <summary>
-        /// Caching convenience method to retrieve a ConsoleUser object
-        /// </summary>
-        /// <returns></returns>
-        public async Task<ConsoleUser> ConsoleUser()
-        {
-            if (!this.IsValid)
-                return null;
-
-            try
-            {
-                if (_oConsoleUser == null)
-                    _oConsoleUser = await UserController.GetIsUserAuthorized(this);
-            }
-            catch (Exception e)
-            {
-                throw; // Rethrow
-            }
-
-            return _oConsoleUser;
         }
     }
 }
