@@ -41,7 +41,7 @@ namespace CiresonPortalAPI
                 ExpandoObjectConverter converter = new ExpandoObjectConverter();
                 dynamic jsonObject = JsonConvert.DeserializeObject<ExpandoObject>(result, converter);
 
-                return new TypeProjection(jsonObject);
+                return new TypeProjection(jsonObject, false);
             }
             catch (Exception e)
             {
@@ -76,7 +76,7 @@ namespace CiresonPortalAPI
                 List<TypeProjection> returnList = new List<TypeProjection>();
                 foreach (var obj in objectList)
                 {
-                    returnList.Add(new TypeProjection(obj));
+                    returnList.Add(new TypeProjection(obj, true));
                 }
 
                 return returnList;
@@ -95,8 +95,8 @@ namespace CiresonPortalAPI
     public class TypeProjection
     {
         protected internal bool _bDirtyObject = false;
-        protected internal dynamic _oOriginalObject;
-        protected internal dynamic _oCurrentObject;
+        protected internal dynamic _oOriginalObject = null;
+        protected internal dynamic _oCurrentObject = null;
 
         /// <summary>
         /// Called when a property changes to set the dirty object flag
@@ -120,24 +120,41 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>
-        /// Creates a new type projection object based on an existing object
+        /// Creates a new type projection
         /// </summary>
-        /// <param name="obj"></param>
-        public TypeProjection(dynamic obj)
+        /// <param name="obj">JSON object</param>
+        /// <param name="existingObject">Is this an existing object?</param>
+        internal TypeProjection(dynamic obj, bool existingObject = false)
         {
             _oCurrentObject = obj;
-            _oOriginalObject = obj;
+
+            if (existingObject)
+                _oOriginalObject = obj;
         }
 
         /// <summary>
-        /// Creates a new type projection for a new object
+        /// Creates a blank type projection for a new object
         /// </summary>
-        public TypeProjection()
+        internal TypeProjection()
         {
             _oCurrentObject = new ExpandoObject();
-            _oOriginalObject = null;
         }
 
+        /// <summary>
+        /// Converts this TypeProjection to a JSON string representation
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+
+        /// <summary>
+        /// Deserializes an enumeration from the specified strings
+        /// </summary>
+        /// <param name="id">ID of the enumeration</param>
+        /// <param name="name">Name of the enumeration</param>
+        /// <returns></returns>
         protected Enumeration DeserializeEnumeration(string id, string name)
         {
             return new Enumeration(id, name, name, true, false);
