@@ -21,7 +21,7 @@ namespace CiresonPortalAPI
         /// <param name="groupsOnly">Should we see groups only?</param>
         /// <param name="maxNumberOfResults">Maximum number of results in this query</param>
         /// <returns></returns>
-        public static async Task<List<UserListItem>> GetUserList(AuthorizationToken authToken, string userFilter = "", bool filterByAnalyst = false, bool groupsOnly = false, int maxNumberOfResults = 10)
+        public static async Task<List<PartialUser>> GetUserList(AuthorizationToken authToken, string userFilter = "", bool filterByAnalyst = false, bool groupsOnly = false, int maxNumberOfResults = 10)
         {
             if (!authToken.IsValid)
             {
@@ -37,7 +37,7 @@ namespace CiresonPortalAPI
                 string result = await helper.GetAsync(endpoint);
 
                 // Deserialize
-                List<UserListItem> returnList = JsonConvert.DeserializeObject<List<UserListItem>>(result);
+                List<PartialUser> returnList = JsonConvert.DeserializeObject<List<PartialUser>>(result);
 
                 return returnList;
             }
@@ -51,16 +51,16 @@ namespace CiresonPortalAPI
     /// <summary>
     /// Represents a user id and name pairing
     /// </summary>
-    public class UserListItem
+    public class PartialUser
     {
-        private Guid _oId;
-        private string _sName;
+        protected Guid   _oId;
+        protected string _sName;
 
         public Guid   Id   { get { return _oId;   } }
         public string Name { get { return _sName; } }
 
         [JsonConstructor]
-        internal UserListItem(string id, string name)
+        internal PartialUser(string id, string name)
         {
             _oId   = new Guid(id);
             _sName = name;

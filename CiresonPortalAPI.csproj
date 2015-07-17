@@ -65,7 +65,7 @@
     <Compile Include="SubstringExtensions.cs" />
     <Compile Include="TemplateConstants.cs" />
     <Compile Include="User.cs" />
-    <Compile Include="UserListItem.cs" />
+    <Compile Include="PartialUser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
