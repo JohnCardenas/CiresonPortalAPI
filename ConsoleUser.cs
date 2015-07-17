@@ -35,7 +35,7 @@ namespace CiresonPortalAPI
             {
                 // Initialize the HTTP helper and get going
                 PortalHttpHelper helper = new PortalHttpHelper(authToken);
-                string result = await helper.GetAsync(IS_USER_AUTHORIZED_ENDPOINT);
+                string result = await helper.GetAsync(endpointUrl);
 
                 // Deserialize the object to an ExpandoObject and return a ConsoleUser
                 ExpandoObjectConverter converter = new ExpandoObjectConverter();
