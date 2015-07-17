@@ -128,19 +128,13 @@ namespace CiresonPortalAPI
                 writer.WritePropertyName("isDirty");
                 writer.WriteValue(workItem._bDirtyObject);
 
-                #region current object
+                //"current" object
                 writer.WritePropertyName("current");
-                writer.WriteStartObject();
-                writer.WriteValue(workItem._oCurrentObject);
-                writer.WriteEndObject();
-                #endregion current object
-
-                #region original object
+                writer.WriteValue(JsonConvert.SerializeObject(workItem._oCurrentObject));
+                
+                //"original" object
                 writer.WritePropertyName("original");
-                writer.WriteStartObject();
-                writer.WriteValue(workItem._oOriginalObject);
-                writer.WriteEndObject();
-                #endregion original object
+                writer.WriteValue(JsonConvert.SerializeObject(workItem._oOriginalObject));
 
                 writer.WriteEndObject(); // formJson
             }
