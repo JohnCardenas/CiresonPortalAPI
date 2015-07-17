@@ -99,7 +99,7 @@ namespace CiresonPortalAPI
         public Nullable<DateTime> FirstResponseDate { get { return _oCurrentObject.FirstResponseDate; } }
 
         /// <summary>Gets the ID of the Incident. Read only.</summary>
-        public string ID { get { return _oCurrentObject.Id; } }
+        public string Id { get { return _oCurrentObject.Id; } }
 
         /// <summary>Gets the date the Incident was last modified. Read only.</summary>
         public Nullable<DateTime> LastModifiedDate { get { return _oCurrentObject.LastModified; } }
