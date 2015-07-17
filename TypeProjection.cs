@@ -116,7 +116,7 @@ namespace CiresonPortalAPI
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            TypeProjection workItem = (TypeProjection)value;
+            TypeProjection projection = (TypeProjection)value;
 
             writer.WriteStartObject();
 
@@ -126,15 +126,15 @@ namespace CiresonPortalAPI
                 writer.WriteStartObject();
 
                 writer.WritePropertyName("isDirty");
-                writer.WriteValue(workItem._bDirtyObject);
+                writer.WriteValue(projection._bDirtyObject);
 
                 //"current" object
                 writer.WritePropertyName("current");
-                writer.WriteValue(JsonConvert.SerializeObject(workItem._oCurrentObject));
+                writer.WriteValue(JsonConvert.SerializeObject(projection._oCurrentObject));
                 
                 //"original" object
                 writer.WritePropertyName("original");
-                writer.WriteValue(JsonConvert.SerializeObject(workItem._oOriginalObject));
+                writer.WriteValue(JsonConvert.SerializeObject(projection._oOriginalObject));
 
                 writer.WriteEndObject(); // formJson
             }
