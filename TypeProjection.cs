@@ -12,7 +12,42 @@ namespace CiresonPortalAPI
 {
     public static partial class TypeProjectionController
     {
-        const string GET_BY_CRITERIA_ENDPOINT = "/api/V3/Projection/GetProjectionByCriteria";
+        const string GET_BY_CRITERIA_ENDPOINT               = "/api/V3/Projection/GetProjectionByCriteria";
+        const string CREATE_PROJECTION_BY_TEMPLATE_ENDPOINT = "/api/V3/Projection/CreateProjectionByTemplate";
+
+        /// <summary>
+        /// Creates an object projection from the specified template, by the specified user.
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="templateId">ID of the object template to project</param>
+        /// <param name="creatingUserId">ID of the user creating the object</param>
+        /// <returns></returns>
+        public static async Task<TypeProjection> CreateProjectionByTemplate(AuthorizationToken authToken, Guid templateId, Guid creatingUserId)
+        {
+            if (!authToken.IsValid)
+            {
+                throw new InvalidCredentialException("AuthorizationToken is not valid.");
+            }
+
+            string endpointUrl = CREATE_PROJECTION_BY_TEMPLATE_ENDPOINT + "/" + templateId.ToString("D") + "?createdById=" + creatingUserId.ToString("D");
+
+            try
+            {
+                // Initialize the HTTP helper and get going
+                PortalHttpHelper helper = new PortalHttpHelper(authToken);
+                string result = await helper.GetAsync(endpointUrl);
+
+                // Convert the result into a TypeProjection and return it
+                ExpandoObjectConverter converter = new ExpandoObjectConverter();
+                dynamic jsonObject = JsonConvert.DeserializeObject<ExpandoObject>(result, converter);
+
+                return new TypeProjection(jsonObject);
+            }
+            catch (Exception e)
+            {
+                throw; // Rethrow exceptions
+            }
+        }
 
         /// <summary>
         /// Queries the Cireson Portal for objects using specified criteria.
