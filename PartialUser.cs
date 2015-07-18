@@ -56,8 +56,8 @@ namespace CiresonPortalAPI
         protected Guid   _oId;
         protected string _sName;
 
-        public Guid   Id   { get { return _oId;   } }
-        public string Name { get { return _sName; } }
+        public virtual Guid   Id   { get { return _oId;   } }
+        public virtual string Name { get { return _sName; } }
 
         [JsonConstructor]
         internal PartialUser(string id, string name)
