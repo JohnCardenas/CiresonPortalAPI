@@ -52,6 +52,7 @@
     <Compile Include="CiresonApiException.cs" />
     <Compile Include="ClassConstants.cs" />
     <Compile Include="ConsoleUser.cs" />
+    <Compile Include="DynamicObjectHelpers.cs" />
     <Compile Include="Incident.cs" />
     <Compile Include="PortalCredentials.cs" />
     <Compile Include="PortalHttpHelper.cs" />

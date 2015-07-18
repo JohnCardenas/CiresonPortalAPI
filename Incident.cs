@@ -274,7 +274,8 @@ namespace CiresonPortalAPI
             _oCurrentObject = projection._oCurrentObject;
 
             // Related objects
-            _oAffectedUser = new User(_oCurrentObject.RequestedWorkItem);
+            if (DynamicObjectHelpers.HasProperty(_oCurrentObject, "RequestedWorkItem"))
+                _oAffectedUser = new User(_oCurrentObject.RequestedWorkItem);
         }
 
         #endregion Constructors
