@@ -81,6 +81,8 @@ namespace CiresonPortalAPI
 
     public class Incident : TypeProjection
     {
+        private User _oAffectedUser = null;
+
         #region Read-Only Properties
 
         /// <summary>Gets the date the Incident was closed. Read only.</summary>
@@ -236,6 +238,30 @@ namespace CiresonPortalAPI
 
         #endregion Read-Write Properties
 
+        #region Relationship Properties
+
+        /// <summary>
+        /// Returns the properties of the Affected User. Read only.
+        /// </summary>
+        public User AffectedUser { get { return _oAffectedUser; } }
+
+        #endregion Relationship Properties
+
+        #region Relationship Setters
+
+        /// <summary>
+        /// Sets the Affected User of this Incident.
+        /// </summary>
+        /// <param name="user">User to set as the Affected User</param>
+        public void SetAffectedUser(User user)
+        {
+            // Set the new Affected User
+            _oCurrentObject.RequestedWorkItem = user._oUserObj;
+            _oAffectedUser = new User(_oCurrentObject.RequestedWorkItem);
+        }
+
+        #endregion Relationship Setters
+
         #region Constructors
 
         /// <summary>
@@ -246,6 +272,9 @@ namespace CiresonPortalAPI
         {
             _oOriginalObject = projection._oOriginalObject;
             _oCurrentObject = projection._oCurrentObject;
+
+            // Related objects
+            _oAffectedUser = new User(_oCurrentObject.RequestedWorkItem);
         }
 
         #endregion Constructors
