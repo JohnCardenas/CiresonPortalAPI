@@ -93,7 +93,7 @@ namespace CiresonPortalAPI
         /// <summary>
         /// Returns the user's ID. Read-only.
         /// </summary>
-        public Guid Id { get { return new Guid((String)_oUserObj.ObjectGuid); } }
+        public Guid Id { get { return new Guid((String)_oUserObj.BaseId); } }
 
         /// <summary>
         /// Returns the user's initials. Read-only.
@@ -156,6 +156,13 @@ namespace CiresonPortalAPI
         public string Zip { get { return _oUserObj.Zip; } }
 
         #endregion Read-Only Properties
+
+        public User(PartialUser user)
+        {
+            _oUserObj = new ExpandoObject();
+            _oUserObj.BaseId = user.Id;
+            _oUserObj.DisplayName = user.Name;
+        }
 
         internal User(dynamic obj)
         {
