@@ -97,6 +97,7 @@ namespace CiresonPortalAPI
         const string COMMIT_ENDPOINT = "/api/V3/Projection/Commit";
 
         protected internal bool _bDirtyObject = false;
+        protected internal bool _bReadOnly = true;
         protected internal dynamic _oOriginalObject = null;
         protected internal dynamic _oCurrentObject = null;
 
@@ -114,10 +115,11 @@ namespace CiresonPortalAPI
         /// <param name="authToken">AuthorizationToken to use</param>
         public async Task<bool> Commit(AuthorizationToken authToken)
         {
+            if (_bReadOnly)
+                throw new CiresonApiException("Cannot commit a read-only type projection.");
+
             if (!authToken.IsValid)
-            {
                 throw new InvalidCredentialException("AuthorizationToken is not valid.");
-            }
 
             if (!_bDirtyObject)
                 throw new CiresonApiException("Object is not dirty, Commit() aborted.");
