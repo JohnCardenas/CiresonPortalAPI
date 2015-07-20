@@ -272,6 +272,7 @@ namespace CiresonPortalAPI
         {
             _oOriginalObject = projection._oOriginalObject;
             _oCurrentObject = projection._oCurrentObject;
+            _bReadOnly = false;
 
             // Related objects
             if (DynamicObjectHelpers.HasProperty(_oCurrentObject, "RequestedWorkItem"))
