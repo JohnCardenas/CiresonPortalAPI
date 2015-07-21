@@ -18,142 +18,142 @@ namespace CiresonPortalAPI
         /// <summary>
         /// Returns the user's business phone number. Read-only.
         /// </summary>
-        public string BusinessPhone { get { return _oUserObj.BusinessPhone; } }
+        public string BusinessPhone { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "BusinessPhone"); } }
 
         /// <summary>
         /// Returns the user's second business phone number. Read-only.
         /// </summary>
-        public string BusinessPhone2 { get { return _oUserObj.BusinessPhone2; } }
+        public string BusinessPhone2 { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "BusinessPhone2"); } }
 
         /// <summary>
         /// Returns the user's city. Read-only.
         /// </summary>
-        public string City { get { return _oUserObj.City; } }
+        public string City { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "City"); } }
 
         /// <summary>
         /// Returns the user's company. Read-only.
         /// </summary>
-        public string Company { get { return _oUserObj.Company; } }
+        public string Company { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Company"); } }
 
         /// <summary>
         /// Returns the user's country. Read-only.
         /// </summary>
-        public string Country { get { return _oUserObj.Country; } }
+        public string Country { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Country"); } }
 
         /// <summary>
         /// Returns the user's department. Read-only.
         /// </summary>
-        public string Department { get { return _oUserObj.Department; } }
+        public string Department { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Department"); } }
 
         /// <summary>
         /// Returns the user's display name. Read-only.
         /// </summary>
-        public string DisplayName { get { return _oUserObj.DisplayName; } }
+        public string DisplayName { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "DisplayName"); } }
 
         /// <summary>
         /// Returns the user's distinguished name. Read-only.
         /// </summary>
-        public string DistinguishedName { get { return _oUserObj.DistinguishedName; } }
+        public string DistinguishedName { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "DistinguishedName"); } }
 
         /// <summary>
         /// Returns the user's domain. Read-only.
         /// </summary>
-        public string Domain { get { return _oUserObj.Domain; } }
+        public string Domain { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Domain"); } }
 
         /// <summary>
         /// Returns the user's employee id. Read-only.
         /// </summary>
-        public string EmployeeId { get { return _oUserObj.EmployeeId; } }
+        public string EmployeeId { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "EmployeeId"); } }
 
         /// <summary>
         /// Returns the user's fax number. Read-only.
         /// </summary>
-        public string Fax { get { return _oUserObj.Fax; } }
+        public string Fax { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Fax"); } }
 
         /// <summary>
         /// Returns the user's first name. Read-only.
         /// </summary>
-        public string FirstName { get { return _oUserObj.FirstName; } }
+        public string FirstName { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "FirstName"); } }
 
         /// <summary>
         /// Returns the fully qualified domain name the user belongs to. Read-only.
         /// </summary>
-        public string FQDN { get { return _oUserObj.FQDN; } }
+        public string FQDN { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "FQDN"); } }
 
         /// <summary>
         /// Returns the user's home phone number. Read-only.
         /// </summary>
-        public string HomePhone { get { return _oUserObj.HomePhone; } }
+        public string HomePhone { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "HomePhone"); } }
 
         /// <summary>
         /// Returns the user's second home phone number. Read-only.
         /// </summary>
-        public string HomePhone2 { get { return _oUserObj.HomePhone2; } }
+        public string HomePhone2 { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "HomePhone2"); } }
 
         /// <summary>
         /// Returns the user's ID. Read-only.
         /// </summary>
-        public Guid Id { get { return new Guid((String)_oUserObj.BaseId); } }
+        public Guid Id { get { return new Guid(DynamicObjectHelpers.GetProperty<string>(_oUserObj, "BaseId")); } }
 
         /// <summary>
         /// Returns the user's initials. Read-only.
         /// </summary>
-        public string Initials { get { return _oUserObj.Initials; } }
+        public string Initials { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Initials"); } }
 
         /// <summary>
         /// Returns the user's last name. Read-only.
         /// </summary>
-        public string LastName { get { return _oUserObj.LastName; } }
+        public string LastName { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "LastName"); } }
 
         /// <summary>
         /// Returns the user's mobile phone number. Read-only.
         /// </summary>
-        public string Mobile { get { return _oUserObj.Mobile; } }
+        public string Mobile { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Mobile"); } }
 
         /// <summary>
         /// Returns the user's office. Read-only.
         /// </summary>
-        public string Office { get { return _oUserObj.Office; } }
+        public string Office { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Office"); } }
 
         /// <summary>
         /// Returns the organizational unit of the user. Read-only.
         /// </summary>
-        public string OrganizationalUnit { get { return _oUserObj.OrganizationalUnit; } }
+        public string OrganizationalUnit { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "OrganizationalUnit"); } }
 
         /// <summary>
         /// Returns the user's pager number. Read-only.
         /// </summary>
-        public string Pager { get { return _oUserObj.Pager; } }
+        public string Pager { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Pager"); } }
 
         /// <summary>
         /// Returns the user's state. Read-only.
         /// </summary>
-        public string State { get { return _oUserObj.State; } }
+        public string State { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "State"); } }
 
         /// <summary>
         /// Returns the user's street address. Read-only.
         /// </summary>
-        public string StreetAddress { get { return _oUserObj.StreetAddress; } }
+        public string StreetAddress { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "StreetAddress"); } }
 
         /// <summary>
         /// Returns the title of this user object. Read-only.
         /// </summary>
-        public string Title { get { return _oUserObj.Title; } }
+        public string Title { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Title"); } }
 
         /// <summary>
         /// Returns the userPrincipalName of the user. Read-only.
         /// </summary>
-        public string UPN { get { return _oUserObj.UPN; } }
+        public string UPN { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "UPN"); } }
 
         /// <summary>
         /// Returns the sAMAccountName of the user. Read-only.
         /// </summary>
-        public string UserName { get { return _oUserObj.UserName; } }
+        public string UserName { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "UserName"); } }
 
         /// <summary>
         /// Returns the user's zip code. Read-only.
         /// </summary>
-        public string Zip { get { return _oUserObj.Zip; } }
+        public string Zip { get { return DynamicObjectHelpers.GetProperty<string>(_oUserObj, "Zip"); } }
 
         #endregion Read-Only Properties
 
@@ -167,6 +167,11 @@ namespace CiresonPortalAPI
         internal User(dynamic obj)
         {
             _oUserObj = obj;
+        }
+
+        public override string ToString()
+        {
+            return DisplayName;
         }
     }
 }
