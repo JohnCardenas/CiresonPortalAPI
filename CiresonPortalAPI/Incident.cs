@@ -48,7 +48,7 @@ namespace CiresonPortalAPI
         public static async Task<Incident> GetIncidentByID(AuthorizationToken authToken, string incidentID)
         {
             QueryCriteriaExpression expression = new QueryCriteriaExpression();
-            expression.PropertyName = "$Context/Property[Type='a604b942-4c7b-2fb2-28dc-61dc6f465c68']/28b1c58f-aefa-a449-7496-4805186bd94f$";
+            expression.PropertyName = "$Context/Property[Type='a604b942-4c7b-2fb2-28dc-61dc6f465c68']/28b1c58f-aefa-a449-7496-4805186bd94f$"; // FIXME
             expression.PropertyType = QueryCriteriaPropertyType.Property;
             expression.Operator = QueryCriteriaExpressionOperator.Equal;
             expression.Value = incidentID;
@@ -243,7 +243,7 @@ namespace CiresonPortalAPI
         /// <summary>
         /// Returns the properties of the Affected User. Read only.
         /// </summary>
-        public User AffectedUser { get { return _oAffectedUser; } }
+        public User AffectedUser { get { return _oAffectedUser; } set { SetAffectedUser(value); } }
 
         #endregion Relationship Properties
 
@@ -253,7 +253,7 @@ namespace CiresonPortalAPI
         /// Sets the Affected User of this Incident.
         /// </summary>
         /// <param name="user">User to set as the Affected User</param>
-        public void SetAffectedUser(User user)
+        private void SetAffectedUser(User user)
         {
             // Set the new Affected User
             _oCurrentObject.RequestedWorkItem = user._oUserObj;
