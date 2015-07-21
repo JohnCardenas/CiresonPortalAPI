@@ -186,7 +186,7 @@ namespace CiresonPortalAPI
         /// <returns></returns>
         protected Enumeration DeserializeEnumeration(string id, string name)
         {
-            return new Enumeration(id, name, name, true, false);
+            return new Enumeration(new Guid(id), name, name, true, false);
         }
     }
 
