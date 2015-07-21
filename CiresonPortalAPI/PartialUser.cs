@@ -20,8 +20,10 @@ namespace CiresonPortalAPI
         /// <param name="filterByAnalyst">Should we filter by analysts?</param>
         /// <param name="groupsOnly">Should we see groups only?</param>
         /// <param name="maxNumberOfResults">Maximum number of results in this query</param>
+        /// <param name="sort">If true, this list will be sorted before returning it</param>
+        /// <param name="insertNullItem">If true, a null item will be inserted as the first item</param>
         /// <returns></returns>
-        public static async Task<List<PartialUser>> GetUserList(AuthorizationToken authToken, string userFilter = "", bool filterByAnalyst = false, bool groupsOnly = false, int maxNumberOfResults = 10)
+        public static async Task<List<PartialUser>> GetUserList(AuthorizationToken authToken, string userFilter = "", bool filterByAnalyst = false, bool groupsOnly = false, int maxNumberOfResults = 10, bool sort = true, bool insertNullItem = true)
         {
             if (!authToken.IsValid)
             {
@@ -38,6 +40,16 @@ namespace CiresonPortalAPI
 
                 // Deserialize
                 List<PartialUser> returnList = JsonConvert.DeserializeObject<List<PartialUser>>(result);
+
+                if (sort)
+                {
+                    returnList.Sort(new PartialUserComparer());
+                }
+
+                if (insertNullItem)
+                {
+                    returnList.Insert(0, new PartialUser(new Guid(), string.Empty));
+                }
 
                 return returnList;
             }
@@ -62,13 +74,27 @@ namespace CiresonPortalAPI
         [JsonConstructor]
         internal PartialUser(string id, string name)
         {
-            _oId   = new Guid(id);
+            _oId = new Guid(id);
+            _sName = name;
+        }
+
+        internal PartialUser(Guid id, string name)
+        {
+            _oId   = id;
             _sName = name;
         }
 
         public override string ToString()
         {
             return Name;
+        }
+    }
+
+    internal class PartialUserComparer : IComparer<PartialUser>
+    {
+        public int Compare(PartialUser a, PartialUser b)
+        {
+            return string.Compare(a.ToString(), b.ToString());
         }
     }
 }
