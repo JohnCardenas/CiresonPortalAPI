@@ -86,41 +86,41 @@ namespace CiresonPortalAPI
         #region Read-Only Properties
 
         /// <summary>Gets the date the Incident was closed. Read only.</summary>
-        public Nullable<DateTime> ClosedDate { get { return _oCurrentObject.ClosedDate; } }
+        public Nullable<DateTime> ClosedDate { get { return DynamicObjectHelpers.GetProperty<Nullable<DateTime>>(_oCurrentObject, "ClosedDate"); } }
 
         /// <summary>Gets the date the Incident was created. Read only.</summary>
-        public Nullable<DateTime> CreatedDate { get { return _oCurrentObject.CreatedDate; } }
+        public Nullable<DateTime> CreatedDate { get { return DynamicObjectHelpers.GetProperty<Nullable<DateTime>>(_oCurrentObject, "CreatedDate"); } }
 
         /// <summary>Gets the DisplayName of the Incident. Read only.</summary>
-        public string DisplayName { get { return _oCurrentObject.DisplayName; } }
+        public string DisplayName { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "DisplayName"); } }
 
         /// <summary>Gets the date the Incident was first assigned. Read only.</summary>
-        public Nullable<DateTime> FirstAssignedDate { get { return _oCurrentObject.FirstAssignedDate; } }
+        public Nullable<DateTime> FirstAssignedDate { get { return DynamicObjectHelpers.GetProperty<Nullable<DateTime>>(_oCurrentObject, "FirstAssignedDate"); } }
 
         /// <summary>Gets the date the Incident was first responded to. Read only.</summary>
-        public Nullable<DateTime> FirstResponseDate { get { return _oCurrentObject.FirstResponseDate; } }
+        public Nullable<DateTime> FirstResponseDate { get { return DynamicObjectHelpers.GetProperty<Nullable<DateTime>>(_oCurrentObject, "FirstResponseDate"); } }
 
         /// <summary>Gets the ID of the Incident. Read only.</summary>
-        public string Id { get { return _oCurrentObject.Id; } }
+        public string Id { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "Id"); } }
 
         /// <summary>Gets the date the Incident was last modified. Read only.</summary>
-        public Nullable<DateTime> LastModifiedDate { get { return _oCurrentObject.LastModified; } }
+        public Nullable<DateTime> LastModifiedDate { get { return DynamicObjectHelpers.GetProperty<Nullable<DateTime>>(_oCurrentObject, "LastModified"); } }
 
         /// <summary>Gets the priority of this Incident. Read only.</summary>
-        public int Priority { get { return _oCurrentObject.Priority; } }
+        public int Priority { get { return DynamicObjectHelpers.GetProperty<int>(_oCurrentObject, "Priority"); } }
 
         /// <summary>Gets the date the Incident was resolved. Read only.</summary>
-        public Nullable<DateTime> ResolvedDate { get { return _oCurrentObject.ResolvedDate; } }
+        public Nullable<DateTime> ResolvedDate { get { return DynamicObjectHelpers.GetProperty<Nullable<DateTime>>(_oCurrentObject, "ResolvedDate"); } }
 
         /// <summary>Gets the Incident's target resolution time. Read only.</summary>
-        public Nullable<DateTime> TargetResolutionTime { get { return _oCurrentObject.TargetResolutionTime; } }
+        public Nullable<DateTime> TargetResolutionTime { get { return DynamicObjectHelpers.GetProperty<Nullable<DateTime>>(_oCurrentObject, "TargetResolutionTime"); } }
 
         #endregion Read-Only Properties
 
         #region Read-Write Properties
 
         /// <summary>Gets or sets the Incident's description.</summary>
-        public string Description { get { return _oCurrentObject.Description; } set { _oCurrentObject.Description = value; SetDirtyBit(); } }
+        public string Description { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "Description"); } set { _oCurrentObject.Description = value; SetDirtyBit(); } }
 
         /// <summary>Gets or sets the Incident's classification.</summary>
         public Enumeration Classification
@@ -138,7 +138,7 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>Gets or sets the Incident's escalation status.</summary>
-        public bool Escalated { get { return _oCurrentObject.Escalated; } set { _oCurrentObject.Escalated = value; SetDirtyBit(); } }
+        public bool Escalated { get { return DynamicObjectHelpers.GetProperty<bool>(_oCurrentObject, "Escalated"); } set { _oCurrentObject.Escalated = value; SetDirtyBit(); } }
 
         /// <summary>Gets or sets the Incident's impact.</summary>
         public Enumeration Impact
@@ -171,7 +171,7 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>Gets or sets the Incident's resolution description.</summary>
-        public string ResolutionDescription { get { return _oCurrentObject.ResolutionDescription; } set { _oCurrentObject.ResolutionDescription = value; SetDirtyBit(); } }
+        public string ResolutionDescription { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "ResolutionDescription"); } set { _oCurrentObject.ResolutionDescription = value; SetDirtyBit(); } }
 
         /// <summary>Gets or sets the Incident's source.</summary>
         public Enumeration Source
@@ -219,7 +219,7 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>Gets or sets the Incident's title.</summary>
-        public string Title { get { return _oCurrentObject.Title; } set { _oCurrentObject.Title = value; SetDirtyBit(); } }
+        public string Title { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "Title"); } set { _oCurrentObject.Title = value; SetDirtyBit(); } }
 
         /// <summary>Gets or sets the Incident's urgency.</summary>
         public Enumeration Urgency
