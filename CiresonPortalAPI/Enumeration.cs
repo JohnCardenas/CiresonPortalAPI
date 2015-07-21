@@ -20,9 +20,11 @@ namespace CiresonPortalAPI
         /// <param name="authToken">Authorization token</param>
         /// <param name="enumList">Enumeration list to fetch</param>
         /// <param name="flatten">If true, flatten the entire enumeration tree into one list; if false, only return the first-level items</param>
+        /// <param name="sort">If true, sorts the list before returning it</param>
+        /// <param name="insertNullItem">If true, add a null item to the list as the first item</param>
         /// <returns></returns>
         /// 
-        public static async Task<List<Enumeration>> GetEnumerationList(AuthorizationToken authToken, Guid enumList, bool flatten)
+        public static async Task<List<Enumeration>> GetEnumerationList(AuthorizationToken authToken, Guid enumList, bool flatten, bool sort, bool insertNullItem)
         {
             if (!authToken.IsValid)
             {
@@ -48,7 +50,7 @@ namespace CiresonPortalAPI
                     {
                         // Skip empty enumerations
                         if (jEnum.ID != Guid.Empty.ToString())
-                            returnList.Add(new Enumeration(jEnum.ID, jEnum.Text, jEnum.Name, flatten, jEnum.HasChildren));
+                            returnList.Add(new Enumeration(new Guid(jEnum.ID), jEnum.Text, jEnum.Name, flatten, jEnum.HasChildren));
                     }
                 }
                 else
@@ -59,8 +61,18 @@ namespace CiresonPortalAPI
                     {
                         // Skip empty enumerations
                         if (jEnum.ID != Guid.Empty.ToString())
-                            returnList.Add(new Enumeration(jEnum.ID, jEnum.Text, jEnum.Name, flatten, jEnum.HasChildren, jEnum.Ordinal));
+                            returnList.Add(new Enumeration(new Guid(jEnum.ID), jEnum.Text, jEnum.Name, flatten, jEnum.HasChildren, jEnum.Ordinal));
                     }
+                }
+
+                if (sort)
+                {
+                    returnList.Sort(new EnumerationComparer());
+                }
+
+                if (insertNullItem)
+                {
+                    returnList.Insert(0, new Enumeration(new Guid(), string.Empty, string.Empty, true, false));
                 }
 
                 return returnList;
@@ -90,7 +102,7 @@ namespace CiresonPortalAPI
     /// <summary>
     /// IComparer for an Enumeration object
     /// </summary>
-    public class EnumerationComparer : IComparer<Enumeration>
+    internal class EnumerationComparer : IComparer<Enumeration>
     {
         public int Compare(Enumeration a, Enumeration b)
         {
@@ -141,9 +153,9 @@ namespace CiresonPortalAPI
         public string  Name    { get { return _sName;    } }
         public decimal Ordinal { get { return _dOrdinal; } }
 
-        internal Enumeration(string id, string text, string name, bool isFlat, bool hasChildren, decimal ordinal = 0)
+        internal Enumeration(Guid id, string text, string name, bool isFlat, bool hasChildren, decimal ordinal = 0)
         {
-            _oId = new Guid(id);
+            _oId = id;
             _sText = text;
             _sName = name;
             _bIsFlat = isFlat;
