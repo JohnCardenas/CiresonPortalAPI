@@ -188,6 +188,17 @@ namespace CiresonPortalAPI
         {
             return new Enumeration(new Guid(id), name, name, true, false);
         }
+
+        /// <summary>
+        /// Deserializes an enumeration from the specified Guid and string
+        /// </summary>
+        /// <param name="id">ID of the enumeration</param>
+        /// <param name="name">Name of the enumeration</param>
+        /// <returns></returns>
+        protected Enumeration DeserializeEnumeration(Guid id, string name)
+        {
+            return new Enumeration(id, name, name, true, false);
+        }
     }
 
     /// <summary>
