@@ -131,8 +131,7 @@ namespace CiresonPortalAPI
             }
             set
             {
-                _oCurrentObject.Classification.Id = value.Id;
-                _oCurrentObject.Classification.Name = value.Name;
+                SetEnumerationValue(_oCurrentObject.Classification, value);
                 SetDirtyBit();
             }
         }
@@ -149,8 +148,7 @@ namespace CiresonPortalAPI
             }
             set
             {
-                _oCurrentObject.Impact.Id = value.Id;
-                _oCurrentObject.Impact.Name = value.Name;
+                SetEnumerationValue(_oCurrentObject.Impact, value);
                 SetDirtyBit();
             }
         }
@@ -164,8 +162,7 @@ namespace CiresonPortalAPI
             }
             set
             {
-                _oCurrentObject.ResolutionCategory.Id = value.Id;
-                _oCurrentObject.ResolutionCategory.Name = value.Name;
+                SetEnumerationValue(_oCurrentObject.ResolutionCategory, value);
                 SetDirtyBit();
             }
         }
@@ -182,8 +179,7 @@ namespace CiresonPortalAPI
             }
             set
             {
-                _oCurrentObject.Source.Id = value.Id;
-                _oCurrentObject.Source.Name = value.Name;
+                SetEnumerationValue(_oCurrentObject.Source, value);
                 SetDirtyBit();
             }
         }
@@ -197,8 +193,7 @@ namespace CiresonPortalAPI
             }
             set
             {
-                _oCurrentObject.Status.Id = value.Id;
-                _oCurrentObject.Status.Name = value.Name;
+                SetEnumerationValue(_oCurrentObject.Status, value);
                 SetDirtyBit();
             }
         }
@@ -212,8 +207,7 @@ namespace CiresonPortalAPI
             }
             set
             {
-                _oCurrentObject.TierQueue.Id = value.Id;
-                _oCurrentObject.TierQueue.Name = value.Name;
+                SetEnumerationValue(_oCurrentObject.TierQueue, value);
                 SetDirtyBit();
             }
         }
@@ -230,8 +224,7 @@ namespace CiresonPortalAPI
             }
             set
             {
-                _oCurrentObject.Urgency.Id = value.Id;
-                _oCurrentObject.Urgency.Name = value.Name;
+                SetEnumerationValue(_oCurrentObject.Urgency, value);
                 SetDirtyBit();
             }
         }
