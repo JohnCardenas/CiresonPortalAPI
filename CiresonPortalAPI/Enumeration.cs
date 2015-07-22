@@ -72,7 +72,7 @@ namespace CiresonPortalAPI
 
                 if (insertNullItem)
                 {
-                    returnList.Insert(0, new Enumeration(new Guid(), string.Empty, string.Empty, true, false));
+                    returnList.Insert(0, new Enumeration(Guid.Empty, string.Empty, string.Empty, true, false));
                 }
 
                 return returnList;
