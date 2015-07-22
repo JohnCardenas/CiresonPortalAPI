@@ -186,6 +186,9 @@ namespace CiresonPortalAPI
         /// <returns></returns>
         protected Enumeration DeserializeEnumeration(string id, string name)
         {
+            if (string.IsNullOrEmpty(id))
+                return null;
+
             return new Enumeration(new Guid(id), name, name, true, false);
         }
 
@@ -197,7 +200,29 @@ namespace CiresonPortalAPI
         /// <returns></returns>
         protected Enumeration DeserializeEnumeration(Guid id, string name)
         {
+            if (id == null)
+                return null;
+
             return new Enumeration(id, name, name, true, false);
+        }
+
+        /// <summary>
+        /// Sets an underlying data model enumeration if the Enumeration object's ID is not empty
+        /// </summary>
+        /// <param name="objectEnum">Object enumeration to set</param>
+        /// <param name="enumValue">Enumeration object to set as the value</param>
+        protected void SetEnumerationValue(dynamic objectEnum, Enumeration enumValue)
+        {
+            if (enumValue.Id == Guid.Empty)
+            {
+                objectEnum.Id = null;
+                objectEnum.Name = string.Empty;
+            }
+            else
+            {
+                objectEnum.Id = enumValue.Id;
+                objectEnum.Name = enumValue.Name;
+            }
         }
     }
 
