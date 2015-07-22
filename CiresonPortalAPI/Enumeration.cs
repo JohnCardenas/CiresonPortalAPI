@@ -136,7 +136,7 @@ namespace CiresonPortalAPI
     /// <summary>
     /// Represents an enumeration in Service Manager
     /// </summary>
-    public class Enumeration
+    public class Enumeration : IEquatable<Enumeration>
     {
         private Guid    _oId;
         private string  _sText;
@@ -161,6 +161,46 @@ namespace CiresonPortalAPI
             _bIsFlat = isFlat;
             _bHasChildren = hasChildren;
             _dOrdinal = ordinal;
+        }
+
+        /// <summary>
+        /// Compares another Enumeration for equality
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Enumeration other)
+        {
+            if (other == null)
+                return false;
+
+            return (this.Id.ToString() == other.Id.ToString());
+        }
+
+        /// <summary>
+        /// Casts another object to an Enumeration and checks for equality
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            Enumeration enumObj = obj as Enumeration;
+
+            if (enumObj == null)
+                return false;
+            else
+                return Equals(enumObj);
+        }
+
+        /// <summary>
+        /// Override base GetHashCode() for IEquatable
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
         }
 
         public override string ToString()
