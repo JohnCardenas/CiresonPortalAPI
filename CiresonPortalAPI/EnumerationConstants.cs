@@ -38,6 +38,9 @@ namespace CiresonPortalAPI
 
                 /// <summary>IncidentTierQueuesEnum</summary>
                 public static Guid TierQueues { get { return new Guid("{c3264527-a501-029f-6872-31300080b3bf}"); } }
+
+                /// <summary>Alias for IncidentTierQueuesEnum</summary>
+                public static Guid SupportGroups { get { return TierQueues; } }
             }
             /// <summary>
             /// Incident enumeration built-in values
