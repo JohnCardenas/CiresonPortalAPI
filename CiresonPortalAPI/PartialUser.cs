@@ -48,7 +48,7 @@ namespace CiresonPortalAPI
 
                 if (insertNullItem)
                 {
-                    returnList.Insert(0, new PartialUser(new Guid(), string.Empty));
+                    returnList.Insert(0, new PartialUser(Guid.Empty, string.Empty));
                 }
 
                 return returnList;
