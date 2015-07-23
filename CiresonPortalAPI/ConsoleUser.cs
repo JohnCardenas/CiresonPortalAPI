@@ -356,5 +356,14 @@ namespace CiresonPortalAPI
         }
 
         #endregion Constructors
+
+        /// <summary>
+        /// Converts this ConsoleUser object to a standard User object
+        /// </summary>
+        /// <returns></returns>
+        public User ToUser()
+        {
+            return new User(_oConsoleUser);
+        }
     }
 }
