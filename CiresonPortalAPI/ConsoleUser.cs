@@ -14,6 +14,7 @@ namespace CiresonPortalAPI
     public static partial class UserController
     {
         const string IS_USER_AUTHORIZED_ENDPOINT = "/api/V3/User/IsUserAuthorized";
+        const string GET_TIER_QUEUES_ENDPOINT = "/api/V3/User/GetUsersTierQueueEnumerations";
 
         /// <summary>
         /// Queries the Cireson Portal for the specified user's security rights
@@ -41,7 +42,10 @@ namespace CiresonPortalAPI
                 ExpandoObjectConverter converter = new ExpandoObjectConverter();
                 dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(result, converter);
 
-                return new ConsoleUser(obj);
+                ConsoleUser returnObj = new ConsoleUser(obj);
+                returnObj.IncidentSupportGroups = await UserController.GetUsersTierQueueEnumerations(authToken, returnObj);
+
+                return returnObj;
             }
             catch (Exception e)
             {
@@ -58,6 +62,43 @@ namespace CiresonPortalAPI
         {
             return await GetIsUserAuthorized(authToken, authToken.UserName, authToken.Domain);
         }
+
+        /// <summary>
+        /// Returns a list of tier queue (support group) enumerations that the specified ConsoleUser is a member of
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="user">ConsoleUser token</param>
+        /// <returns></returns>
+        internal static async Task<List<Enumeration>> GetUsersTierQueueEnumerations(AuthorizationToken authToken, ConsoleUser user)
+        {
+            if (!authToken.IsValid)
+            {
+                throw new InvalidCredentialException("AuthorizationToken is not valid.");
+            }
+
+            string endpointUrl = GET_TIER_QUEUES_ENDPOINT + "/" + user.Id.ToString("D");
+
+            try
+            {
+                PortalHttpHelper helper = new PortalHttpHelper(authToken);
+                string result = await helper.GetAsync(endpointUrl);
+
+                dynamic obj = JsonConvert.DeserializeObject<List<ExpandoObject>>(result, new ExpandoObjectConverter());
+
+                List<Enumeration> returnList = new List<Enumeration>();
+
+                foreach (var enumJson in obj)
+                {
+                    returnList.Add(new Enumeration(enumJson.Id, enumJson.Text, enumJson.Name, true, false));
+                }
+
+                return returnList;
+            }
+            catch (Exception e)
+            {
+                throw; // Rethrow exceptions
+            }
+        }
     }
 
     /// <summary>
@@ -66,6 +107,7 @@ namespace CiresonPortalAPI
     public class ConsoleUser
     {
         private dynamic _oConsoleUser;
+        private List<Enumeration> _lIncidentSupportGroups;
 
         #region User Properties
         /// <summary>
@@ -117,6 +159,11 @@ namespace CiresonPortalAPI
         /// User's employee ID. Read only.
         /// </summary>
         public string EmployeeId { get { return _oConsoleUser.EmployeeId; } }
+
+        /// <summary>
+        /// List of Incident Support Groups for which this user is a member. Read only.
+        /// </summary>
+        public List<Enumeration> IncidentSupportGroups { get { return _lIncidentSupportGroups; } internal set { _lIncidentSupportGroups = value; } }
 
         #endregion User Properties
 
