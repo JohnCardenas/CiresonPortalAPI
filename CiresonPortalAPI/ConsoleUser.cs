@@ -363,7 +363,11 @@ namespace CiresonPortalAPI
         /// <returns></returns>
         public User ToUser()
         {
-            return new User(_oConsoleUser);
+            dynamic userObj = new ExpandoObject();
+            userObj.BaseId = this.Id;
+            userObj.DisplayName = this.Name;
+
+            return new User(userObj);
         }
     }
 }
