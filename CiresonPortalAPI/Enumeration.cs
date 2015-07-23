@@ -163,6 +163,8 @@ namespace CiresonPortalAPI
             _dOrdinal = ordinal;
         }
 
+        internal Enumeration(string id, string text, string name, bool isFlat, bool hasChildren, decimal ordinal = 0) : this(new Guid(id), text, name, isFlat, hasChildren, ordinal) {}
+
         /// <summary>
         /// Compares another Enumeration for equality
         /// </summary>
