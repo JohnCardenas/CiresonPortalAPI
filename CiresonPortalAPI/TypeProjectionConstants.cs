@@ -90,6 +90,12 @@ namespace CiresonPortalAPI
         public static Guid Invoice { get { return new Guid("{3333dfb2-ad14-f7c1-98dd-fec564c5a98a}"); } }
 
         /// <summary>
+        /// Knowledge Article (advanced)
+        /// System.Knowledge.ArticleProjection
+        /// </summary>
+        public static Guid KnowledgeArticle { get { return new Guid("{c421d300-5c3e-621b-73e8-e85e37aae4b7}"); } }
+
+        /// <summary>
         /// Cireson Lease (Full)
         /// Cireson.AssetManagement.Lease
         /// </summary>
@@ -106,12 +112,6 @@ namespace CiresonPortalAPI
         /// Cireson.AssetManagement.Location
         /// </summary>
         public static Guid Location { get { return new Guid("{1887019a-8451-848e-ae65-23b385a97037}"); } }
-
-        /// <summary>
-        /// Knowledge Article (advanced)
-        /// System.Knowledge.ArticleProjection
-        /// </summary>
-        public static Guid KnowledgeArticle { get { return new Guid("{c421d300-5c3e-621b-73e8-e85e37aae4b7}"); } }
 
         /// <summary>
         /// Manual Activity (advanced)
