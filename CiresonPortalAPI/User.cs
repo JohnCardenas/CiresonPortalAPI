@@ -93,7 +93,7 @@ namespace CiresonPortalAPI
         /// <summary>
         /// Returns the user's ID. Read-only.
         /// </summary>
-        public Guid Id { get { return new Guid(DynamicObjectHelpers.GetProperty<string>(_oUserObj, "BaseId")); } }
+        public Guid Id { get { return DynamicObjectHelpers.GetProperty<Guid>(_oUserObj, "BaseId"); } }
 
         /// <summary>
         /// Returns the user's initials. Read-only.
