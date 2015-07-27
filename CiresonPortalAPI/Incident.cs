@@ -239,7 +239,7 @@ namespace CiresonPortalAPI
         /// </summary>
         public User AffectedUser { get { return _oAffectedUser; } set { SetAffectedUser(value); } }
 
-        public User AssignedToUser { get { return _oAssignedToUser; } set { SetAffectedUser(value); } }
+        public User AssignedToUser { get { return _oAssignedToUser; } set { SetAssignedToUser(value); } }
 
         #endregion Relationship Properties
 
