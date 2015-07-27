@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Dynamic;
+using System.ComponentModel;
 
 namespace CiresonPortalAPI
 {
@@ -35,7 +36,11 @@ namespace CiresonPortalAPI
 
             var exp = expando as IDictionary<string, Object>;
 
-            return (T)Convert.ChangeType(exp[key], typeof(T));
+            // If we're natively dealing with a Guid, return it
+            if ((typeof(T) == typeof(Guid)) && (exp[key] is Guid))
+                return (T)exp[key];
+            else
+                return (T)Convert.ChangeType(exp[key], typeof(T));
         }
     }
 }
