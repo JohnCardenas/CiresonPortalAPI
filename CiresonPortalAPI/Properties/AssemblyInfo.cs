@@ -48,9 +48,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.*")]
 
 /**
- * AssemblyInformationalVersion is what users would understand the version of the assembly to be, and is in the format "(Major).(Minor) (RevisionDescriptor)"
+ * AssemblyInformationalVersion is what users would understand the version of the assembly to be, and is in the format "(Major).(Minor).(Patch)"
  */
-[assembly: AssemblyInformationalVersion("1.0")]
+[assembly: AssemblyInformationalVersion("1.0.0")]
 
 /**
  * Milestones:
