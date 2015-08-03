@@ -48,7 +48,7 @@ namespace CiresonPortalAPI
         public static async Task<Incident> GetIncidentByID(AuthorizationToken authToken, string incidentID)
         {
             QueryCriteriaExpression expression = new QueryCriteriaExpression();
-            expression.PropertyName = "$Context/Property[Type='a604b942-4c7b-2fb2-28dc-61dc6f465c68']/28b1c58f-aefa-a449-7496-4805186bd94f$"; // FIXME
+            expression.PropertyName = (new PropertyPathHelper(ClassConstants.Incident, "ID")).ToString();
             expression.PropertyType = QueryCriteriaPropertyType.Property;
             expression.Operator = QueryCriteriaExpressionOperator.Equal;
             expression.Value = incidentID;
