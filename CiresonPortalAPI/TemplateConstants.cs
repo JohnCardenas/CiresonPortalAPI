@@ -31,5 +31,17 @@ namespace CiresonPortalAPI
             /// </summary>
             public static Guid Default { get { return new Guid("{03bc9162-041f-c987-8ce4-a5547cd9ca04}"); } }
         }
+
+        /// <summary>
+        /// Built-in templates for Cireson Hardware Assets
+        /// </summary>
+        public static class HardwareAsset
+        {
+            /// <summary>
+            /// Asset Management Hardware Asset Template (HardwareAssetTempate)
+            /// Cireson Asset Management Hardware Asset Tempate (Portal)
+            /// </summary>
+            public static Guid Default { get { return new Guid("5b20b20f-0e6d-556b-8247-9b53e2393b73"); } }
+        }
     }
 }
