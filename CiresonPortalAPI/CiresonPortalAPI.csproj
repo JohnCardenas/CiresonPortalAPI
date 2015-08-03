@@ -54,12 +54,14 @@
     <Compile Include="ClassConstants.cs" />
     <Compile Include="ConsoleUser.cs" />
     <Compile Include="DynamicObjectHelpers.cs" />
+    <Compile Include="HardwareAsset.cs" />
     <Compile Include="Incident.cs" />
     <Compile Include="PortalCredentials.cs" />
     <Compile Include="PortalHttpHelper.cs" />
     <Compile Include="EnumerationConstants.cs" />
     <Compile Include="Enumeration.cs" />
     <Compile Include="AuthorizationToken.cs" />
+    <Compile Include="PropertyPath.cs" />
     <Compile Include="QueryCriteria.cs" />
     <Compile Include="TypeProjection.cs" />
     <Compile Include="TypeProjectionConstants.cs" />
