@@ -86,6 +86,31 @@ namespace CiresonPortalAPI
                 throw; // Rethrow exceptions
             }
         }
+
+        /// <summary>
+        /// Helper method that queries for TypeProjections using the specified criteria, then converts them to desired type T
+        /// </summary>
+        /// <typeparam name="T">CiresonPortalAPI object type</typeparam>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="criteria">QueryCriteria rules</param>
+        /// <returns>List of specific CiresonPortalAPI objects</returns>
+        internal static async Task<List<T>> GenericToSpecific<T>(AuthorizationToken authToken, QueryCriteria criteria)
+        {
+            if (!authToken.IsValid)
+            {
+                throw new InvalidCredentialException("AuthorizationToken is not valid.");
+            }
+
+            List<T> returnList = new List<T>();
+
+            List<TypeProjection> projectionList = await TypeProjectionController.GetProjectionByCriteria(authToken, criteria);
+            foreach (TypeProjection projection in projectionList)
+            {
+                returnList.Add((T)Activator.CreateInstance(typeof(T), new object[] { projection }));
+            }
+
+            return returnList;
+        }
     }
 
     /// <summary>
