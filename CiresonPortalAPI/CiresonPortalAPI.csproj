@@ -61,7 +61,8 @@
     <Compile Include="EnumerationConstants.cs" />
     <Compile Include="Enumeration.cs" />
     <Compile Include="AuthorizationToken.cs" />
-    <Compile Include="PropertyPath.cs" />
+    <Compile Include="PropertyPathHelper.cs" />
+    <Compile Include="PurchaseOrder.cs" />
     <Compile Include="QueryCriteria.cs" />
     <Compile Include="TypeProjection.cs" />
     <Compile Include="TypeProjectionConstants.cs" />
