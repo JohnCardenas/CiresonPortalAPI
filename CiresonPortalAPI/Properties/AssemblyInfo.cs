@@ -40,17 +40,17 @@ using System.Runtime.InteropServices;
 /**
  * AssemblyVersion is in the format "(Major).(Minor)"
  */
-[assembly: AssemblyVersion("1.0")]
+[assembly: AssemblyVersion("1.1")]
 
 /**
  * AssemblyFileVersion is in the format "(Major).(Minor).(Build).(Revision)"; automatically generate Build and Revision
  */
-[assembly: AssemblyFileVersion("1.0.*")]
+[assembly: AssemblyFileVersion("1.1.*")]
 
 /**
  * AssemblyInformationalVersion is what users would understand the version of the assembly to be, and is in the format "(Major).(Minor).(Patch)"
  */
-[assembly: AssemblyInformationalVersion("1.0.0")]
+[assembly: AssemblyInformationalVersion("1.1.0")]
 
 /**
  * Milestones:
