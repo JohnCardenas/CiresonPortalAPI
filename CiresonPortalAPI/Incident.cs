@@ -42,12 +42,12 @@ namespace CiresonPortalAPI
             criteria.GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression;
             criteria.Expressions.Add(expression);
 
-            List<TypeProjection> projectionList = await TypeProjectionController.GetProjectionByCriteria(authToken, criteria);
+            List<Incident> incidentList = await IncidentController.GetIncidentsByCriteria(authToken, criteria);
 
-            if (projectionList.Count == 0)
+            if (incidentList.Count == 0)
                 return null;
 
-            return new Incident(projectionList[0]);
+            return incidentList[0];
         }
 
         /// <summary>
