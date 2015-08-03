@@ -39,8 +39,45 @@ namespace CiresonPortalAPI
     }
 
 
-    public class HardwareAsset
+    public class HardwareAsset : TypeProjection
     {
+        #region Read-Only Properties
 
+        /// <summary>
+        /// Returns this hardware asset's Hardware Asset ID. Read only.
+        /// </summary>
+        public Guid HardwareAssetID { get { return DynamicObjectHelpers.GetProperty<Guid>(_oCurrentObject, "HardwareAssetID"); } }
+
+        #endregion Read-Only Properties
+
+        #region Read-Write Properties
+
+        /// <summary>
+        /// Date this hardware asset was received.
+        /// </summary>
+        public Nullable<DateTime> ReceivedDate { get { return DynamicObjectHelpers.GetProperty<DateTime>(_oCurrentObject, "ReceivedDate"); } }
+
+        #endregion Read-Write Properties
+
+        #region Relationship Properties
+        #endregion Relationship Properties
+
+        #region Relationship Setters
+        #endregion Relationship Setters
+
+        #region Constructors
+
+        /// <summary>
+        /// Constructor used internally when an existing object has been queried
+        /// </summary>
+        /// <param name="projection">Parent type projection</param>
+        internal HardwareAsset(TypeProjection projection)
+        {
+            _oOriginalObject = projection._oOriginalObject;
+            _oCurrentObject = projection._oCurrentObject;
+            _bReadOnly = false;
+        }
+
+        #endregion Constructors
     }
 }
