@@ -20,23 +20,8 @@ namespace CiresonPortalAPI
         /// <returns></returns>
         public static async Task<List<Incident>> GetIncidentsByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
-            if (!authToken.IsValid)
-            {
-                throw new InvalidCredentialException("AuthorizationToken is not valid.");
-            }
-
             criteria.ProjectionID = TypeProjectionConstants.Incident;
-
-            List<Incident> returnList = new List<Incident>();
-
-            // Get the raw Incident TypeProjections and convert them
-            List<TypeProjection> projectionList = await TypeProjectionController.GetProjectionByCriteria(authToken, criteria);
-            foreach (TypeProjection projection in projectionList)
-            {
-                returnList.Add(new Incident(projection));
-            }
-
-            return returnList;
+            return await TypeProjectionController.GenericToSpecific<Incident>(authToken, criteria);
         }
 
         /// <summary>
