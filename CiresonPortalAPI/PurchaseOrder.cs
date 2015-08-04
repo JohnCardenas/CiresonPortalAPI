@@ -144,11 +144,17 @@ namespace CiresonPortalAPI
         /// Constructor used internally when an existing object has been queried
         /// </summary>
         /// <param name="projection">Parent type projection</param>
-        internal PurchaseOrder(TypeProjection projection)
+        internal PurchaseOrder(TypeProjection projection) : this((ExpandoObject)projection._oCurrentObject) { }
+
+        /// <summary>
+        /// Constructor used to build a PurchaseOrder from a JSON data set
+        /// </summary>
+        /// <param name="obj"></param>
+        internal PurchaseOrder(dynamic obj)
         {
-            _oOriginalObject = projection._oOriginalObject;
-            _oCurrentObject = projection._oCurrentObject;
-            _bReadOnly = false;
+            _oOriginalObject = obj;
+            _oCurrentObject = obj;
+            _bReadOnly = false;            
         }
 
         #endregion Constructors
