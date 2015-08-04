@@ -239,6 +239,7 @@ namespace CiresonPortalAPI
             // Set the new Affected User
             _oCurrentObject.RequestedWorkItem = user._oUserObj;
             _oAffectedUser = new User(_oCurrentObject.RequestedWorkItem);
+            SetDirtyBit();
         }
 
         /// <summary>
@@ -250,6 +251,7 @@ namespace CiresonPortalAPI
             // Set the new Assigned To User
             _oCurrentObject.AssignedWorkItem = user._oUserObj;
             _oAssignedToUser = new User(_oCurrentObject.AssignedWorkItem);
+            SetDirtyBit();
         }
 
         #endregion Relationship Setters

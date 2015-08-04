@@ -79,6 +79,7 @@ namespace CiresonPortalAPI
             // Set the new Affected User
             _oCurrentObject.Target_HardwareAssetHasPurchaseOrder = order._oCurrentObject;
             _oPurchaseOrder = new PurchaseOrder(_oCurrentObject.Target_HardwareAssetHasPurchaseOrder);
+            SetDirtyBit();
         }
 
         #region Relationship Setters
