@@ -123,5 +123,22 @@ namespace CiresonPortalAPI
                 }
             }
         }
+        /// <summary>
+        /// Enumerations for Cireson Purchase Orders
+        /// </summary>
+        public static class PurchaseOrder
+        {
+            /// <summary>
+            /// Purchase Order enumeration lists
+            /// </summary>
+            public static class Lists
+            {
+                /// <summary>Cireson.AssetManagement.PurchaseOrderStatusEnum</summary>
+                public static Guid PurchaseOrderStatus { get { return new Guid("{4150e434-e09e-70db-3573-eec1fff96bd4}"); } }
+
+                /// <summary>Cireson.AssetManagement.PurchaseOrderTypeEnum</summary>
+                public static Guid PurchaseOrderType { get { return new Guid("{2e654705-a8bc-d13f-7013-d5d1d7fc529c}"); } }
+            }
+        }
     }
 }
