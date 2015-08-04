@@ -41,6 +41,8 @@ namespace CiresonPortalAPI
 
     public class HardwareAsset : TypeProjection
     {
+        private PurchaseOrder _oPurchaseOrder = null;
+
         #region Read-Only Properties
 
         /// <summary>
@@ -60,7 +62,24 @@ namespace CiresonPortalAPI
         #endregion Read-Write Properties
 
         #region Relationship Properties
+
+        /// <summary>
+        /// Gets or sets the PurchaseOrder related to this HardwareAsset
+        /// </summary>
+        public PurchaseOrder PurchaseOrder { get { return _oPurchaseOrder; } set { SetPurchaseOrder(value); } }
+
         #endregion Relationship Properties
+
+        /// <summary>
+        /// Sets the PurchaseOrder of this HardwareAsset.
+        /// </summary>
+        /// <param name="user">User to set as the Affected User</param>
+        private void SetPurchaseOrder(PurchaseOrder order)
+        {
+            // Set the new Affected User
+            _oCurrentObject.Target_HardwareAssetHasPurchaseOrder = order._oCurrentObject;
+            _oPurchaseOrder = new PurchaseOrder(_oCurrentObject.Target_HardwareAssetHasPurchaseOrder);
+        }
 
         #region Relationship Setters
         #endregion Relationship Setters
@@ -76,6 +95,10 @@ namespace CiresonPortalAPI
             _oOriginalObject = projection._oOriginalObject;
             _oCurrentObject = projection._oCurrentObject;
             _bReadOnly = false;
+
+            // Related objects
+            if (DynamicObjectHelpers.HasProperty(_oCurrentObject, "Target_HardwareAssetHasPurchaseOrder"))
+                _oPurchaseOrder = new PurchaseOrder(_oCurrentObject.Target_HardwareAssetHasPurchaseOrder);
         }
 
         #endregion Constructors
