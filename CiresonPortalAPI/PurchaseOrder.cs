@@ -28,15 +28,15 @@ namespace CiresonPortalAPI
         /// Convenience method that returns a list of Purchase Orders with the specified order type
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="purchaseOrderType">Purchase Order Type</param>
+        /// <param name="poTypeGuid">Purchase Order Type ID to search for</param>
         /// <returns></returns>
-        public static async Task<List<PurchaseOrder>> GetPurchaseOrdersByType(AuthorizationToken authToken, Enumeration purchaseOrderType)
+        public static async Task<List<PurchaseOrder>> GetPurchaseOrdersByType(AuthorizationToken authToken, Guid poTypeGuid)
         {
             QueryCriteriaExpression expression = new QueryCriteriaExpression();
             expression.PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder, "PurchaseOrderType")).ToString();
             expression.PropertyType = QueryCriteriaPropertyType.Property;
             expression.Operator = QueryCriteriaExpressionOperator.Equal;
-            expression.Value = purchaseOrderType.Id.ToString("B");
+            expression.Value = poTypeGuid.ToString("B");
 
             QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.PurchaseOrder);
             criteria.GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression;
@@ -48,6 +48,17 @@ namespace CiresonPortalAPI
                 return null;
 
             return purchaseOrderList;
+        }
+
+        /// <summary>
+        /// Overloaded method, takes an Enumeration instead of a GUID
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="purchaseOrderType">Purchase Order Type to search for</param>
+        /// <returns></returns>
+        public static async Task<List<PurchaseOrder>> GetPurchaseOrdersByType(AuthorizationToken authToken, Enumeration purchaseOrderType)
+        {
+            return await GetPurchaseOrdersByType(authToken, purchaseOrderType.Id);
         }
     }
 
