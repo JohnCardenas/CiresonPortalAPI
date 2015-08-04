@@ -7,6 +7,8 @@ using System.Security.Authentication;
 using System.Dynamic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System.Reflection;
+using System.Globalization;
 
 namespace CiresonPortalAPI
 {
@@ -106,7 +108,17 @@ namespace CiresonPortalAPI
             List<TypeProjection> projectionList = await TypeProjectionController.GetProjectionByCriteria(authToken, criteria);
             foreach (TypeProjection projection in projectionList)
             {
-                returnList.Add((T)Activator.CreateInstance(typeof(T), new object[] { projection }));
+                // Use binding flags to find internal constructors
+                BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance;
+                CultureInfo culture = null;
+
+                // Build parameters list
+                object[] parameters = new object[1];
+                parameters[0] = projection;
+
+                // Instantiate and add to the list
+                var instanceType = (T)Activator.CreateInstance(typeof(T), flags, null, parameters, culture);
+                returnList.Add(instanceType);
             }
 
             return returnList;
