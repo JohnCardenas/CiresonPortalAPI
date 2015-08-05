@@ -32,15 +32,27 @@ namespace CiresonPortalAPI
         /// <returns></returns>
         public static async Task<List<PurchaseOrder>> GetPurchaseOrdersByType(AuthorizationToken authToken, Guid poTypeGuid)
         {
-            QueryCriteriaExpression expression = new QueryCriteriaExpression();
-            expression.PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder, "PurchaseOrderType")).ToString();
-            expression.PropertyType = QueryCriteriaPropertyType.Property;
-            expression.Operator = QueryCriteriaExpressionOperator.Equal;
-            expression.Value = poTypeGuid.ToString("B");
+            QueryCriteriaExpression expression = new QueryCriteriaExpression
+            {
+                PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder, "PurchaseOrderType")).ToString(),
+                PropertyType = QueryCriteriaPropertyType.Property,
+                Operator = QueryCriteriaExpressionOperator.Equal,
+                Value = poTypeGuid.ToString("B")
+            };
+
+            // Purchase Orders inherit System.ConfigItem, so we need to exclude Deleted and PendingDeletion POs
+            QueryCriteriaExpression activeItemsOnly = new QueryCriteriaExpression
+            {
+                PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder, "ObjectStatus")).ToString(),
+                PropertyType = QueryCriteriaPropertyType.Property,
+                Operator = QueryCriteriaExpressionOperator.Equal,
+                Value = EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active.ToString("B")
+            };
 
             QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.PurchaseOrder);
-            criteria.GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression;
+            criteria.GroupingOperator = QueryCriteriaGroupingOperator.And;
             criteria.Expressions.Add(expression);
+            criteria.Expressions.Add(activeItemsOnly);
 
             List<PurchaseOrder> purchaseOrderList = await PurchaseOrderController.GetPurchaseOrdersByCriteria(authToken, criteria);
 
