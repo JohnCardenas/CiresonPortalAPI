@@ -34,13 +34,25 @@ namespace CiresonPortalAPI
             if (!HasProperty(expando, key))
                 return default(T);
 
+            Type t = typeof(T);
+            Type u = Nullable.GetUnderlyingType(t);
+
             var exp = expando as IDictionary<string, Object>;
 
             // If we're natively dealing with a Guid, return it
-            if ((typeof(T) == typeof(Guid)) && (exp[key] is Guid))
+            if ((t == typeof(Guid)) && (exp[key] is Guid))
+            {
                 return (T)exp[key];
+            }
+            // If we have a nullable type we need to handle it differently
+            else if (u != null)
+            {
+                return (exp[key] == null) ? default(T) : (T)Convert.ChangeType(exp[key], u);
+            }
             else
-                return (T)Convert.ChangeType(exp[key], typeof(T));
+            {
+                return (T)Convert.ChangeType(exp[key], t);
+            }
         }
     }
 }
