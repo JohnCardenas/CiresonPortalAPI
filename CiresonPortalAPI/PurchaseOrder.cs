@@ -156,7 +156,36 @@ namespace CiresonPortalAPI
         #endregion Read-Write Properties
 
         #region Relationship Properties
+
+        /// <summary>
+        /// Returns a list of all child Purchase Orders. Read only.
+        /// </summary>
+        public List<PurchaseOrder> Children { get { return GetChildPurchaseOrders(); } }
+
         #endregion Relationship Properties
+
+        #region Relationship Getters
+
+        /// <summary>
+        /// Retrieves all child POs from the underlying data model and returns them as a list
+        /// </summary>
+        /// <returns></returns>
+        private List<PurchaseOrder> GetChildPurchaseOrders()
+        {
+            List<PurchaseOrder> poList = new List<PurchaseOrder>();
+
+            if (DynamicObjectHelpers.HasProperty(_oCurrentObject, "Target_PurchaseOrderHasChildPurchaseOrder"))
+            {
+                foreach (dynamic obj in _oCurrentObject.Target_PurchaseOrderHasChildPurchaseOrder)
+                {
+                    poList.Add(new PurchaseOrder(obj));
+                }
+            }
+
+            return poList;
+        }
+
+        #endregion
 
         #region Relationship Setters
         #endregion Relationship Setters
@@ -177,7 +206,7 @@ namespace CiresonPortalAPI
         {
             _oOriginalObject = obj;
             _oCurrentObject = obj;
-            _bReadOnly = false;            
+            _bReadOnly = false;
         }
 
         #endregion Constructors
