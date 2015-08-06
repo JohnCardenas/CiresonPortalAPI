@@ -11,13 +11,19 @@ namespace CiresonPortalAPI
 {
     public static partial class HardwareAssetController
     {
+        public static async Task<List<HardwareAsset>> GetHardwareAssetsByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
+        {
+            criteria.ProjectionID = TypeProjectionConstants.HardwareAsset;
+            return await TypeProjectionController.GenericToSpecific<HardwareAsset>(authToken, criteria);
+        }
+
         /// <summary>
-        /// Convenience method that returns a HardwareAsset by its Asset Tag
+        /// Convenience method that returns a HardwareAsset by its asset tag
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="assetTag">Asset Tag to retrieve</param>
+        /// <param name="assetTag">Asset's unique asset tag</param>
         /// <returns>HardwareAsset</returns>
-        public static async Task<HardwareAsset> GetAssetByAssetTag(AuthorizationToken authToken, string assetTag)
+        public static async Task<HardwareAsset> GetHardwareAssetByAssetTag(AuthorizationToken authToken, string assetTag)
         {
             QueryCriteriaExpression expression = new QueryCriteriaExpression();
             expression.PropertyName = (new PropertyPathHelper(ClassConstants.HardwareAsset, "AssetTag")).ToString();
@@ -34,6 +40,9 @@ namespace CiresonPortalAPI
             if (projectionList.Count == 0)
                 return null;
 
+            if (projectionList.Count > 1)
+                throw new Exception("More than one asset found with the same asset tag!");
+
             return new HardwareAsset(projectionList[0]);
         }
     }
@@ -45,14 +54,39 @@ namespace CiresonPortalAPI
 
         #region Read-Only Properties
 
-        /// <summary>
-        /// Returns this hardware asset's Hardware Asset ID. Read only.
-        /// </summary>
-        public Guid HardwareAssetID { get { return DynamicObjectHelpers.GetProperty<Guid>(_oCurrentObject, "HardwareAssetID"); } }
-
         #endregion Read-Only Properties
 
         #region Read-Write Properties
+
+        /// <summary>
+        /// Gets or sets this hardware asset's asset tag.
+        /// </summary>
+        public string AssetTag { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "AssetTag"); } set { _oCurrentObject.AssetTag = value; SetDirtyBit(); } }
+
+        /// <summary>
+        /// Gets or sets this hardware asset's unique hardware asset ID.
+        /// </summary>
+        public string HardwareAssetID { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "HardwareAssetID"); } set { _oCurrentObject.HardwareAssetID = value; SetDirtyBit(); } }
+
+        /// <summary>
+        /// Gets or sets this hardware asset's manufacturer.
+        /// </summary>
+        public string Manufacturer { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "Manufacturer"); } set { _oCurrentObject.Manufacturer = value; SetDirtyBit(); } }
+
+        /// <summary>
+        /// Gets or sets this hardware asset's model.
+        /// </summary>
+        public string Model { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "Model"); } set { _oCurrentObject.Model = value; SetDirtyBit(); } }
+
+        /// <summary>
+        /// Gets or sets this hardware asset's name.
+        /// </summary>
+        public string Name { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "Name"); } set { _oCurrentObject.Name = value; SetDirtyBit(); } }
+
+        /// <summary>
+        /// Gets or sets this hardware asset's serial number.
+        /// </summary>
+        public string SerialNumber { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "SerialNumber"); } set { _oCurrentObject.SerialNumber = value; SetDirtyBit(); } }
 
         /// <summary>
         /// Date this hardware asset was received.
