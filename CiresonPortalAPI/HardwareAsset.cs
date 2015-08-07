@@ -59,9 +59,9 @@ namespace CiresonPortalAPI
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="id">HardwareAssetID</param>
         /// <returns></returns>
-        public static async Task<HardwareAsset> GetHardwareAssetByID(AuthorizationToken authToken, Guid id)
+        public static async Task<HardwareAsset> GetHardwareAssetByID(AuthorizationToken authToken, string id)
         {
-            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "HardwareAssetID"), id.ToString("B"));
+            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "HardwareAssetID"), id);
             List<HardwareAsset> assetList = await HardwareAssetController.GetHardwareAssetsByCriteria(authToken, criteria);
 
             if (assetList == null)
