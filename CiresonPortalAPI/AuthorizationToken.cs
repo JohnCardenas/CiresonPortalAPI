@@ -28,6 +28,8 @@ namespace CiresonPortalAPI
         /// <param name="userName">User name</param>
         /// <param name="password">User's password</param>
         /// <param name="languageCode">Portal language code</param>
+        /// <exception cref="System.Security.Authentication.InvalidCredentialException">Thrown when user credentials are invalid.</exception>
+        /// <exception cref="CiresonPortalAPI.CiresonApiException">Thrown when an error occurs in the API.</exception>
         /// <returns></returns>
         public static async Task<AuthorizationToken> GetAuthorizationToken(string portalUrl, string userName, SecureString password, string languageCode = "ENU")
         {
@@ -51,7 +53,7 @@ namespace CiresonPortalAPI
                 // Return the authorization token
                 return new AuthorizationToken(portalUrl, credentials, languageCode, result, windowsAuthEnabled);
             }
-            catch (Exception e)
+            catch
             {
                 throw; // Rethrow exceptions
             }

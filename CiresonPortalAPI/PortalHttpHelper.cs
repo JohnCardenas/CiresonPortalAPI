@@ -50,6 +50,7 @@ namespace CiresonPortalAPI
         /// Overloaded constructor with an Authorization header; suitable for connecting to endpoints other than /Authorization/GetToken
         /// </summary>
         /// <param name="authToken">AuthorizationToken object</param>
+        /// <exception cref="CiresonPortalAPI.CiresonApiException"></exception>
         public PortalHttpHelper(AuthorizationToken authToken) : this(authToken.PortalUrl, authToken.Credentials, authToken.WindowsAuthEnabled)
         {
             if (!authToken.IsValid)
@@ -66,6 +67,8 @@ namespace CiresonPortalAPI
         /// <param name="url">URL to POST to</param>
         /// <param name="payload">Data to POST</param>
         /// <returns>Result message from the server</returns>
+        /// <exception cref="System.Security.Authentication.InvalidCredentialException"></exception>
+        /// <exception cref="CiresonPortalAPI.CiresonApiException"></exception>
         public async Task<string> PostAsync(string url, string payload)
         {
             try
@@ -85,6 +88,8 @@ namespace CiresonPortalAPI
         /// </summary>
         /// <param name="url">URL to GET from</param>
         /// <returns>Result message from the server</returns>
+        /// <exception cref="System.Security.Authentication.InvalidCredentialException"></exception>
+        /// <exception cref="CiresonPortalAPI.CiresonApiException"></exception>
         public async Task<string> GetAsync(string url)
         {
             try
@@ -104,6 +109,9 @@ namespace CiresonPortalAPI
         /// </summary>
         /// <param name="response">HttpResponseMessage from the server</param>
         /// <returns>Task&lt;string&gt;</returns>
+        /// <exception cref="System.Security.Authentication.InvalidCredentialException">Thrown when an invalid username or password is supplied.</exception>
+        /// <exception cref="CiresonPortalAPI.CiresonApiException">Thrown when an internal server error (HTTP 500) occurs.</exception>
+        /// <exception cref="System.Net.Http.HttpRequestException">Thrown when any other HTTP exception occurs.</exception>
         private async Task<string> ProcessResponse(HttpResponseMessage response)
         {
             string result = string.Empty;
@@ -129,7 +137,7 @@ namespace CiresonPortalAPI
                 {
                     response.EnsureSuccessStatusCode();
                 }
-                catch (Exception e)
+                catch (HttpRequestException)
                 {
                     // Rethrow exception
                     throw;
