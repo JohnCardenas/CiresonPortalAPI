@@ -120,7 +120,7 @@ namespace CiresonPortalAPI
             {
                 result = await response.Content.ReadAsStringAsync();
             }
-            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            else if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
             {
                 throw new InvalidCredentialException("Invalid username or password.");
             }
