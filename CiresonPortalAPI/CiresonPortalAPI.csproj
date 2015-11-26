@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CiresonApiException.cs" />
+    <Compile Include="CiresonException.cs" />
     <Compile Include="ClassConstants.cs" />
     <Compile Include="ConsoleUser.cs" />
     <Compile Include="DynamicObjectHelpers.cs" />
