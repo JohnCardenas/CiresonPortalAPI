@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Dynamic;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
-using System.Security.Authentication;
-using System.Dynamic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.Reflection;
-using System.Globalization;
 
 namespace CiresonPortalAPI
 {
@@ -20,11 +22,12 @@ namespace CiresonPortalAPI
         /// <summary>
         /// Creates an object projection from the specified template, by the specified user.
         /// </summary>
+        /// <typeparam name="T">Type of projection to create</typeparam>
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="templateId">ID of the object template to project</param>
         /// <param name="creatingUserId">ID of the user creating the object</param>
         /// <returns></returns>
-        public static async Task<TypeProjection> CreateProjectionByTemplate(AuthorizationToken authToken, Guid templateId, Guid creatingUserId)
+        public static async Task<T> CreateProjectionByTemplate<T>(AuthorizationToken authToken, Guid templateId, Guid creatingUserId) where T : TypeProjection
         {
             if (!authToken.IsValid)
             {
@@ -43,7 +46,7 @@ namespace CiresonPortalAPI
                 ExpandoObjectConverter converter = new ExpandoObjectConverter();
                 dynamic jsonObject = JsonConvert.DeserializeObject<ExpandoObject>(result, converter);
 
-                return new TypeProjection(jsonObject, false);
+                return (T)Activator.CreateInstance(typeof(T), new object[] { jsonObject, false });
             }
             catch (Exception e)
             {
@@ -57,7 +60,7 @@ namespace CiresonPortalAPI
         /// <param name="authToken">AuthenticationToken to use</param>
         /// <param name="criteria">QueryCriteria rules</param>
         /// <returns>List of ExpandoObjects</returns>
-        public static async Task<List<TypeProjection>> GetProjectionByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
+        public static async Task<List<T>> GetProjectionByCriteria<T>(AuthorizationToken authToken, QueryCriteria criteria) where T : TypeProjection
         {
             if (!authToken.IsValid)
             {
@@ -75,10 +78,17 @@ namespace CiresonPortalAPI
                 dynamic objectList = JsonConvert.DeserializeObject<List<ExpandoObject>>(result, converter);
 
                 // Convert the ExpandoObjects into proper TypeProjection objects
-                List<TypeProjection> returnList = new List<TypeProjection>();
-                foreach (var obj in objectList)
+                List<T> returnList = new List<T>();
+                foreach (ExpandoObject obj in objectList)
                 {
-                    returnList.Add(new TypeProjection(obj, true));
+                    // Instantiate and add to the list
+                    T instanceType = Activator.CreateInstance<T>();
+
+                    instanceType.OriginalObject = obj;
+                    instanceType.CurrentObject = obj;
+                    instanceType.ReadOnly = false;
+
+                    returnList.Add(instanceType);
                 }
 
                 return returnList;
@@ -88,77 +98,107 @@ namespace CiresonPortalAPI
                 throw; // Rethrow exceptions
             }
         }
-
-        /// <summary>
-        /// Helper method that queries for TypeProjections using the specified criteria, then converts them to desired type T
-        /// </summary>
-        /// <typeparam name="T">CiresonPortalAPI object type</typeparam>
-        /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="criteria">QueryCriteria rules</param>
-        /// <returns>List of specific CiresonPortalAPI objects</returns>
-        internal static async Task<List<T>> GenericToSpecific<T>(AuthorizationToken authToken, QueryCriteria criteria)
-        {
-            if (!authToken.IsValid)
-            {
-                throw new InvalidCredentialException("AuthorizationToken is not valid.");
-            }
-
-            List<T> returnList = new List<T>();
-
-            List<TypeProjection> projectionList = await TypeProjectionController.GetProjectionByCriteria(authToken, criteria);
-            foreach (TypeProjection projection in projectionList)
-            {
-                // Use binding flags to find internal constructors
-                BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance;
-                CultureInfo culture = null;
-
-                // Build parameters list
-                object[] parameters = new object[1];
-                parameters[0] = projection;
-
-                // Instantiate and add to the list
-                var instanceType = (T)Activator.CreateInstance(typeof(T), flags, null, parameters, culture);
-                returnList.Add(instanceType);
-            }
-
-            return returnList;
-        }
     }
 
     /// <summary>
     /// TypeProjection
     /// </summary>
     [JsonConverter(typeof(TypeProjectionSerializer))]
-    public class TypeProjection
+    public abstract class TypeProjection : INotifyPropertyChanged
     {
+        #region Constants
         const string COMMIT_ENDPOINT = "/api/V3/Projection/Commit";
+        #endregion // Constants
 
-        protected internal bool _bDirtyObject = false;
-        protected internal bool _bReadOnly = true;
-        protected internal dynamic _oOriginalObject = null;
-        protected internal dynamic _oCurrentObject = null;
+        #region Events
+        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion // Events
 
-        /// <summary>
-        /// Called when a property changes to set the dirty object flag
-        /// </summary>
-        protected void SetDirtyBit()
+        #region Fields
+        private bool _bDirtyObject = false;
+        private bool _bReadOnly = true;
+        private dynamic _oOriginalObject = null;
+        private dynamic _oCurrentObject = null;
+        #endregion // Fields
+
+        #region Properties
+        internal dynamic OriginalObject
         {
-            _bDirtyObject = true;
+            get { return _oOriginalObject; }
+            set { _oOriginalObject = value; }
         }
 
+        internal dynamic CurrentObject
+        {
+            get { return _oCurrentObject; }
+            set { _oCurrentObject = value; }
+        }
+
+        public bool DirtyObject
+        {
+            get { return _bDirtyObject; }
+            set { _bDirtyObject = value; }
+        }
+
+        public bool ReadOnly
+        {
+            get { return _bReadOnly; }
+            set { _bReadOnly = value; }
+        }
+        #endregion // Properties
+
+        #region Constructors
+        /// <summary>
+        /// Creates a new type projection
+        /// </summary>
+        /// <param name="obj">JSON object</param>
+        /// <param name="existingObject">Is this an existing object?</param>
+        /// <param name="readOnly">Should this object be read only?</param>
+        internal TypeProjection(ExpandoObject obj, bool existingObject = false, bool readOnly = true)
+        {
+            this.CurrentObject = obj;
+
+            if (existingObject)
+                this.OriginalObject = obj;
+
+            this.ReadOnly = readOnly;
+        }
+
+        /// <summary>
+        /// Creates a copy of a TypeProjection from another TypeProjection
+        /// </summary>
+        /// <param name="otherProjection"></param>
+        internal TypeProjection(TypeProjection otherProjection)
+        {
+            this.CurrentObject = otherProjection.CurrentObject;
+            this.OriginalObject = otherProjection.OriginalObject;
+            this.DirtyObject = otherProjection.DirtyObject;
+            this.ReadOnly = otherProjection.ReadOnly;
+        }
+
+        /// <summary>
+        /// Creates a blank type projection for a new object
+        /// </summary>
+        internal TypeProjection()
+        {
+            this.CurrentObject = new ExpandoObject();
+        }
+        #endregion // Constructors
+
+        #region General Methods
         /// <summary>
         /// Attempts to commit the type projection to the portal. Throws an exception if not successful.
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
         public async Task<bool> Commit(AuthorizationToken authToken)
         {
-            if (_bReadOnly)
+            if (this.ReadOnly)
                 throw new CiresonApiException("Cannot commit a read-only type projection.");
 
             if (!authToken.IsValid)
                 throw new InvalidCredentialException("AuthorizationToken is not valid.");
 
-            if (!_bDirtyObject)
+            if (this.DirtyObject)
                 throw new CiresonApiException("Object is not dirty, Commit() aborted.");
 
             try
@@ -186,27 +226,6 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>
-        /// Creates a new type projection
-        /// </summary>
-        /// <param name="obj">JSON object</param>
-        /// <param name="existingObject">Is this an existing object?</param>
-        internal TypeProjection(dynamic obj, bool existingObject = false)
-        {
-            _oCurrentObject = obj;
-
-            if (existingObject)
-                _oOriginalObject = obj;
-        }
-
-        /// <summary>
-        /// Creates a blank type projection for a new object
-        /// </summary>
-        internal TypeProjection()
-        {
-            _oCurrentObject = new ExpandoObject();
-        }
-
-        /// <summary>
         /// Converts this TypeProjection to a JSON string representation
         /// </summary>
         /// <returns></returns>
@@ -216,6 +235,20 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>
+        /// Emits a property changed event
+        /// </summary>
+        /// <param name="propertyName">Name of the property to notify listeners</param>
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion // General Methods
+
+        #region Enumeration Methods
+        /*/// <summary>
         /// Deserializes an enumeration from the specified strings
         /// </summary>
         /// <param name="id">ID of the enumeration</param>
@@ -260,7 +293,224 @@ namespace CiresonPortalAPI
                 objectEnum.Id = enumValue.Id;
                 objectEnum.Name = enumValue.Name;
             }
+        }*/
+
+        /// <summary>
+        /// Gets an enumeration from the underlying data model.
+        /// </summary>
+        /// <param name="modelProperty">Enumeration's data model property name</param>
+        /// <returns></returns>
+        protected Enumeration GetEnumeration(string modelProperty)
+        {
+            if (DynamicObjectHelpers.HasProperty(this.CurrentObject, modelProperty))
+            {
+                var objectData = (IDictionary<string,object>)this.CurrentObject;
+                dynamic rawEnum = objectData[modelProperty];
+
+                if (rawEnum.Id == null)
+                    return null;
+
+                return new Enumeration(rawEnum.Id, rawEnum.Name, rawEnum.Name, true, false);
+            }
+            else
+                return null;
         }
+
+        /// <summary>
+        /// Sets an enumeration in the underlying data model.
+        /// </summary>
+        /// <param name="modelProperty">Enumeration's data model property name</param>
+        /// <param name="value">New enumeration value</param>
+        /// <param name="objectProperty">Derived object's property name, if it is different than the data model property name.</param>
+        protected void SetEnumeration(string modelProperty, Enumeration value, string objectProperty = null)
+        {
+            if (this.ReadOnly)
+                throw new CiresonReadOnlyException("Cannot set enumeration; this object is read-only.");
+
+            var objectData = (IDictionary<string, object>)this.CurrentObject;
+
+            // Add a null value in case it doesn't exist already
+            if (!DynamicObjectHelpers.HasProperty(this.CurrentObject, modelProperty))
+            {
+                objectData.Add(modelProperty, null);
+            }
+
+            dynamic rawEnum = objectData[modelProperty];
+
+            if (value == null)
+            {
+                rawEnum.Id = null;
+                rawEnum.Name = string.Empty;
+            }
+            else if (value.Id == Guid.Empty)
+            {
+                rawEnum.Id = null;
+                rawEnum.Name = string.Empty;
+            }
+            else
+            {
+                rawEnum.Id = value.Id;
+                rawEnum.Name = value.Name;
+            }
+
+            this.CurrentObject = (ExpandoObject)objectData;
+            this.DirtyObject = true;
+
+            if (String.IsNullOrEmpty(objectProperty))
+                NotifyPropertyChanged(modelProperty);
+            else
+                NotifyPropertyChanged(objectProperty);
+        }
+
+        #endregion // Enumeration Methods
+
+        #region Relationship Methods
+        /// <summary>
+        /// Gets a related object based on a relationship.
+        /// </summary>
+        /// <typeparam name="T">Type of the related object</typeparam>
+        /// <param name="modelProperty">Relationship's data model property name</param>
+        /// <returns></returns>
+        protected T GetRelatedObject<T>(string modelProperty) where T : TypeProjection
+        {
+            if (DynamicObjectHelpers.HasProperty(this.CurrentObject, modelProperty))
+            {
+                var objectData = (IDictionary<string, object>)this.CurrentObject;
+
+                T relObj = Activator.CreateInstance<T>();
+
+                relObj.CurrentObject = (ExpandoObject)objectData[modelProperty];
+                relObj.ReadOnly = true;
+
+                return relObj;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets a list of related objects based on a relationship.
+        /// </summary>
+        /// <typeparam name="T">Type of the related objects</typeparam>
+        /// <param name="modelProperty">Relationship's data model property name</param>
+        /// <returns></returns>
+        protected List<T> GetRelatedObjectsList<T>(string modelProperty) where T : TypeProjection
+        {
+            List<T> memberList = new List<T>();
+
+            if (DynamicObjectHelpers.HasProperty(this.CurrentObject, modelProperty))
+            {
+                var objectData = (IDictionary<string, object>)this.CurrentObject;
+                dynamic objectList = objectData[modelProperty];
+
+                foreach (dynamic obj in objectList)
+                {
+                    T relObj = Activator.CreateInstance<T>();
+
+                    relObj.CurrentObject = obj;
+                    relObj.ReadOnly = true;
+
+                    memberList.Add(relObj);
+                }
+            }
+
+            return memberList;
+        }
+
+        /// <summary>
+        /// Sets a relationship to a list of TypeProjections
+        /// </summary>
+        /// <param name="modelProperty">Relationship's data model property name</param>
+        /// <param name="objects">List of objects to set</param>
+        /// <param name="objectProperty">Derived object's property name, if it is different than the data model property name.</param>
+        protected void SetRelatedObjectsList(string modelProperty, List<TypeProjection> objects, string objectProperty = null)
+        {
+            if (this.ReadOnly)
+                throw new CiresonReadOnlyException("Cannot set related objects; object is read-only.");
+
+            var objectData = (IDictionary<string, object>)this.CurrentObject;
+            var objectList = new dynamic[objects.Count];
+
+            for (int i = 0; i < objects.Count; i++)
+            {
+                objectList[i] = objects[i].CurrentObject;
+            }
+
+            objectData[modelProperty] = objectList;
+            this.CurrentObject = (ExpandoObject)objectData;
+            this.DirtyObject = true;
+
+            if (String.IsNullOrEmpty(objectProperty))
+                NotifyPropertyChanged(modelProperty);
+            else
+                NotifyPropertyChanged(objectProperty);
+        }
+
+        /// <summary>
+        /// Sets a relationship to the specified TypeProjection
+        /// </summary>
+        /// <param name="modelProperty">Relationship's data model property name</param>
+        /// <param name="obj">Object to set</param>
+        /// <param name="objectProperty">Derived object's property name, if it is different than the data model property name.</param>
+        protected void SetRelatedObject(string modelProperty, TypeProjection obj, string objectProperty = null)
+        {
+            if (this.ReadOnly)
+                throw new CiresonReadOnlyException("Cannot set related object; object is read-only.");
+
+            var objectData = (IDictionary<string, object>)this.CurrentObject;
+            objectData[modelProperty] = obj.CurrentObject;
+
+            this.CurrentObject = (ExpandoObject)objectData;
+            this.DirtyObject = true;
+
+            if (String.IsNullOrEmpty(objectProperty))
+                NotifyPropertyChanged(modelProperty);
+            else
+                NotifyPropertyChanged(objectProperty);
+        }
+        #endregion // Relationship Methods
+
+        #region Primitive Methods
+        /// <summary>
+        /// Gets a primitive value by property name.
+        /// </summary>
+        /// <typeparam name="T">Primitive type</typeparam>
+        /// <param name="modelProperty">Primitive's data model property name</param>
+        /// <returns></returns>
+        protected T GetPrimitiveValue<T>(string modelProperty)
+        {
+            if (DynamicObjectHelpers.HasProperty(this.CurrentObject, modelProperty))
+            {
+                return DynamicObjectHelpers.GetProperty<T>(this.CurrentObject, modelProperty);
+            }
+
+            return default(T);
+        }
+
+        /// <summary>
+        /// Sets a primitive value by property name
+        /// </summary>
+        /// <typeparam name="T">Type of the primitive</typeparam>
+        /// <param name="modelProperty">Primitive's data model property name name</param>
+        /// <param name="value">Primitive value</param>
+        /// <param name="objectProperty">Derived object's property name, if it is different than the data model property name.</param>
+        protected void SetPrimitiveValue<T>(string modelProperty, T value, string objectProperty = null)
+        {
+            if (this.ReadOnly)
+                throw new CiresonReadOnlyException("Cannot set primitive value; object is read-only.");
+
+            var objectData = (IDictionary<string, object>)this.CurrentObject;
+            objectData[modelProperty] = value.ToString();
+
+            this.CurrentObject = (ExpandoObject)objectData;
+            this.DirtyObject = true;
+
+            if (String.IsNullOrEmpty(objectProperty))
+                NotifyPropertyChanged(modelProperty);
+            else
+                NotifyPropertyChanged(objectProperty);
+        }
+        #endregion // Primitive Methods
     }
 
     /// <summary>
@@ -280,15 +530,15 @@ namespace CiresonPortalAPI
                 writer.WriteStartObject();
 
                 writer.WritePropertyName("isDirty");
-                writer.WriteValue(projection._bDirtyObject);
+                writer.WriteValue(projection.DirtyObject);
 
                 //"current" object
                 writer.WritePropertyName("current");
-                writer.WriteRawValue(JsonConvert.SerializeObject(projection._oCurrentObject));
+                writer.WriteRawValue(JsonConvert.SerializeObject(projection.CurrentObject));
                 
                 //"original" object
                 writer.WritePropertyName("original");
-                writer.WriteRawValue(JsonConvert.SerializeObject(projection._oOriginalObject));
+                writer.WriteRawValue(JsonConvert.SerializeObject(projection.OriginalObject));
 
                 writer.WriteEndObject(); // formJson
             }
