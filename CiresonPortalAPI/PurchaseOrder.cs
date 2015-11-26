@@ -21,7 +21,7 @@ namespace CiresonPortalAPI
         public static async Task<List<PurchaseOrder>> GetPurchaseOrdersByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
             criteria.ProjectionID = TypeProjectionConstants.PurchaseOrder;
-            return await TypeProjectionController.GenericToSpecific<PurchaseOrder>(authToken, criteria);
+            return await TypeProjectionController.GetProjectionByCriteria<PurchaseOrder>(authToken, criteria);
         }
 
         /// <summary>
@@ -74,141 +74,91 @@ namespace CiresonPortalAPI
         }
     }
 
-    public class PurchaseOrder : TypeProjection
+    public class PurchaseOrder : ConfigurationItem
     {
         #region Read-Only Properties
-
-        /// <summary>Gets the DisplayName of the Purchase Order. Read only.</summary>
-        public string DisplayName { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "DisplayName"); } }
-
-        /// <summary>Gets the number of the Purchase Order. Read only.</summary>
-        public string PurchaseOrderNumber { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "PurchaseOrderNumber"); } }
-
+        /// <summary>
+        /// Gets the number of the Purchase Order. Read only.
+        /// </summary>
+        public string OrderNumber
+        {
+            get { return this.GetPrimitiveValue<string>("PurchaseOrderNumber"); }
+        }
         #endregion Read-Only Properties
 
         #region Read-Write Properties
+        /// <summary>
+        /// Gets or sets the Purchase Order's amount
+        /// </summary>
+        public decimal Amount
+        {
+            get { return this.GetPrimitiveValue<decimal>("Amount"); }
+            set { this.SetPrimitiveValue<decimal>("Amount", value); }
+        }
 
-        /// <summary>Gets or sets the Purchase Order's amount</summary>
-        public decimal Amount { get { return DynamicObjectHelpers.GetProperty<decimal>(_oCurrentObject, "Amount"); } set { _oCurrentObject.Amount = value; SetDirtyBit(); } }
-
-        /// <summary>Gets or sets the Purchase Order's asset status</summary>
+        /// <summary>
+        /// Gets or sets the Purchase Order's asset status
+        /// </summary>
         public Enumeration AssetStatus
         {
-            get
-            {
-                return DeserializeEnumeration(_oCurrentObject.AssetStatus.Id, _oCurrentObject.AssetStatus.Name);
-            }
-            set
-            {
-                SetEnumerationValue(_oCurrentObject.AssetStatus, value);
-                SetDirtyBit();
-            }
+            get { return this.GetEnumeration("AssetStatus"); }
+            set { this.SetEnumeration("AssetStatus", value); }
         }
 
-        /// <summary>Gets or sets the Purchase Order's currency</summary>
+        /// <summary>
+        /// Gets or sets the Purchase Order's currency.
+        /// </summary>
         public Enumeration Currency
         {
-            get
-            {
-                return DeserializeEnumeration(_oCurrentObject.Currency.Id, _oCurrentObject.Currency.Name);
-            }
-            set
-            {
-                SetEnumerationValue(_oCurrentObject.Currency, value);
-                SetDirtyBit();
-            }
+            get { return this.GetEnumeration("Currency"); }
+            set { this.SetEnumeration("Currency", value); }
         }
 
-        /// <summary>Gets or sets the Purchase Order's notes field.</summary>
-        public string Notes { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "Notes"); } set { _oCurrentObject.Notes = value; SetDirtyBit(); } }
-
-        /// <summary>Gets or sets the Purchase Order date.</summary>
-        public Nullable<DateTime> PurchaseOrderDate { get { return DynamicObjectHelpers.GetProperty<Nullable<DateTime>>(_oCurrentObject, "PurchaseOrderDate"); } set { _oCurrentObject.PurchaseOrderDate = value; SetDirtyBit(); } }
-
-        /// <summary>Gets or sets the Purchase Order's status</summary>
-        public Enumeration PurchaseOrderStatus
+        /// <summary>
+        /// Gets or sets the Purchase Order date.
+        /// </summary>
+        public DateTime? OrderDate
         {
-            get
-            {
-                return DeserializeEnumeration(_oCurrentObject.PurchaseOrderStatus.Id, _oCurrentObject.PurchaseOrderStatus.Name);
-            }
-            set
-            {
-                SetEnumerationValue(_oCurrentObject.PurchaseOrderStatus, value);
-                SetDirtyBit();
-            }
+            get { return this.GetPrimitiveValue<DateTime?>("PurchaseOrderDate"); }
+            set { this.SetPrimitiveValue<DateTime?>("PurchaseOrderDate", value, "OrderDate"); }
         }
 
-        /// <summary>Gets or sets the Purchase Order's type.</summary>
-        public Enumeration PurchaseOrderType
+        /// <summary>
+        /// Gets or sets the Purchase Order's status.
+        /// </summary>
+        public Enumeration OrderStatus
         {
-            get
-            {
-                return DeserializeEnumeration(_oCurrentObject.PurchaseOrderType.Id, _oCurrentObject.PurchaseOrderType.Name);
-            }
-            set
-            {
-                SetEnumerationValue(_oCurrentObject.PurchaseOrderType, value);
-                SetDirtyBit();
-            }
+            get { return this.GetEnumeration("PurchaseOrderStatus"); }
+            set { this.SetEnumeration("PurchaseOrderStatus", value, "OrderStatus"); }
         }
 
+        /// <summary>
+        /// Gets or sets the Purchase Order's type.
+        /// </summary>
+        public Enumeration OrderType
+        {
+            get { return this.GetEnumeration("PurchaseOrderType"); }
+            set { this.SetEnumeration("PurchaseOrderType", value, "OrderType"); }
+        }
         #endregion Read-Write Properties
 
         #region Relationship Properties
-
         /// <summary>
         /// Returns a list of all child Purchase Orders. Read only.
         /// </summary>
-        public List<PurchaseOrder> Children { get { return GetChildPurchaseOrders(); } }
+        public List<PurchaseOrder> Children
+        {
+            get { return this.GetRelatedObjectsList<PurchaseOrder>("Target_PurchaseOrderHasChildPurchaseOrder"); }
+        }
 
+        /// <summary>
+        /// Gets or sets the parent Purchase Order. Read-only.
+        /// </summary>
+        public PurchaseOrder Parent
+        {
+            get { return this.GetRelatedObject<PurchaseOrder>("Source_PurchaseOrderHasChildPurchaseOrder"); }
+            set { this.SetRelatedObject("Source_PurchaseOrderHasChildPurchaseOrder", value, "Parent"); }
+        }
         #endregion Relationship Properties
-
-        #region Relationship Getters
-
-        /// <summary>
-        /// Retrieves all child POs from the underlying data model and returns them as a list
-        /// </summary>
-        /// <returns></returns>
-        private List<PurchaseOrder> GetChildPurchaseOrders()
-        {
-            List<PurchaseOrder> poList = new List<PurchaseOrder>();
-
-            if (DynamicObjectHelpers.HasProperty(_oCurrentObject, "Target_PurchaseOrderHasChildPurchaseOrder"))
-            {
-                foreach (dynamic obj in _oCurrentObject.Target_PurchaseOrderHasChildPurchaseOrder)
-                {
-                    poList.Add(new PurchaseOrder(obj));
-                }
-            }
-
-            return poList;
-        }
-
-        #endregion
-
-        #region Relationship Setters
-        #endregion Relationship Setters
-
-        #region Constructors
-
-        /// <summary>
-        /// Constructor used internally when an existing object has been queried
-        /// </summary>
-        /// <param name="projection">Parent type projection</param>
-        internal PurchaseOrder(TypeProjection projection) : this((ExpandoObject)projection._oCurrentObject) { }
-
-        /// <summary>
-        /// Constructor used to build a PurchaseOrder from a JSON data set
-        /// </summary>
-        /// <param name="obj"></param>
-        internal PurchaseOrder(dynamic obj)
-        {
-            _oOriginalObject = obj;
-            _oCurrentObject = obj;
-            _bReadOnly = false;
-        }
-
-        #endregion Constructors
     }
 }
