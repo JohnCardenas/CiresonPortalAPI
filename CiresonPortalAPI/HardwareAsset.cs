@@ -38,7 +38,7 @@ namespace CiresonPortalAPI
             }
 
             criteria.ProjectionID = TypeProjectionConstants.HardwareAsset;
-            return await TypeProjectionController.GenericToSpecific<HardwareAsset>(authToken, criteria);
+            return await TypeProjectionController.GetProjectionByCriteria<HardwareAsset>(authToken, criteria);
         }
 
         /// <summary>
@@ -98,8 +98,8 @@ namespace CiresonPortalAPI
         /// <returns></returns>
         public static async Task<HardwareAsset> CreateNewHardwareAsset(AuthorizationToken authToken, Guid templateId, Guid userId)
         {
-            TypeProjection projection = await TypeProjectionController.CreateProjectionByTemplate(authToken, templateId, userId);
-            return new HardwareAsset(projection);
+            TypeProjection projection = await TypeProjectionController.CreateProjectionByTemplate<HardwareAsset>(authToken, templateId, userId);
+            return (HardwareAsset)projection;
         }
 
         #endregion Creators
@@ -138,92 +138,86 @@ namespace CiresonPortalAPI
 
     public class HardwareAsset : TypeProjection
     {
-        private PurchaseOrder _oPurchaseOrder = null;
+        //private PurchaseOrder _oPurchaseOrder = null;
 
         #region Read-Only Properties
 
         #endregion Read-Only Properties
 
         #region Read-Write Properties
-
         /// <summary>
         /// Gets or sets this hardware asset's asset tag.
         /// </summary>
-        public string AssetTag { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "AssetTag"); } set { _oCurrentObject.AssetTag = value; SetDirtyBit(); } }
+        public string AssetTag
+        {
+            get { return this.GetPrimitiveValue<string>("AssetTag"); }
+            set { this.SetPrimitiveValue<string>("AssetTag", value); }
+        }
 
         /// <summary>
         /// Gets or sets this hardware asset's unique hardware asset ID.
         /// </summary>
-        public string HardwareAssetID { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "HardwareAssetID"); } set { _oCurrentObject.HardwareAssetID = value; SetDirtyBit(); } }
+        public string HardwareAssetID
+        {
+            get { return this.GetPrimitiveValue<string>("HardwareAssetID"); }
+            set { this.SetPrimitiveValue<string>("HardwareAssetID", value); }
+        }
 
         /// <summary>
         /// Gets or sets this hardware asset's manufacturer.
         /// </summary>
-        public string Manufacturer { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "Manufacturer"); } set { _oCurrentObject.Manufacturer = value; SetDirtyBit(); } }
+        public string Manufacturer
+        {
+            get { return this.GetPrimitiveValue<string>("Manufacturer"); }
+            set { this.SetPrimitiveValue<string>("Manufacturer", value); }
+        }
 
         /// <summary>
         /// Gets or sets this hardware asset's model.
         /// </summary>
-        public string Model { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "Model"); } set { _oCurrentObject.Model = value; SetDirtyBit(); } }
+        public string Model
+        {
+            get { return this.GetPrimitiveValue<string>("Model"); }
+            set { this.SetPrimitiveValue<string>("Model", value); }
+        }
 
         /// <summary>
         /// Gets or sets this hardware asset's name.
         /// </summary>
-        public string Name { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "Name"); } set { _oCurrentObject.Name = value; SetDirtyBit(); } }
+        public string Name
+        {
+            get { return this.GetPrimitiveValue<string>("Name"); }
+            set { this.SetPrimitiveValue<string>("Name", value); }
+        }
 
         /// <summary>
         /// Gets or sets this hardware asset's serial number.
         /// </summary>
-        public string SerialNumber { get { return DynamicObjectHelpers.GetProperty<string>(_oCurrentObject, "SerialNumber"); } set { _oCurrentObject.SerialNumber = value; SetDirtyBit(); } }
+        public string SerialNumber
+        {
+            get { return this.GetPrimitiveValue<string>("SerialNumber"); }
+            set { this.SetPrimitiveValue<string>("SerialNumber", value); }
+        }
 
         /// <summary>
         /// Date this hardware asset was received.
         /// </summary>
-        public Nullable<DateTime> ReceivedDate { get { return DynamicObjectHelpers.GetProperty<DateTime>(_oCurrentObject, "ReceivedDate"); } }
-
+        public DateTime? ReceivedDate
+        {
+            get { return this.GetPrimitiveValue<DateTime?>("ReceivedDate"); }
+            set { this.SetPrimitiveValue<DateTime?>("ReceivedDate", value); }
+        }
         #endregion Read-Write Properties
 
         #region Relationship Properties
-
         /// <summary>
         /// Gets or sets the PurchaseOrder related to this HardwareAsset
         /// </summary>
-        public PurchaseOrder PurchaseOrder { get { return _oPurchaseOrder; } set { SetPurchaseOrder(value); } }
-
+        public PurchaseOrder PurchaseOrder
+        {
+            get { return this.GetRelatedObject<PurchaseOrder>("Target_HardwareAssetHasPurchaseOrder"); }
+            set { this.SetRelatedObject("Target_HardwareAssetHasPurchaseOrder", value, "PurchaseOrder"); }
+        }
         #endregion Relationship Properties
-
-        /// <summary>
-        /// Sets the PurchaseOrder of this HardwareAsset.
-        /// </summary>
-        /// <param name="user">User to set as the Affected User</param>
-        private void SetPurchaseOrder(PurchaseOrder order)
-        {
-            // Set the new Affected User
-            _oCurrentObject.Target_HardwareAssetHasPurchaseOrder = order._oCurrentObject;
-            _oPurchaseOrder = new PurchaseOrder(_oCurrentObject.Target_HardwareAssetHasPurchaseOrder);
-            SetDirtyBit();
-        }
-
-        #region Relationship Setters
-        #endregion Relationship Setters
-
-        #region Constructors
-
-        /// <summary>
-        /// Constructor used internally when an existing object has been queried
-        /// </summary>
-        /// <param name="projection">Parent type projection</param>
-        internal HardwareAsset(TypeProjection projection)
-        {
-            _oOriginalObject = projection._oOriginalObject;
-            _oCurrentObject = projection._oCurrentObject;
-            _bReadOnly = false;
-
-            // Related objects
-            if (DynamicObjectHelpers.HasProperty(_oCurrentObject, "Target_HardwareAssetHasPurchaseOrder"))
-                _oPurchaseOrder = new PurchaseOrder(_oCurrentObject.Target_HardwareAssetHasPurchaseOrder);
-        }
-
-        #endregion Constructors
     }
 }
