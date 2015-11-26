@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="CiresonException.cs" />
     <Compile Include="ClassConstants.cs" />
+    <Compile Include="ConfigurationItem.cs" />
     <Compile Include="ConsoleUser.cs" />
     <Compile Include="DynamicObjectHelpers.cs" />
     <Compile Include="HardwareAsset.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="TemplateConstants.cs" />
     <Compile Include="User.cs" />
     <Compile Include="PartialUser.cs" />
+    <Compile Include="WorkItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
