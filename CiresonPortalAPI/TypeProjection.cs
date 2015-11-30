@@ -14,92 +14,6 @@ using Newtonsoft.Json.Converters;
 
 namespace CiresonPortalAPI
 {
-    public static partial class TypeProjectionController
-    {
-        const string GET_BY_CRITERIA_ENDPOINT               = "/api/V3/Projection/GetProjectionByCriteria";
-        const string CREATE_PROJECTION_BY_TEMPLATE_ENDPOINT = "/api/V3/Projection/CreateProjectionByTemplate";
-
-        /// <summary>
-        /// Creates an object projection from the specified template, by the specified user.
-        /// </summary>
-        /// <typeparam name="T">Type of projection to create</typeparam>
-        /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="templateId">ID of the object template to project</param>
-        /// <param name="creatingUserId">ID of the user creating the object</param>
-        /// <returns></returns>
-        public static async Task<T> CreateProjectionByTemplate<T>(AuthorizationToken authToken, Guid templateId, Guid creatingUserId) where T : TypeProjection
-        {
-            if (!authToken.IsValid)
-            {
-                throw new InvalidCredentialException("AuthorizationToken is not valid.");
-            }
-
-            string endpointUrl = CREATE_PROJECTION_BY_TEMPLATE_ENDPOINT + "/" + templateId.ToString("D") + "?createdById=" + creatingUserId.ToString("D");
-
-            try
-            {
-                // Initialize the HTTP helper and get going
-                PortalHttpHelper helper = new PortalHttpHelper(authToken);
-                string result = await helper.GetAsync(endpointUrl);
-
-                // Convert the result into a TypeProjection and return it
-                ExpandoObjectConverter converter = new ExpandoObjectConverter();
-                dynamic jsonObject = JsonConvert.DeserializeObject<ExpandoObject>(result, converter);
-
-                return (T)Activator.CreateInstance(typeof(T), new object[] { jsonObject, false });
-            }
-            catch (Exception e)
-            {
-                throw; // Rethrow exceptions
-            }
-        }
-
-        /// <summary>
-        /// Queries the Cireson Portal for objects using specified criteria.
-        /// </summary>
-        /// <param name="authToken">AuthenticationToken to use</param>
-        /// <param name="criteria">QueryCriteria rules</param>
-        /// <returns>List of ExpandoObjects</returns>
-        public static async Task<List<T>> GetProjectionByCriteria<T>(AuthorizationToken authToken, QueryCriteria criteria) where T : TypeProjection
-        {
-            if (!authToken.IsValid)
-            {
-                throw new InvalidCredentialException("AuthorizationToken is not valid.");
-            }
-
-            try
-            {
-                // Initialize the HTTP helper and get going
-                PortalHttpHelper helper = new PortalHttpHelper(authToken);
-                string result = await helper.PostAsync(GET_BY_CRITERIA_ENDPOINT, criteria.ToString());
-
-                // TypeProjections have no set properties, so we deserialize to a list of ExpandoObjects
-                ExpandoObjectConverter converter = new ExpandoObjectConverter();
-                dynamic objectList = JsonConvert.DeserializeObject<List<ExpandoObject>>(result, converter);
-
-                // Convert the ExpandoObjects into proper TypeProjection objects
-                List<T> returnList = new List<T>();
-                foreach (ExpandoObject obj in objectList)
-                {
-                    // Instantiate and add to the list
-                    T instanceType = Activator.CreateInstance<T>();
-
-                    instanceType.OriginalObject = obj;
-                    instanceType.CurrentObject = obj;
-                    instanceType.ReadOnly = false;
-
-                    returnList.Add(instanceType);
-                }
-
-                return returnList;
-            }
-            catch (Exception e)
-            {
-                throw; // Rethrow exceptions
-            }
-        }
-    }
-
     /// <summary>
     /// TypeProjection
     /// </summary>
@@ -248,53 +162,6 @@ namespace CiresonPortalAPI
         #endregion // General Methods
 
         #region Enumeration Methods
-        /*/// <summary>
-        /// Deserializes an enumeration from the specified strings
-        /// </summary>
-        /// <param name="id">ID of the enumeration</param>
-        /// <param name="name">Name of the enumeration</param>
-        /// <returns></returns>
-        protected Enumeration DeserializeEnumeration(string id, string name)
-        {
-            if (string.IsNullOrEmpty(id))
-                return null;
-
-            return new Enumeration(new Guid(id), name, name, true, false);
-        }
-
-        /// <summary>
-        /// Deserializes an enumeration from the specified Guid and string
-        /// </summary>
-        /// <param name="id">ID of the enumeration</param>
-        /// <param name="name">Name of the enumeration</param>
-        /// <returns></returns>
-        protected Enumeration DeserializeEnumeration(Guid id, string name)
-        {
-            if (id == null)
-                return null;
-
-            return new Enumeration(id, name, name, true, false);
-        }
-
-        /// <summary>
-        /// Sets an underlying data model enumeration if the Enumeration object's ID is not empty
-        /// </summary>
-        /// <param name="objectEnum">Object enumeration to set</param>
-        /// <param name="enumValue">Enumeration object to set as the value</param>
-        protected void SetEnumerationValue(dynamic objectEnum, Enumeration enumValue)
-        {
-            if (enumValue.Id == Guid.Empty)
-            {
-                objectEnum.Id = null;
-                objectEnum.Name = string.Empty;
-            }
-            else
-            {
-                objectEnum.Id = enumValue.Id;
-                objectEnum.Name = enumValue.Name;
-            }
-        }*/
-
         /// <summary>
         /// Gets an enumeration from the underlying data model.
         /// </summary>
@@ -311,6 +178,34 @@ namespace CiresonPortalAPI
                     return null;
 
                 return new Enumeration(rawEnum.Id, rawEnum.Name, rawEnum.Name, true, false);
+            }
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Gets an enumeration list from the underlying data model.
+        /// </summary>
+        /// <param name="modelProperty">Enumeration list's data model property name</param>
+        /// <returns></returns>
+        protected List<Enumeration> GetEnumerationList(string modelProperty)
+        {
+            List<Enumeration> returnList = new List<Enumeration>();
+
+            if (DynamicObjectHelpers.HasProperty(this.CurrentObject, modelProperty))
+            {
+                var objectData = (IDictionary<string, object>)this.CurrentObject;
+                dynamic objectList = objectData[modelProperty];
+
+                foreach (dynamic obj in objectList)
+                {
+                    if (obj.Id == null)
+                        continue;
+
+                    returnList.Add(new Enumeration(obj.Id, obj.Name, obj.Name, true, false));
+                }
+
+                return returnList;
             }
             else
                 return null;
