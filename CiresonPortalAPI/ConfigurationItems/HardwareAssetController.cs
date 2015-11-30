@@ -19,23 +19,8 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         public static async Task<List<HardwareAsset>> GetHardwareAssetsByCriteria(AuthorizationToken authToken, QueryCriteria criteria, bool includeInactiveItems = false)
         {
-            if (!includeInactiveItems)
-            {
-                // Hardware Assets inherit System.ConfigItem, so we need to exclude Deleted and PendingDeletion POs
-                QueryCriteriaExpression activeItemsOnly = new QueryCriteriaExpression
-                {
-                    PropertyName = (new PropertyPathHelper(ClassConstants.HardwareAsset, "ObjectStatus")).ToString(),
-                    PropertyType = QueryCriteriaPropertyType.Property,
-                    Operator = QueryCriteriaExpressionOperator.Equal,
-                    Value = EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active.ToString("B")
-                };
-
-                criteria.GroupingOperator = QueryCriteriaGroupingOperator.And;
-                criteria.Expressions.Add(activeItemsOnly);
-            }
-
             criteria.ProjectionID = TypeProjectionConstants.HardwareAsset;
-            return await TypeProjectionController.GetProjectionByCriteria<HardwareAsset>(authToken, criteria);
+            return await ConfigurationItem.GetConfigurationItemsByCriteria<HardwareAsset>(authToken, criteria);
         }
 
         /// <summary>

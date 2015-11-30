@@ -17,7 +17,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         public static async Task<List<PurchaseOrder>> GetPurchaseOrdersByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
             criteria.ProjectionID = TypeProjectionConstants.PurchaseOrder;
-            return await TypeProjectionController.GetProjectionByCriteria<PurchaseOrder>(authToken, criteria);
+            return await ConfigurationItem.GetConfigurationItemsByCriteria<PurchaseOrder>(authToken, criteria);
         }
 
         /// <summary>
@@ -36,19 +36,9 @@ namespace CiresonPortalAPI.ConfigurationItems
                 Value = poTypeGuid.ToString("B")
             };
 
-            // Purchase Orders inherit System.ConfigItem, so we need to exclude Deleted and PendingDeletion POs
-            QueryCriteriaExpression activeItemsOnly = new QueryCriteriaExpression
-            {
-                PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder, "ObjectStatus")).ToString(),
-                PropertyType = QueryCriteriaPropertyType.Property,
-                Operator = QueryCriteriaExpressionOperator.Equal,
-                Value = EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active.ToString("B")
-            };
-
             QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.PurchaseOrder);
             criteria.GroupingOperator = QueryCriteriaGroupingOperator.And;
             criteria.Expressions.Add(expression);
-            criteria.Expressions.Add(activeItemsOnly);
 
             List<PurchaseOrder> purchaseOrderList = await PurchaseOrderController.GetPurchaseOrdersByCriteria(authToken, criteria);
 
