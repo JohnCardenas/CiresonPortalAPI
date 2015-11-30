@@ -9,7 +9,7 @@ using System.Dynamic;
 
 namespace CiresonPortalAPI.ConfigurationItems
 {
-    public class HardwareAsset : TypeProjection
+    public class HardwareAsset : ConfigurationItem
     {
         //private PurchaseOrder _oPurchaseOrder = null;
 
