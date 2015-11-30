@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthorizationController.cs" />
     <Compile Include="CiresonException.cs" />
     <Compile Include="ClassConstants.cs" />
     <Compile Include="ConfigurationItem.cs" />
