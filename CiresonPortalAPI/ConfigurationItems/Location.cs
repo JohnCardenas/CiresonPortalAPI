@@ -8,7 +8,7 @@ using System.Dynamic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace CiresonPortalAPI
+namespace CiresonPortalAPI.ConfigurationItems
 {
     public class Location : ConfigurationItem
     {

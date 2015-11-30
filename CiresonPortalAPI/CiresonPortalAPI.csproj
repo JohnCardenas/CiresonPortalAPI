@@ -50,25 +50,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthorizationController.cs" />
+    <Compile Include="Authorization\AuthorizationController.cs" />
     <Compile Include="CiresonException.cs" />
     <Compile Include="ClassConstants.cs" />
-    <Compile Include="ConfigurationItem.cs" />
-    <Compile Include="ConsoleUser.cs" />
+    <Compile Include="ConfigurationItems\ConfigurationItem.cs" />
+    <Compile Include="Authorization\ConsoleUser.cs" />
+    <Compile Include="ConfigurationItems\PurchaseOrderController.cs" />
     <Compile Include="DynamicObjectHelpers.cs" />
-    <Compile Include="HardwareAsset.cs" />
-    <Compile Include="HardwareAssetController.cs" />
-    <Compile Include="Incident.cs" />
-    <Compile Include="IncidentController.cs" />
-    <Compile Include="Location.cs" />
-    <Compile Include="LocationController.cs" />
-    <Compile Include="PortalCredentials.cs" />
+    <Compile Include="ConfigurationItems\HardwareAsset.cs" />
+    <Compile Include="ConfigurationItems\HardwareAssetController.cs" />
+    <Compile Include="EnumerationController.cs" />
+    <Compile Include="WorkItems\Incident.cs" />
+    <Compile Include="WorkItems\IncidentController.cs" />
+    <Compile Include="ConfigurationItems\Location.cs" />
+    <Compile Include="ConfigurationItems\LocationController.cs" />
+    <Compile Include="Authorization\PortalCredentials.cs" />
     <Compile Include="PortalHttpHelper.cs" />
     <Compile Include="EnumerationConstants.cs" />
     <Compile Include="Enumeration.cs" />
-    <Compile Include="AuthorizationToken.cs" />
+    <Compile Include="Authorization\AuthorizationToken.cs" />
     <Compile Include="PropertyPathHelper.cs" />
-    <Compile Include="PurchaseOrder.cs" />
+    <Compile Include="ConfigurationItems\PurchaseOrder.cs" />
     <Compile Include="QueryCriteria.cs" />
     <Compile Include="TypeProjection.cs" />
     <Compile Include="TypeProjectionConstants.cs" />
@@ -76,14 +78,15 @@
     <Compile Include="SubstringExtensions.cs" />
     <Compile Include="TemplateConstants.cs" />
     <Compile Include="TypeProjectionController.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="PartialUser.cs" />
-    <Compile Include="UserController.cs" />
-    <Compile Include="WorkItem.cs" />
+    <Compile Include="ConfigurationItems\User.cs" />
+    <Compile Include="ConfigurationItems\PartialUser.cs" />
+    <Compile Include="ConfigurationItems\UserController.cs" />
+    <Compile Include="WorkItems\WorkItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

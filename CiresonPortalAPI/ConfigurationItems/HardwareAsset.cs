@@ -7,7 +7,7 @@ using System.Security.Authentication;
 using Newtonsoft.Json;
 using System.Dynamic;
 
-namespace CiresonPortalAPI
+namespace CiresonPortalAPI.ConfigurationItems
 {
     public class HardwareAsset : TypeProjection
     {

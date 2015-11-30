@@ -7,8 +7,9 @@ using System.Security.Authentication;
 using System.Dynamic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using CiresonPortalAPI.ConfigurationItems;
 
-namespace CiresonPortalAPI
+namespace CiresonPortalAPI.WorkItems
 {
     public class Incident : WorkItem
     {

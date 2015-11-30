@@ -12,10 +12,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using CredentialManagement;
-using CiresonPortalAPI;
 using Newtonsoft.Json;
 
-namespace CiresonPortalAPI
+namespace CiresonPortalAPI.Authorization
 {
     public static partial class AuthorizationController
     {

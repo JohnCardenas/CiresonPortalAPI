@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace CiresonPortalAPI
 {
-    public static class DynamicObjectHelpers
+    internal static class DynamicObjectHelpers
     {
         /// <summary>
         /// Returns true if the specified dynamic has a given property, false otherwise.

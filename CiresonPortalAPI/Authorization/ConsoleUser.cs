@@ -8,8 +8,9 @@ using System.Security.Authentication;
 using System.Dynamic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using CiresonPortalAPI.ConfigurationItems;
 
-namespace CiresonPortalAPI
+namespace CiresonPortalAPI.Authorization
 {
     /// <summary>
     /// A ConsoleUser represents an authorized user's security rights and preferences

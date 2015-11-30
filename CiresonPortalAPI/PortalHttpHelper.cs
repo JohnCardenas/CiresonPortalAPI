@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Security;
 using System.Security.Authentication;
 using CredentialManagement;
+using CiresonPortalAPI.Authorization;
 
 namespace CiresonPortalAPI
 {

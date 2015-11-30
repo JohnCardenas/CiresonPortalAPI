@@ -8,8 +8,9 @@ using System.Security.Authentication;
 using System.Dynamic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using CiresonPortalAPI.Authorization;
 
-namespace CiresonPortalAPI
+namespace CiresonPortalAPI.ConfigurationItems
 {
     public static class UserController
     {

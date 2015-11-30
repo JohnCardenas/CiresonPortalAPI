@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CiresonPortalAPI.Authorization;
 
-namespace CiresonPortalAPI
+namespace CiresonPortalAPI.ConfigurationItems
 {
     public static class LocationController
     {

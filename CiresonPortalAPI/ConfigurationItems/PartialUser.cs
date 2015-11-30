@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Security.Authentication;
 using Newtonsoft.Json;
 
-namespace CiresonPortalAPI
+namespace CiresonPortalAPI.ConfigurationItems
 {
     /// <summary>
     /// Represents a user id and name pairing
