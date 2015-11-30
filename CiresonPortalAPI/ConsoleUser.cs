@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using CiresonPortalAPI.ConfigurationItems;
 
-namespace CiresonPortalAPI.Authorization
+namespace CiresonPortalAPI
 {
     /// <summary>
     /// A ConsoleUser represents an authorized user's security rights and preferences

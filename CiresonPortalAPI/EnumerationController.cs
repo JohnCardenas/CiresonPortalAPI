@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Security.Authentication;
 using CiresonPortalAPI;
 using Newtonsoft.Json;
-using CiresonPortalAPI.Authorization;
 
 namespace CiresonPortalAPI
 {

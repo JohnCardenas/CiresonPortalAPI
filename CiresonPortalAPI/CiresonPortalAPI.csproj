@@ -50,11 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authorization\AuthorizationController.cs" />
+    <Compile Include="AuthorizationController.cs" />
     <Compile Include="CiresonException.cs" />
     <Compile Include="ClassConstants.cs" />
     <Compile Include="ConfigurationItems\ConfigurationItem.cs" />
-    <Compile Include="Authorization\ConsoleUser.cs" />
+    <Compile Include="ConsoleUser.cs" />
     <Compile Include="ConfigurationItems\PurchaseOrderController.cs" />
     <Compile Include="DynamicObjectHelpers.cs" />
     <Compile Include="ConfigurationItems\HardwareAsset.cs" />
@@ -64,11 +64,11 @@
     <Compile Include="WorkItems\IncidentController.cs" />
     <Compile Include="ConfigurationItems\Location.cs" />
     <Compile Include="ConfigurationItems\LocationController.cs" />
-    <Compile Include="Authorization\PortalCredentials.cs" />
+    <Compile Include="PortalCredentials.cs" />
     <Compile Include="PortalHttpHelper.cs" />
     <Compile Include="EnumerationConstants.cs" />
     <Compile Include="Enumeration.cs" />
-    <Compile Include="Authorization\AuthorizationToken.cs" />
+    <Compile Include="AuthorizationToken.cs" />
     <Compile Include="PropertyPathHelper.cs" />
     <Compile Include="ConfigurationItems\PurchaseOrder.cs" />
     <Compile Include="QueryCriteria.cs" />

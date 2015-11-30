@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using CredentialManagement;
 using Newtonsoft.Json;
 
-namespace CiresonPortalAPI.Authorization
+namespace CiresonPortalAPI
 {
     public static partial class AuthorizationController
     {

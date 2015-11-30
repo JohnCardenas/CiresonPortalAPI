@@ -8,7 +8,6 @@ using System.Security.Authentication;
 using System.Dynamic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using CiresonPortalAPI.Authorization;
 
 namespace CiresonPortalAPI.ConfigurationItems
 {

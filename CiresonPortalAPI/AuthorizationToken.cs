@@ -15,7 +15,7 @@ using CredentialManagement;
 using CiresonPortalAPI;
 using Newtonsoft.Json;
 
-namespace CiresonPortalAPI.Authorization
+namespace CiresonPortalAPI
 {
     /// <summary>
     /// Authorization token used by all CiresonPortalAPI methods interacting with endpoints.

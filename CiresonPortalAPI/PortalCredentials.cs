@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CredentialManagement;
 
-namespace CiresonPortalAPI.Authorization
+namespace CiresonPortalAPI
 {
     internal class PortalCredentials : Credential
     {
