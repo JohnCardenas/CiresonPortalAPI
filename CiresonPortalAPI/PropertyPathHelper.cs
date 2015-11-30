@@ -11,8 +11,10 @@ namespace CiresonPortalAPI
     /// </summary>
     internal class PropertyPathHelper
     {
-        private Guid   _oObjectClass;
-        private string _sPropertyName;
+        #region Properties
+        public Guid ObjectClass { get; set; }
+        public string PropertyName { get; set; }
+        #endregion // Properties
 
         /// <summary>
         /// Constructs a new PropertyPathHelper
@@ -21,13 +23,18 @@ namespace CiresonPortalAPI
         /// <param name="propertyName">Name of the property</param>
         public PropertyPathHelper(Guid objectClass, string propertyName)
         {
-            _oObjectClass = objectClass;
-            _sPropertyName = propertyName;
+            this.ObjectClass = objectClass;
+            this.PropertyName = propertyName;
         }
+
+        /// <summary>
+        /// Default constructor; creates a blank PropertyPathHelper
+        /// </summary>
+        public PropertyPathHelper() { }
 
         public override string ToString()
         {
-            return "$Context/Property[Type='" + _oObjectClass.ToString() + "']/" + _sPropertyName + "$";
+            return "$Context/Property[Type='" + this.ObjectClass.ToString() + "']/" + this.PropertyName + "$";
         }
     }
 }
