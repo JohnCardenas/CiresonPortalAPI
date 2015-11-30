@@ -73,6 +73,7 @@
     <Compile Include="TemplateConstants.cs" />
     <Compile Include="User.cs" />
     <Compile Include="PartialUser.cs" />
+    <Compile Include="UserController.cs" />
     <Compile Include="WorkItem.cs" />
   </ItemGroup>
   <ItemGroup>
