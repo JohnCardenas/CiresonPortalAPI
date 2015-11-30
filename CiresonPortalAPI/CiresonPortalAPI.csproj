@@ -58,6 +58,7 @@
     <Compile Include="DynamicObjectHelpers.cs" />
     <Compile Include="HardwareAsset.cs" />
     <Compile Include="Incident.cs" />
+    <Compile Include="IncidentController.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="PortalCredentials.cs" />
     <Compile Include="PortalHttpHelper.cs" />
