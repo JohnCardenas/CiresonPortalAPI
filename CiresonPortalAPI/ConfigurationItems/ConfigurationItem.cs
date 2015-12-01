@@ -174,4 +174,12 @@ namespace CiresonPortalAPI.ConfigurationItems
         }
         #endregion // General Methods
     }
+
+    internal class ConfigurationItemComparer : IComparer<ConfigurationItem>
+    {
+        public int Compare(ConfigurationItem a, ConfigurationItem b)
+        {
+            return string.Compare(a.ToString(), b.ToString());
+        }
+    }
 }
