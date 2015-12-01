@@ -129,14 +129,6 @@ namespace CiresonPortalAPI.ConfigurationItems
         }
 
         /// <summary>
-        /// Returns the user's ID. Read-only.
-        /// </summary>
-        public Guid Id
-        {
-            get { return this.GetPrimitiveValue<Guid>("BaseId"); }
-        }
-
-        /// <summary>
         /// Returns the user's initials. Read-only.
         /// </summary>
         public string Initials
@@ -145,7 +137,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         }
 
         /// <summary>
-        /// Returns true if this user object is partial, and only contains a subset of all the available properties.
+        /// Returns true if there is only a partial subset of user data available.
         /// </summary>
         public bool IsPartialUser
         {
@@ -243,15 +235,33 @@ namespace CiresonPortalAPI.ConfigurationItems
 
         #endregion Read-Only Properties
 
-        #region Constructors
-        public User(PartialUser user)
+        public User (PartialUser p)
         {
-            this.IsPartialUser = true;
             this.CurrentObject = new ExpandoObject();
-            this.CurrentObject.BaseId = user.Id;
-            this.CurrentObject.DisplayName = user.Name;
+            this.CurrentObject.BaseId = p.Id;
+            this.CurrentObject.DisplayName = p.Name;
+            this.IsPartialUser = true;
             this.ReadOnly = true;
         }
-        #endregion // Constructors
+
+        /// <summary>
+        /// Retrieves all user properties for a partial user object.
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <returns></returns>
+        public async Task<bool> FetchFullAttributes(AuthorizationToken authToken)
+        {
+            if (this.IsPartialUser)
+            {
+                // Fetch a full user object and replace the partial data model with the full one
+                User fullUser = await ConfigurationItem.GetConfigurationItemByBaseId<User>(authToken, this.Id);
+                this.CurrentObject = fullUser.CurrentObject;
+                this.IsPartialUser = false;
+                this.ReadOnly = true;
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }
