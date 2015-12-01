@@ -37,7 +37,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// </summary>
         public string City
         {
-            get { return this.GetPrimitiveValue<string>("City"); }
+            get { return this.GetPrimitiveValue<string>("LocationCity"); }
             set { this.SetPrimitiveValue<string>("LocationCity", value, "City"); }
         }
 
