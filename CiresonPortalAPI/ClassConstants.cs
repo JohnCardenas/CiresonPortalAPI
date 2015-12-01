@@ -22,6 +22,11 @@ namespace CiresonPortalAPI
         public static Guid ChangeRequest { get { return new Guid("{e6c9cf6e-d7fe-1b5d-216c-c3f5d2c7670c}"); } }
 
         /// <summary>
+        /// Configuration Item (System.ConfigItem)
+        /// </summary>
+        public static Guid ConfigItem { get { return new Guid("{62f0be9f-ecea-e73c-f00d-3dd78a7422fc}"); } }
+
+        /// <summary>
         /// Cost Center (Cireson.AssetManagement.CostCenter)
         /// </summary>
         public static Guid CostCenter { get { return new Guid("{128bdb2d-f5bd-f8b6-440e-e3f7d8ab4858}"); } }
