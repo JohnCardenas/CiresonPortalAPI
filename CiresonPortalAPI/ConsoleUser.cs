@@ -268,17 +268,5 @@ namespace CiresonPortalAPI
 
         #endregion Constructors
 
-        /// <summary>
-        /// Converts this ConsoleUser object to a standard User object
-        /// </summary>
-        /// <returns></returns>
-        public User ToUser()
-        {
-            dynamic userObj = new ExpandoObject();
-            userObj.BaseId = this.Id;
-            userObj.DisplayName = this.Name;
-
-            return new User(userObj);
-        }
     }
 }
