@@ -9,10 +9,18 @@ namespace CiresonPortalAPI.ConfigurationItems
     public abstract class ConfigurationItem : TypeProjection
     {
         #region Read-Only Properties
-        /// <summary>Gets the DisplayName of the Work Item. Read only.</summary>
+        /// <summary>Gets the DisplayName of the Configuration Item. Read only.</summary>
         public string DisplayName
         {
             get { return this.GetPrimitiveValue<string>("DisplayName"); }
+        }
+
+        /// <summary>
+        /// Returns this Configuration Item's BaseId. Read only.
+        /// </summary>
+        public Guid Id
+        {
+            get { return this.GetPrimitiveValue<Guid>("BaseId"); }
         }
 
         /// <summary>
