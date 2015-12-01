@@ -32,6 +32,11 @@ namespace CiresonPortalAPI
         public static Guid CostCenter { get { return new Guid("{128bdb2d-f5bd-f8b6-440e-e3f7d8ab4858}"); } }
 
         /// <summary>
+        /// Domain User (System.Domain.User)
+        /// </summary>
+        public static Guid DomainUser { get { return new Guid("{eca3c52a-f273-5cdc-f165-3eb95a2b26cf}"); } }
+
+        /// <summary>
         /// Hardware Asset (Cireson.AssetManagement.HardwareAsset)
         /// </summary>
         public static Guid HardwareAsset { get { return new Guid("{c0c58e7f-7865-55cc-4600-753305b9be64}"); } }
@@ -120,6 +125,11 @@ namespace CiresonPortalAPI
         /// Support Contract (Cireson.AssetManagement.SupportContract)
         /// </summary>
         public static Guid SupportContract { get { return new Guid("{b2c105d4-d8c7-b57c-fe3d-205d47e07141}"); } }
+
+        /// <summary>
+        /// User (System.User)
+        /// </summary>
+        public static Guid User { get { return new Guid("{943d298f-d79a-7a29-a335-8833e582d252}"); } }
 
         /// <summary>
         /// Vendor (Cireson.AssetManagement.Vendor)
