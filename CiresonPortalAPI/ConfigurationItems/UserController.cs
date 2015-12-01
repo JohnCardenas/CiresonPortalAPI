@@ -28,7 +28,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <param name="sort">If true, this list will be sorted before returning it</param>
         /// <param name="insertNullItem">If true, a null item will be inserted as the first item</param>
         /// <returns></returns>
-        public static async Task<List<PartialUser>> GetUserList(AuthorizationToken authToken, string userFilter = "", bool filterByAnalyst = false, bool groupsOnly = false, int maxNumberOfResults = 10, bool sort = true, bool insertNullItem = true)
+        public static async Task<List<User>> GetUserList(AuthorizationToken authToken, string userFilter = "", bool filterByAnalyst = false, bool groupsOnly = false, int maxNumberOfResults = 10, bool sort = true)
         {
             if (!authToken.IsValid)
             {
@@ -44,16 +44,18 @@ namespace CiresonPortalAPI.ConfigurationItems
                 string result = await helper.GetAsync(endpoint);
 
                 // Deserialize
-                List<PartialUser> returnList = JsonConvert.DeserializeObject<List<PartialUser>>(result);
+                List<PartialUser> partialList = JsonConvert.DeserializeObject<List<PartialUser>>(result);
 
                 if (sort)
                 {
-                    returnList.Sort(new PartialUserComparer());
+                    partialList.Sort(new PartialUserComparer());
                 }
 
-                if (insertNullItem)
+                // Convert PartialUsers to Users
+                List<User> returnList = new List<User>();
+                foreach (PartialUser partialUser in partialList)
                 {
-                    returnList.Insert(0, new PartialUser(Guid.Empty, string.Empty));
+                    returnList.Add(new User(partialUser));
                 }
 
                 return returnList;
