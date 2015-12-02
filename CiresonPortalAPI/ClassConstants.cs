@@ -12,6 +12,11 @@ namespace CiresonPortalAPI
     public static class ClassConstants
     {
         /// <summary>
+        /// Active Directory User (Microsoft.AD.User)
+        /// </summary>
+        public static Guid ADUser { get { return new Guid("{10a7f898-e672-ccf3-8881-360bfb6a8f9a}"); } }
+
+        /// <summary>
         /// Catalog Item (Cireson.AssetManagement.CatalogItem)
         /// </summary>
         public static Guid CatalogItem { get { return new Guid("{c0c58e7f-7865-55cc-4600-753305b9be64}"); } }
