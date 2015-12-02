@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -78,16 +79,12 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         internal static async Task<T> GetConfigurationItemByBaseId<T>(AuthorizationToken authToken, Guid baseId) where T : ConfigurationItem
         {
-            PropertyPathHelper pathHelper = new PropertyPathHelper();
-            pathHelper.PropertyName = "BaseId";
-            pathHelper.ObjectClass = GetClassIdByType<T>();
-
             QueryCriteriaExpression expr = new QueryCriteriaExpression
             {
-                PropertyName = pathHelper.ToString(),
-                PropertyType = QueryCriteriaPropertyType.Property,
+                PropertyName = "Id",
+                PropertyType = QueryCriteriaPropertyType.GenericProperty,
                 Operator = QueryCriteriaExpressionOperator.Equal,
-                Value = baseId.ToString("B")
+                Value = baseId.ToString("D")
             };
 
             QueryCriteria criteria = new QueryCriteria(GetProjectionIdByType<T>())
@@ -97,7 +94,7 @@ namespace CiresonPortalAPI.ConfigurationItems
 
             criteria.Expressions.Add(expr);
 
-            List<T> retList = await TypeProjectionController.GetProjectionByCriteria<T>(authToken, ExcludeInactiveItems<T>(criteria));
+            List<T> retList = await TypeProjectionController.GetProjectionByCriteria<T>(authToken, criteria);
 
             if (retList.Count == 0)
                 return null;
@@ -152,6 +149,8 @@ namespace CiresonPortalAPI.ConfigurationItems
                 return TypeProjectionConstants.Location;
             else if (typeof(T) == typeof(PurchaseOrder))
                 return TypeProjectionConstants.PurchaseOrder;
+            else if (typeof(T) == typeof(User))
+                return TypeProjectionConstants.User;
             else
                 throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
         }
@@ -169,6 +168,8 @@ namespace CiresonPortalAPI.ConfigurationItems
                 return ClassConstants.Location;
             else if (typeof(T) == typeof(PurchaseOrder))
                 return ClassConstants.PurchaseOrder;
+            else if (typeof(T) == typeof(User))
+                return ClassConstants.ADUser;
             else
                 throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
         }
