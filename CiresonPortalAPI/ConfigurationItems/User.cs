@@ -235,6 +235,7 @@ namespace CiresonPortalAPI.ConfigurationItems
 
         #endregion Read-Only Properties
 
+        #region Constructors
         public User (PartialUser p)
         {
             this.CurrentObject = new ExpandoObject();
@@ -243,6 +244,23 @@ namespace CiresonPortalAPI.ConfigurationItems
             this.IsPartialUser = true;
             this.ReadOnly = true;
         }
+
+        public User()
+        {
+            this.CurrentObject = new ExpandoObject();
+            this.ReadOnly = true;
+        }
+        #endregion // Constructors
+
+        #region Relationship Properties
+        /// <summary>
+        /// Returns this user's Manager. Read only.
+        /// </summary>
+        public User Manager
+        {
+            get { return this.GetRelatedObject<User>("Manager"); }
+        }
+        #endregion // Relationship Properties
 
         /// <summary>
         /// Retrieves all user properties for a partial user object.
