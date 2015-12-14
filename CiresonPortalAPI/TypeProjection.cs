@@ -112,7 +112,7 @@ namespace CiresonPortalAPI
             if (!authToken.IsValid)
                 throw new InvalidCredentialException("AuthorizationToken is not valid.");
 
-            if (this.DirtyObject)
+            if (!this.DirtyObject)
                 throw new CiresonApiException("Object is not dirty, Commit() aborted.");
 
             try
