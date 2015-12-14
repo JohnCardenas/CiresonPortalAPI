@@ -84,6 +84,24 @@ namespace CiresonPortalAPI.ConfigurationItems
 
         #region Relationship Properties
         /// <summary>
+        /// Gets or sets the owning User of this HardwareAsset
+        /// </summary>
+        public User Custodian
+        {
+            get { return this.GetRelatedObject<User>("OwnedBy"); }
+            set { this.SetRelatedObject("OwnedBy", value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the Location of this HardwareAsset
+        /// </summary>
+        public Location Location
+        {
+            get { return this.GetRelatedObject<Location>("Target_HardwareAssetHasLocation"); }
+            set { this.SetRelatedObject("Target_HardwareAssetHasLocation", value, "Location"); }
+        }
+
+        /// <summary>
         /// Gets or sets the PurchaseOrder related to this HardwareAsset
         /// </summary>
         public PurchaseOrder PurchaseOrder
