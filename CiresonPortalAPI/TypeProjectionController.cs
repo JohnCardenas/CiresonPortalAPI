@@ -18,6 +18,7 @@ namespace CiresonPortalAPI
     {
         const string GET_BY_CRITERIA_ENDPOINT = "/api/V3/Projection/GetProjectionByCriteria";
         const string CREATE_PROJECTION_BY_TEMPLATE_ENDPOINT = "/api/V3/Projection/CreateProjectionByTemplate";
+        const string CREATE_PROJECTION_BY_DATA_ENDPOINT = "/api/V3/Projection/Commit";
 
         /// <summary>
         /// Creates an object projection from the specified template, by the specified user.
@@ -46,7 +47,53 @@ namespace CiresonPortalAPI
                 ExpandoObjectConverter converter = new ExpandoObjectConverter();
                 dynamic jsonObject = JsonConvert.DeserializeObject<ExpandoObject>(result, converter);
 
-                return (T)Activator.CreateInstance(typeof(T), new object[] { jsonObject, false });
+                BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+                CultureInfo culture = null;
+                return (T)Activator.CreateInstance(typeof(T), flags, null, new object[] { jsonObject, false }, culture);
+            }
+            catch (Exception e)
+            {
+                throw; // Rethrow exceptions
+            }
+        }
+
+        /// <summary>
+        /// Creates an object projection using the specified data.
+        /// </summary>
+        /// <typeparam name="T">Type of projection to create</typeparam>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="data">Data object to specify for creation</param>
+        /// <param name="readOnly">Should this projection be read only?</param>
+        /// <returns></returns>
+        public static async Task<T> CreateProjectionByData<T>(AuthorizationToken authToken, dynamic data, bool readOnly = false) where T : TypeProjection
+        {
+            if (!authToken.IsValid)
+            {
+                throw new InvalidCredentialException("AuthorizationToken is not valid.");
+            }
+            
+            try
+            {
+                string jsonObj = JsonConvert.SerializeObject(data);
+
+                // Initialize the HTTP helper and get going
+                PortalHttpHelper helper = new PortalHttpHelper(authToken);
+                string result = await helper.PostAsync(CREATE_PROJECTION_BY_DATA_ENDPOINT, jsonObj);
+
+                // Retrieve the result
+                ExpandoObjectConverter converter = new ExpandoObjectConverter();
+                dynamic resultObj = JsonConvert.DeserializeObject<ExpandoObject>(result, converter);
+
+                // Throw an exception if we didn't succeed
+                if (!resultObj.success)
+                    throw new CiresonApiException(resultObj.exception);
+
+                // Fetch the BaseId of the new object and create the projection
+                data.formJson.current.BaseId = resultObj.BaseId;
+
+                BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+                CultureInfo culture = null;
+                return (T)Activator.CreateInstance(typeof(T), flags, null, new object[] { data.formJson.current, true, readOnly }, culture);
             }
             catch (Exception e)
             {
@@ -82,7 +129,9 @@ namespace CiresonPortalAPI
                 foreach (ExpandoObject obj in objectList)
                 {
                     // Instantiate and add to the list
-                    T instanceType = Activator.CreateInstance<T>();
+                    BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+                    CultureInfo culture = null;
+                    T instanceType = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
 
                     instanceType.OriginalObject = obj;
                     instanceType.CurrentObject = obj;

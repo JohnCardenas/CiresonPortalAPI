@@ -272,7 +272,9 @@ namespace CiresonPortalAPI
             {
                 var objectData = (IDictionary<string, object>)this.CurrentObject;
 
-                T relObj = Activator.CreateInstance<T>();
+                BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+                CultureInfo culture = null;
+                T relObj = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
 
                 relObj.CurrentObject = (ExpandoObject)objectData[modelProperty];
                 relObj.ReadOnly = true;
@@ -300,7 +302,9 @@ namespace CiresonPortalAPI
 
                 foreach (dynamic obj in objectList)
                 {
-                    T relObj = Activator.CreateInstance<T>();
+                    BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+                    CultureInfo culture = null;
+                    T relObj = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
 
                     relObj.CurrentObject = obj;
                     relObj.ReadOnly = true;
