@@ -137,6 +137,48 @@ namespace CiresonPortalAPI.ConfigurationItems
         }
 
         /// <summary>
+        /// Creates a new ConfigurationItem of derived type T and returns it
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="authToken"></param>
+        /// <returns></returns>
+        internal static async Task<T> CreateConfigurationItem<T>(AuthorizationToken authToken, string name, string displayName, dynamic objProps = null) where T : ConfigurationItem
+        {
+            dynamic ci = new ExpandoObject();
+
+            ci.formJson = new ExpandoObject();
+            ci.formJson.isDirty = true;
+            ci.formJson.original = null;
+
+            ci.formJson.current = new ExpandoObject();
+            ci.formJson.current.BaseId = null;
+            ci.formJson.current.ClassTypeId = GetClassIdByType<T>();
+            ci.formJson.current.ClassName = GetClassNameByType<T>();
+            ci.formJson.current.Name = name;
+            ci.formJson.current.DisplayName = displayName;
+            ci.formJson.current.TimeAdded = "0001-01-01T00:00:00";
+
+            ci.formJson.current.ObjectStatus = new ExpandoObject();
+            ci.formJson.current.ObjectStatus.Id = EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active;
+
+            // Merge another property object in
+            if (objProps != null)
+            {
+                IDictionary<string, object> ciDict = (IDictionary<string, object>)ci.formJson.current;
+
+                foreach (var property in objProps.GetType().GetProperties())
+                {
+                    if (property.CanRead)
+                    {
+                        ciDict[property.Name] = property.GetValue(objProps);
+                    }
+                }
+            }
+
+            return await TypeProjectionController.CreateProjectionByData<T>(authToken, ci);
+        }
+
+        /// <summary>
         /// Returns the SCSM projection ID of the specified type
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -173,7 +215,29 @@ namespace CiresonPortalAPI.ConfigurationItems
             else
                 throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
         }
+
+        /// <summary>
+        /// Returns the SCSM class ID of the specified type
+        /// </summary>
+        /// <typeparam name="T">Class to find</typeparam>
+        /// <returns></returns>
+        private static string GetClassNameByType<T>()
+        {
+            if (typeof(T) == typeof(HardwareAsset))
+                return "Cireson.AssetManagement.HardwareAsset";
+            else if (typeof(T) == typeof(Location))
+                return "Cireson.AssetManagement.Location";
+            else if (typeof(T) == typeof(PurchaseOrder))
+                return "Cireson.AssetManagement.PurchaseOrder";
+            else
+                throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
+        }
         #endregion // General Methods
+
+        #region Constructors
+        internal ConfigurationItem(ExpandoObject obj, bool existingObject = false, bool readOnly = true) : base(obj, existingObject, readOnly) { }
+        internal ConfigurationItem() : this(null, true, false) { }
+        #endregion // Constructors
     }
 
     internal class ConfigurationItemComparer : IComparer<ConfigurationItem>
