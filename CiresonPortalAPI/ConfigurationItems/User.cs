@@ -236,7 +236,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         #endregion Read-Only Properties
 
         #region Constructors
-        public User (PartialUser p)
+        public User (PartialUser p) : base(null, true, true)
         {
             this.CurrentObject = new ExpandoObject();
             this.CurrentObject.BaseId = p.Id;
@@ -245,11 +245,8 @@ namespace CiresonPortalAPI.ConfigurationItems
             this.ReadOnly = true;
         }
 
-        public User()
-        {
-            this.CurrentObject = new ExpandoObject();
-            this.ReadOnly = true;
-        }
+        internal User(ExpandoObject obj, bool existingObject = false, bool readOnly = true) : base(obj, existingObject, readOnly) { }
+        internal User() : base(null, true, true) { }
         #endregion // Constructors
 
         #region Relationship Properties

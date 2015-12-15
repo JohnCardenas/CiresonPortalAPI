@@ -125,5 +125,10 @@ namespace CiresonPortalAPI.ConfigurationItems
             set { this.SetRelatedObject("Target_LocationContainsLocation", value, "Parent"); }
         }
         #endregion Relationship Properties
+
+        #region Constructors
+        internal Location(ExpandoObject obj, bool existingObject = false, bool readOnly = true) : base(obj, existingObject, readOnly) { }
+        internal Location() : base() { }
+        #endregion // Constructors
     }
 }

@@ -110,5 +110,10 @@ namespace CiresonPortalAPI.ConfigurationItems
             set { this.SetRelatedObject("Target_HardwareAssetHasPurchaseOrder", value, "PurchaseOrder"); }
         }
         #endregion Relationship Properties
+
+        #region Constructors
+        internal HardwareAsset(ExpandoObject obj, bool existingObject = false, bool readOnly = true) : base(obj, existingObject, readOnly) { }
+        internal HardwareAsset() : base() { }
+        #endregion // Constructors
     }
 }

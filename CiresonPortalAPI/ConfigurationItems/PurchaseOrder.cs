@@ -96,5 +96,10 @@ namespace CiresonPortalAPI.ConfigurationItems
             set { this.SetRelatedObject("Source_PurchaseOrderHasChildPurchaseOrder", value, "Parent"); }
         }
         #endregion Relationship Properties
+
+        #region Constructors
+        internal PurchaseOrder(ExpandoObject obj, bool existingObject = false, bool readOnly = true) : base(obj, existingObject, readOnly) { }
+        internal PurchaseOrder() : base() { }
+        #endregion // Constructors
     }
 }
