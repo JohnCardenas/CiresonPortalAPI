@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         public static async Task<List<HardwareAsset>> GetHardwareAssetsByCriteria(AuthorizationToken authToken, QueryCriteria criteria, bool includeInactiveItems = false)
         {
             criteria.ProjectionID = TypeProjectionConstants.HardwareAsset;
-            return await ConfigurationItem.GetConfigurationItemsByCriteria<HardwareAsset>(authToken, criteria);
+            return await ConfigurationItemController.GetConfigurationItemsByCriteria<HardwareAsset>(authToken, criteria);
         }
 
         /// <summary>
@@ -70,20 +71,27 @@ namespace CiresonPortalAPI.ConfigurationItems
         #endregion Finders
 
         #region Creators
-
         /// <summary>
-        /// Creates a new Hardware Asset based on the supplied Template ID
+        /// Creates a new HardwareAsset
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="templateId">TemplateID to use</param>
-        /// <param name="userId">ID of the user creating the Incident</param>
+        /// <param name="model">Model of the asset</param>
+        /// <param name="manufacturer">Manufacturer of the asset</param>
+        /// <param name="assetTag">Asset tag</param>
+        /// <param name="serialNumber">Asset's serial number</param>
         /// <returns></returns>
-        public static async Task<HardwareAsset> CreateNewHardwareAsset(AuthorizationToken authToken, Guid templateId, Guid userId)
+        public static async Task<HardwareAsset> CreateNewHardwareAsset(AuthorizationToken authToken, string model, string manufacturer, string assetTag, string serialNumber)
         {
-            TypeProjection projection = await TypeProjectionController.CreateProjectionByTemplate<HardwareAsset>(authToken, templateId, userId);
-            return (HardwareAsset)projection;
-        }
+            dynamic extraProps = new {
+                Model = model,
+                Manufacturer = manufacturer,
+                AssetTag = assetTag,
+                SerialNumber = serialNumber,
+                HardwareAssetID = assetTag
+            };
 
+            return await ConfigurationItemController.CreateConfigurationItem<HardwareAsset>(authToken, assetTag, assetTag, extraProps);
+        }
         #endregion Creators
 
         #region Helpers

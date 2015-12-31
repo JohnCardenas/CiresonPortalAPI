@@ -89,7 +89,7 @@ namespace CiresonPortalAPI
                     throw new CiresonApiException(resultObj.exception);
 
                 // Fetch the BaseId of the new object and create the projection
-                data.formJson.current.BaseId = resultObj.BaseId;
+                data.formJson.current.BaseId = new Guid(resultObj.BaseId);
 
                 BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
                 CultureInfo culture = null;

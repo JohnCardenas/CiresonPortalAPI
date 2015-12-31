@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CiresonPortalAPI.ConfigurationItems;
+using CiresonPortalAPI.WorkItems;
 
 namespace CiresonPortalAPI
 {
@@ -11,6 +13,25 @@ namespace CiresonPortalAPI
     /// </summary>
     public static class TypeProjectionConstants
     {
+        /// <summary>
+        /// Returns the SCSM projection ID of the specified type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static Guid GetProjectionIdByType<T>()
+        {
+            if (typeof(T) == typeof(HardwareAsset))
+                return TypeProjectionConstants.HardwareAsset;
+            else if (typeof(T) == typeof(Location))
+                return TypeProjectionConstants.Location;
+            else if (typeof(T) == typeof(PurchaseOrder))
+                return TypeProjectionConstants.PurchaseOrder;
+            else if (typeof(T) == typeof(User))
+                return TypeProjectionConstants.User;
+            else
+                throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
+        }
+
         /// <summary>
         /// Build (advanced)
         /// System.Build.ProjectionType

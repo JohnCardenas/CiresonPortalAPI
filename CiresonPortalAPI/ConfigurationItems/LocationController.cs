@@ -17,7 +17,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         public static async Task<List<Location>> GetLocationsByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
             criteria.ProjectionID = TypeProjectionConstants.PurchaseOrder;
-            return await ConfigurationItem.GetConfigurationItemsByCriteria<Location>(authToken, criteria);
+            return await ConfigurationItemController.GetConfigurationItemsByCriteria<Location>(authToken, criteria);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         {
             QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.Location);
 
-            return await TypeProjectionController.GetProjectionByCriteria<Location>(authToken, ConfigurationItem.ExcludeInactiveItems<Location>(criteria));
+            return await TypeProjectionController.GetProjectionByCriteria<Location>(authToken, ConfigurationItemController.ExcludeInactiveItems<Location>(criteria));
         }
     }
 }

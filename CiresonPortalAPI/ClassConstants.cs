@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CiresonPortalAPI.ConfigurationItems;
+using CiresonPortalAPI.WorkItems;
 
 namespace CiresonPortalAPI
 {
@@ -12,9 +14,49 @@ namespace CiresonPortalAPI
     public static class ClassConstants
     {
         /// <summary>
+        /// Returns the SCSM class ID of the specified type
+        /// </summary>
+        /// <typeparam name="T">Class to find</typeparam>
+        /// <returns></returns>
+        public static string GetClassNameByType<T>()
+        {
+            if (typeof(T) == typeof(HardwareAsset))
+                return "Cireson.AssetManagement.HardwareAsset";
+            else if (typeof(T) == typeof(Location))
+                return "Cireson.AssetManagement.Location";
+            else if (typeof(T) == typeof(PurchaseOrder))
+                return "Cireson.AssetManagement.PurchaseOrder";
+            else
+                throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
+        }
+
+        /// <summary>
+        /// Returns the SCSM class ID of the specified type
+        /// </summary>
+        /// <typeparam name="T">Class to find</typeparam>
+        /// <returns></returns>
+        public static Guid GetClassIdByType<T>()
+        {
+            if (typeof(T) == typeof(HardwareAsset))
+                return ClassConstants.HardwareAsset;
+            else if (typeof(T) == typeof(Location))
+                return ClassConstants.Location;
+            else if (typeof(T) == typeof(PurchaseOrder))
+                return ClassConstants.PurchaseOrder;
+            else if (typeof(T) == typeof(User))
+                return ClassConstants.ADUser.Id;
+            else
+                throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
+        }
+
+        /// <summary>
         /// Active Directory User (Microsoft.AD.User)
         /// </summary>
-        public static Guid ADUser { get { return new Guid("{10a7f898-e672-ccf3-8881-360bfb6a8f9a}"); } }
+        public static class ADUser
+        {
+            public static string Name { get { return "Microsoft.AD.User"; } }
+            public static Guid   Id { get { return new Guid("{10a7f898-e672-ccf3-8881-360bfb6a8f9a}"); } }
+        }
 
         /// <summary>
         /// Catalog Item (Cireson.AssetManagement.CatalogItem)
