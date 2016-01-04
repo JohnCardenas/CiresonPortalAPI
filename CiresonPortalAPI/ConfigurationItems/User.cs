@@ -9,7 +9,7 @@ using System.Dynamic;
 
 namespace CiresonPortalAPI.ConfigurationItems
 {
-    public class User : ConfigurationItem
+    public class User : ConfigurationItem, IEquatable<ConfigurationItem>
     {
         #region Fields
         private bool _bIsPartialUser = false;
@@ -259,6 +259,18 @@ namespace CiresonPortalAPI.ConfigurationItems
         }
         #endregion // Relationship Properties
 
+        #region General Methods
+        /// <summary>
+        /// Refreshes this User from the portal. This will reset any changes made to the object.
+        /// This method must be called before accessing properties of children in relationship collections in order to populate all properties.
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <returns></returns>
+        public override async Task<bool> Refresh(AuthorizationToken authToken)
+        {
+            return await this.RefreshType<User>(authToken);
+        }
+
         /// <summary>
         /// Retrieves all user properties for a partial user object.
         /// </summary>
@@ -278,5 +290,6 @@ namespace CiresonPortalAPI.ConfigurationItems
             else
                 return false;
         }
+        #endregion // General Methods
     }
 }

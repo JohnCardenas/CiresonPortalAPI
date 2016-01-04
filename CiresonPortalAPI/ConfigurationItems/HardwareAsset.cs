@@ -9,7 +9,7 @@ using System.Dynamic;
 
 namespace CiresonPortalAPI.ConfigurationItems
 {
-    public class HardwareAsset : ConfigurationItem
+    public class HardwareAsset : ConfigurationItem, IEquatable<ConfigurationItem>
     {
         //private PurchaseOrder _oPurchaseOrder = null;
 
@@ -115,5 +115,18 @@ namespace CiresonPortalAPI.ConfigurationItems
         internal HardwareAsset(ExpandoObject obj, bool existingObject = false, bool readOnly = true) : base(obj, existingObject, readOnly) { }
         internal HardwareAsset() : base() { }
         #endregion // Constructors
+
+        #region General Methods
+        /// <summary>
+        /// Refreshes this HardwareAsset from the portal. This will reset any changes made to the object.
+        /// This method must be called before accessing properties of children in relationship collections in order to populate all properties.
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <returns></returns>
+        public override async Task<bool> Refresh(AuthorizationToken authToken)
+        {
+            return await this.RefreshType<HardwareAsset>(authToken);
+        }
+        #endregion // General Methods
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CiresonPortalAPI.ConfigurationItems
 {
-    public abstract class ConfigurationItem : TypeProjection
+    public abstract class ConfigurationItem : TypeProjection, IEquatable<ConfigurationItem>
     {
         #region Read-Only Properties
         /// <summary>Gets the DisplayName of the Configuration Item. Read only.</summary>
@@ -48,6 +48,70 @@ namespace CiresonPortalAPI.ConfigurationItems
         public override string ToString()
         {
             return this.DisplayName;
+        }
+
+        /// <summary>
+        /// Equality check method
+        /// </summary>
+        /// <param name="other">Other ConfigurationItem to check for equality</param>
+        /// <returns></returns>
+        public bool Equals(ConfigurationItem other)
+        {
+            if (other == null)
+                return false;
+
+            if (this.Id == other.Id)
+                return true;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Equality check method
+        /// </summary>
+        /// <param name="obj">Other object to check for equality</param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ConfigurationItem);
+        }
+
+        /// <summary>
+        /// Hash code method
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+
+        /// <summary>
+        /// Refreshes a configuration item from the portal.
+        /// This method must be called before accessing properties of children in relationship collections in order to populate all properties.
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <returns></returns>
+        public abstract Task<bool> Refresh(AuthorizationToken authToken);
+
+        /// <summary>
+        /// Refreshes a configuration item from the database
+        /// </summary>
+        /// <typeparam name="T">Type of the ConfigurationItem to refresh</typeparam>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <returns></returns>
+        internal async Task<bool> RefreshType<T>(AuthorizationToken authToken) where T : ConfigurationItem
+        {
+            ConfigurationItem ci = await ConfigurationItemController.GetConfigurationItemByBaseId<T>(authToken, this.Id);
+
+            if (ci == null)
+                return false;
+
+            this.CurrentObject  = ci.CurrentObject;
+            this.OriginalObject = ci.CurrentObject;
+            this.DirtyObject    = ci.DirtyObject;
+            this.ReadOnly       = ci.ReadOnly;
+
+            return true;
         }
         #endregion // General Methods
 
