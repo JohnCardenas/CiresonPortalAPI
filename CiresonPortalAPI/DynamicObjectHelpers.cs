@@ -44,6 +44,12 @@ namespace CiresonPortalAPI
             {
                 return (T)exp[key];
             }
+            // If we're dealing with a string but we need a Guid, cast it and return
+            else if ((t == typeof(Guid)) && (exp[key] is String))
+            {
+                Guid g = new Guid((string)exp[key]);
+                return (T)Convert.ChangeType(g, t);
+            }
             // If we have a nullable type we need to handle it differently
             else if (u != null)
             {
