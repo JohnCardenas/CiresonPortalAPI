@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -13,12 +14,15 @@ using System.Text;
 using System.Threading.Tasks;
 using CredentialManagement;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace CiresonPortalAPI
 {
     public static partial class AuthorizationController
     {
-        const string AUTHORIZATION_ENDPOINT = "/api/V3/Authorization/GetToken";
+        const string AUTHORIZATION_ENDPOINT      = "/api/V3/Authorization/GetToken";
+        const string IS_USER_AUTHORIZED_ENDPOINT = "/api/V3/User/IsUserAuthorized";
+        const string GET_TIER_QUEUES_ENDPOINT    = "/api/V3/User/GetUsersTierQueueEnumerations";
 
         /// <summary>
         /// Retrieves an authorization token from the server
@@ -77,6 +81,90 @@ namespace CiresonPortalAPI
                     bool found = (response.Headers.WwwAuthenticate.Contains(negotiate) || response.Headers.WwwAuthenticate.Contains(ntlm) || response.Headers.WwwAuthenticate.Contains(kerberos));
                     return found;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Queries the Cireson Portal for the specified user's security rights
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="userName">User name to query</param>
+        /// <param name="domain">Domain of the user</param>
+        /// <returns></returns>
+        public static async Task<ConsoleUser> GetUserRights(AuthorizationToken authToken, string userName, string domain)
+        {
+            if (!authToken.IsValid)
+            {
+                throw new InvalidCredentialException("AuthorizationToken is not valid.");
+            }
+
+            string endpointUrl = IS_USER_AUTHORIZED_ENDPOINT + "?userName=" + userName + "&domain=" + domain;
+
+            try
+            {
+                // Initialize the HTTP helper and get going
+                PortalHttpHelper helper = new PortalHttpHelper(authToken);
+                string result = await helper.PostAsync(endpointUrl, String.Empty);
+
+                // Deserialize the object to an ExpandoObject and return a ConsoleUser
+                ExpandoObjectConverter converter = new ExpandoObjectConverter();
+                dynamic obj = JsonConvert.DeserializeObject<ExpandoObject>(result, converter);
+
+                ConsoleUser returnObj = new ConsoleUser(obj);
+                returnObj.IncidentSupportGroups = await GetUsersTierQueueEnumerations(authToken, returnObj);
+
+                return returnObj;
+            }
+            catch (Exception e)
+            {
+                throw; // Rethrow exceptions
+            }
+        }
+
+        /// <summary>
+        /// Convenience method to query the Cireson Portal for the authenticated user's security rights.
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <returns></returns>
+        public static async Task<ConsoleUser> GetUserRights(AuthorizationToken authToken)
+        {
+            return await GetUserRights(authToken, authToken.UserName, authToken.Domain);
+        }
+
+        /// <summary>
+        /// Returns a list of tier queue (support group) enumerations that the specified ConsoleUser is a member of
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="user">ConsoleUser token</param>
+        /// <returns></returns>
+        internal static async Task<List<Enumeration>> GetUsersTierQueueEnumerations(AuthorizationToken authToken, ConsoleUser user)
+        {
+            if (!authToken.IsValid)
+            {
+                throw new InvalidCredentialException("AuthorizationToken is not valid.");
+            }
+
+            string endpointUrl = GET_TIER_QUEUES_ENDPOINT + "/" + user.Id.ToString("D");
+
+            try
+            {
+                PortalHttpHelper helper = new PortalHttpHelper(authToken);
+                string result = await helper.GetAsync(endpointUrl);
+
+                dynamic obj = JsonConvert.DeserializeObject<List<ExpandoObject>>(result, new ExpandoObjectConverter());
+
+                List<Enumeration> returnList = new List<Enumeration>();
+
+                foreach (var enumJson in obj)
+                {
+                    returnList.Add(new Enumeration(enumJson.Id, enumJson.Text, enumJson.Name, true, false));
+                }
+
+                return returnList;
+            }
+            catch (Exception e)
+            {
+                throw; // Rethrow exceptions
             }
         }
     }
