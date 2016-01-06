@@ -12,7 +12,8 @@ namespace CiresonPortalAPI.ConfigurationItems
     public class User : ConfigurationItem, IEquatable<ConfigurationItem>
     {
         #region Fields
-        private bool _bIsPartialUser = false;
+        bool   _isPartialUser = false;
+        string _emailAddress = null;
         #endregion // Fields
 
         #region Read-Only Properties
@@ -89,6 +90,38 @@ namespace CiresonPortalAPI.ConfigurationItems
         }
 
         /// <summary>
+        /// Returns the user's email address. Read-only.
+        /// </summary>
+        public string Email
+        {
+            get
+            {
+                if (_emailAddress == null)
+                {
+                    _emailAddress = string.Empty;
+
+                    // Find the user's email address
+                    if (((IDictionary<string, object>)this.CurrentObject).ContainsKey("Preference"))
+                    {
+                        if (this.CurrentObject.Preference is List<object>)
+                        {
+                            foreach (var prefObj in this.CurrentObject.Preference)
+                            {
+                                if (prefObj.ChannelName == "SMTP")
+                                {
+                                    _emailAddress = prefObj.TargetAddress;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return _emailAddress;
+            }
+        }
+
+        /// <summary>
         /// Returns the user's fax number. Read-only.
         /// </summary>
         public string Fax
@@ -141,8 +174,8 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// </summary>
         public bool IsPartialUser
         {
-            get { return _bIsPartialUser; }
-            private set { _bIsPartialUser = value; }
+            get { return _isPartialUser; }
+            private set { _isPartialUser = value; }
         }
 
         /// <summary>
