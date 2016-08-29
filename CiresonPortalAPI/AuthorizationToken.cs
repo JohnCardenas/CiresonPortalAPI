@@ -36,8 +36,8 @@ namespace CiresonPortalAPI
         internal string            Token        { get { return _sToken;         } }
         internal PortalCredentials Credentials  { get { return _oCredentials;   } }
 
-        public string UserName { get { return _oCredentials.UserNameNoDomain; } }
-        public string Domain   { get { return _oCredentials.Domain;           } }
+        public string UserName { get { return _oCredentials.Username; } }
+        public string Domain   { get { return _oCredentials.Domain;   } }
 
         internal bool WindowsAuthEnabled { get { return _bWindowsAuthEnabled; } }
 

@@ -34,7 +34,7 @@ namespace CiresonPortalAPI
         /// <exception cref="System.Security.Authentication.InvalidCredentialException">Thrown when user credentials are invalid.</exception>
         /// <exception cref="CiresonPortalAPI.CiresonApiException">Thrown when an error occurs in the API.</exception>
         /// <returns></returns>
-        public static async Task<AuthorizationToken> GetAuthorizationToken(string portalUrl, string userName, SecureString password, string languageCode = "ENU")
+        public static async Task<AuthorizationToken> GetAuthorizationToken(string portalUrl, string userName, SecureString password, string domain, string languageCode = "ENU")
         {
             try
             {
@@ -45,6 +45,7 @@ namespace CiresonPortalAPI
                 PortalCredentials credentials = new PortalCredentials();
                 credentials.Username = userName;
                 credentials.SecurePassword = password;
+                credentials.Domain = domain;
 
                 // Initialize the HTTP helper and do the heavy lifting
                 PortalHttpHelper helper = new PortalHttpHelper(portalUrl, credentials, windowsAuthEnabled);
@@ -144,7 +145,7 @@ namespace CiresonPortalAPI
                 throw new InvalidCredentialException("AuthorizationToken is not valid.");
             }
 
-            string endpointUrl = GET_TIER_QUEUES_ENDPOINT + "/" + user.Id.ToString("D");
+            string endpointUrl = GET_TIER_QUEUES_ENDPOINT + "?id=" + user.Id.ToString("D");
 
             try
             {
