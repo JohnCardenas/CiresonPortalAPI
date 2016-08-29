@@ -57,13 +57,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         public bool Equals(ConfigurationItem other)
         {
-            if (other == null)
-                return false;
-
-            if (this.Id == other.Id)
-                return true;
-            else
-                return false;
+            return Equals(this, other);
         }
 
         /// <summary>
@@ -74,6 +68,48 @@ namespace CiresonPortalAPI.ConfigurationItems
         public override bool Equals(object obj)
         {
             return Equals(obj as ConfigurationItem);
+        }
+
+        /// <summary>
+        /// Equality check method
+        /// </summary>
+        /// <param name="a">First object to check for equality</param>
+        /// <param name="b">Second object to check for equality</param>
+        /// <returns></returns>
+        public static bool Equals(ConfigurationItem a, ConfigurationItem b)
+        {
+            // If both or null or the same instance, return true
+            if (System.Object.ReferenceEquals(a, b))
+                return true;
+
+            // If one is null but not both, return false
+            if (((object)a == null) || ((object)b == null))
+                return false;
+
+            // Return true if the IDs match
+            return a.Id == b.Id;
+        }
+
+        /// <summary>
+        /// Overload equality check operator
+        /// </summary>
+        /// <param name="a">First operand to check for equality</param>
+        /// <param name="b">Second operand to check for equality</param>
+        /// <returns></returns>
+        public static bool operator ==(ConfigurationItem a, ConfigurationItem b)
+        {
+            return Equals(a, b);
+        }
+
+        /// <summary>
+        /// Overload non-equality check operator
+        /// </summary>
+        /// <param name="a">First operand to check for non-equality</param>
+        /// <param name="b">Second operand to check for non-equality</param>
+        /// <returns></returns>
+        public static bool operator !=(ConfigurationItem a, ConfigurationItem b)
+        {
+            return !Equals(a, b);
         }
 
         /// <summary>
