@@ -68,6 +68,18 @@ namespace CiresonPortalAPI.ConfigurationItems
             return await HardwareAssetController.GetHardwareAssetsByCriteria(authToken, criteria);
         }
 
+        /// <summary>
+        /// Convenience method that returns a list of HardwareAssets by asset type. Depending on the size of the asset database,
+        /// this might be a VERY large list, and therefore very time consuming!
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="assetType">HardwareAssetType</param>
+        /// <returns></returns>
+        public static async Task<List<HardwareAsset>> GetHardwareAssetsByType(AuthorizationToken authToken, Enumeration assetType)
+        {
+            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "HardwareAssetType"), assetType.Id.ToString());
+            return await HardwareAssetController.GetHardwareAssetsByCriteria(authToken, criteria);
+        }
         #endregion Finders
 
         #region Creators
