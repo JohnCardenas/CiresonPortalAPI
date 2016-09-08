@@ -6,7 +6,7 @@ using System.Security;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CiresonPortalAPI.IntegrationTests
+namespace CiresonPortalAPI.Tests.Integration
 {
     /// <summary>
     /// Summary description for AuthorizationTokenTests
@@ -39,6 +39,7 @@ namespace CiresonPortalAPI.IntegrationTests
         #endregion // Constructor
 
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task GetAuthenticatonTokenTest()
         {
             // Arrange
@@ -56,6 +57,7 @@ namespace CiresonPortalAPI.IntegrationTests
         }
 
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task GetUserRightsTest()
         {
             // Arrange

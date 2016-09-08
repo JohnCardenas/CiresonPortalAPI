@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CiresonPortalAPI", "CiresonPortalAPI\CiresonPortalAPI.csproj", "{65925D49-9C1E-4C8A-903F-2E3AE438E631}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CiresonPortalAPI.IntegrationTests", "CiresonPortalAPI.IntegrationTests\CiresonPortalAPI.IntegrationTests.csproj", "{7E73CA58-33AC-439D-BFF9-6DAF35B378E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CiresonPortalAPI.Tests", "CiresonPortalAPI.Tests\CiresonPortalAPI.Tests.csproj", "{7E73CA58-33AC-439D-BFF9-6DAF35B378E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
