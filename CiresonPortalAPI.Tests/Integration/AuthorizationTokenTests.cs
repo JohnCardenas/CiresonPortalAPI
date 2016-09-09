@@ -22,6 +22,7 @@ namespace CiresonPortalAPI.Tests.Integration
         public AuthorizationTokenTests() { }
         #endregion // Constructor
 
+        #region AUTH01_GetAuthorizationTokenTest
         [TestMethod]
         [TestCategory("Integration - AuthorizationController")]
         public async Task AUTH01_GetAuthorizationTokenTest()
@@ -38,7 +39,9 @@ namespace CiresonPortalAPI.Tests.Integration
             Assert.AreEqual(ConfigurationHelper.PortalUrl, _authToken.PortalUrl);
             Assert.IsTrue(_authToken.IsValid);
         }
+        #endregion
 
+        #region AUTH02_GetUserRightsTest
         [TestMethod]
         [TestCategory("Integration - AuthorizationController")]
         public async Task AUTH02_GetUserRightsTest()
@@ -55,5 +58,6 @@ namespace CiresonPortalAPI.Tests.Integration
             Assert.AreEqual(ConfigurationHelper.Domain, userRights.Domain);
             Assert.IsFalse(string.IsNullOrWhiteSpace(userRights.PrincipalName));
         }
+        #endregion
     }
 }

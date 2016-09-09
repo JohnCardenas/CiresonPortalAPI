@@ -37,7 +37,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         }
         #endregion // Properties
 
-        #region Test Cases
+        #region Class Initializer
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {
@@ -45,7 +45,9 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             tokenTask.Wait();
             _authToken = tokenTask.Result;
         }
+        #endregion // Class Initializer
 
+        #region USER01_GetUserListTest
         [TestMethod]
         [TestCategory("Integration - UserController")]
         [Description("Tests a fetch of user objects with a set limit")]
@@ -61,7 +63,9 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             // Assert
             Assert.AreEqual(MAX_USERS, userList.Count);
         }
+        #endregion
 
+        #region USER02_GetAnalystUserListTest
         [TestMethod]
         [TestCategory("Integration - UserController")]
         [Description("Tests fetching only analyst users")]
@@ -77,7 +81,9 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             Assert.AreEqual(1, userList.Count);
             Assert.IsNotNull(userList[0]);
         }
+        #endregion
 
+        #region USER03_GetUserByFilterTest
         [TestMethod]
         [TestCategory("Integration - UserController")]
         [Description("Fetches a single user as indicated by the UserFilter property in App.config")]
@@ -94,7 +100,9 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             Assert.IsNotNull(_userObject);
             Assert.IsTrue(_userObject.IsPartialUser);
         }
+        #endregion
 
+        #region USER04_ExpandPartialUserTest
         [TestMethod]
         [TestCategory("Integration - User")]
         [Description("Expands a partial user to include the full set of attributes")]
@@ -109,7 +117,9 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             Assert.IsTrue(expandTest);
             Assert.IsFalse(string.IsNullOrEmpty(_userObject.OrganizationalUnit));
         }
+        #endregion
 
+        #region USER05_RefreshUserObjectTest
         [TestMethod]
         [TestCategory("Integration - User")]
         [Description("Tests refresh functionality")]
@@ -123,7 +133,9 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             // Assert
             Assert.IsFalse(_userObject.DirtyObject);
         }
+        #endregion
 
+        #region USER06_GetRelatedManagerTest
         [TestMethod]
         [TestCategory("Integration - User")]
         [Description("Fetches the manager of the user retrieved from the UserFilter property in App.config")]
@@ -139,6 +151,6 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             Assert.IsNotNull(manager);
             Assert.IsFalse(manager.IsPartialUser);
         }
-        #endregion // Test Cases
+        #endregion
     }
 }
