@@ -14,9 +14,9 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
     public class UserTests
     {
         #region Fields
-        public static AuthorizationToken _authToken;
-        public static Guid _userId;
-        public static User _userObject;
+        private static AuthorizationToken _authToken;
+        private static Guid _userId;
+        private static User _userObject;
 
         private TestContext _testContextInstance;
         #endregion // Fields
