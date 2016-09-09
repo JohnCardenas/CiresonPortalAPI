@@ -314,7 +314,7 @@ namespace CiresonPortalAPI.ConfigurationItems
             if (this.IsPartialUser)
             {
                 // Fetch a full user object and replace the partial data model with the full one
-                User fullUser = await ConfigurationItemController.GetConfigurationItemByBaseId<User>(authToken, this.Id);
+                User fullUser = await UserController.GetUserById(authToken, this.Id);
                 this.CurrentObject = fullUser.CurrentObject;
                 this.IsPartialUser = false;
                 this.ReadOnly = true;
