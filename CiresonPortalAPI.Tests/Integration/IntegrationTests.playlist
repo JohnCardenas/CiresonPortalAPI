@@ -1,7 +1,0 @@
-<Playlist Version="1.0">
-	<Add Test="CiresonPortalAPI.Tests.Integration.AuthorizationTokenTests.GetAuthorizationTokenTest" />
-	<Add Test="CiresonPortalAPI.Tests.Integration.AuthorizationTokenTests.GetUserRightsTest" />
-	<Add Test="CiresonPortalAPI.Tests.Integration.ConfigurationItems.UserTests.GetUserListTest" />
-	<Add Test="CiresonPortalAPI.Tests.Integration.ConfigurationItems.UserTests.GetAnalystUserListTest" />
-	<Add Test="CiresonPortalAPI.Tests.Integration.ConfigurationItems.UserTests.GetUserByIdTest" />
-</Playlist>
