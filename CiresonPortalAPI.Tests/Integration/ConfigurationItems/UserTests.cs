@@ -16,6 +16,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         #region Fields
         public static AuthorizationToken _authToken;
         public static Guid _userId;
+        public static User _userObject;
 
         private TestContext _testContextInstance;
         #endregion // Fields
@@ -36,6 +37,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         }
         #endregion // Properties
 
+        #region Test Cases
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {
@@ -46,7 +48,8 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         [TestMethod]
         [TestCategory("Integration - UserController")]
-        public async Task GetUserListTest()
+        [Description("Tests a fetch of user objects with a set limit")]
+        public async Task USER01_GetUserListTest()
         {
             // Arrange
             const int MAX_USERS = 5; // Set this low to make sure the basic get list function works
@@ -61,7 +64,8 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         [TestMethod]
         [TestCategory("Integration - UserController")]
-        public async Task GetAnalystUserListTest()
+        [Description("Tests fetching only analyst users")]
+        public async Task USER02_GetAnalystUserListTest()
         {
             // Arrange
             List<User> userList;
@@ -72,23 +76,68 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             // Assert
             Assert.AreEqual(1, userList.Count);
             Assert.IsNotNull(userList[0]);
-
-            // Setup for next test
-            _userId = userList[0].Id;
         }
 
         [TestMethod]
         [TestCategory("Integration - UserController")]
-        public async Task GetUserByIdTest()
+        [Description("Fetches a single user as indicated by the UserFilter property in App.config")]
+        public async Task USER03_GetUserByFilterTest()
         {
             // Arrange
-            User user;
+            List<User> userList;
 
             // Act
-            user = await UserController.GetUserById(_authToken, _userId);
+            userList = await UserController.GetUserList(_authToken, ConfigurationHelper.UserFilter, false, false, 1);
+            _userObject = userList[0];
 
             // Assert
-            Assert.IsNotNull(user);
+            Assert.IsNotNull(_userObject);
+            Assert.IsTrue(_userObject.IsPartialUser);
         }
+
+        [TestMethod]
+        [TestCategory("Integration - User")]
+        [Description("Expands a partial user to include the full set of attributes")]
+        public async Task USER04_ExpandPartialUserTest()
+        {
+            // Arrange
+
+            // Act
+            bool expandTest = await _userObject.FetchFullAttributes(_authToken);
+
+            // Assert
+            Assert.IsTrue(expandTest);
+            Assert.IsFalse(string.IsNullOrEmpty(_userObject.OrganizationalUnit));
+        }
+
+        [TestMethod]
+        [TestCategory("Integration - User")]
+        [Description("Tests refresh functionality")]
+        public async Task USER05_RefreshUserObjectTest()
+        {
+            // Arrange
+
+            // Act
+            await _userObject.Refresh(_authToken);
+
+            // Assert
+            Assert.IsFalse(_userObject.DirtyObject);
+        }
+
+        [TestMethod]
+        [TestCategory("Integration - User")]
+        [Description("Fetches the manager of the user retrieved from the UserFilter property in App.config")]
+        public void USER06_GetRelatedManagerTest()
+        {
+            // Arrange
+            User manager;
+
+            // Act
+            manager = _userObject.Manager;
+
+            // Assert
+            Assert.IsNotNull(manager);
+        }
+        #endregion // Test Cases
     }
 }
