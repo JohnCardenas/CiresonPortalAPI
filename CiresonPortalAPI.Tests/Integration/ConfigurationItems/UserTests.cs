@@ -127,16 +127,17 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         [TestMethod]
         [TestCategory("Integration - User")]
         [Description("Fetches the manager of the user retrieved from the UserFilter property in App.config")]
-        public void USER06_GetRelatedManagerTest()
+        public async Task USER06_GetRelatedManagerTest()
         {
             // Arrange
             User manager;
 
             // Act
-            manager = _userObject.Manager;
+            manager = await UserController.GetUserById(_authToken, _userObject.Manager.Id);
 
             // Assert
             Assert.IsNotNull(manager);
+            Assert.IsFalse(manager.IsPartialUser);
         }
         #endregion // Test Cases
     }
