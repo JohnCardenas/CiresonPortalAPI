@@ -135,21 +135,81 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         }
         #endregion
 
-        #region USER06_GetRelatedManagerTest
+        #region USER06_UserPropertiesTest
         [TestMethod]
         [TestCategory("Integration - User")]
-        [Description("Fetches the manager of the user retrieved from the UserFilter property in App.config")]
-        public async Task USER06_GetRelatedManagerTest()
+        [Description("Tests exposing data from the underlying data model as properties")]
+        public void USER06_UserPropertiesTest()
+        {
+            // Arrange
+            string strData;
+            Guid guidData;
+            Enumeration enumData;
+
+            // Act
+            try
+            {
+                strData = _userObject.BusinessPhone;
+                strData = _userObject.BusinessPhone2;
+                strData = _userObject.City;
+                strData = _userObject.Company;
+                strData = _userObject.Country;
+                strData = _userObject.Department;
+                strData = _userObject.DisplayName;
+                strData = _userObject.DistinguishedName;
+                strData = _userObject.Domain;
+                strData = _userObject.Email;
+                strData = _userObject.EmployeeId;
+                strData = _userObject.Fax;
+                strData = _userObject.FirstName;
+                strData = _userObject.FQDN;
+                strData = _userObject.HomePhone;
+                strData = _userObject.HomePhone2;
+                strData = _userObject.Initials;
+                strData = _userObject.LastName;
+                strData = _userObject.Mobile;
+                strData = _userObject.Notes;
+                strData = _userObject.Office;
+                strData = _userObject.OrganizationalUnit;
+                strData = _userObject.Pager;
+                strData = _userObject.State;
+                strData = _userObject.StreetAddress;
+                strData = _userObject.Title;
+                strData = _userObject.UPN;
+                strData = _userObject.UserName;
+                strData = _userObject.Zip;
+
+                guidData = _userObject.Id;
+
+                enumData = _userObject.ObjectStatus;
+            }
+            // Assert
+            catch (Exception e)
+            {
+                Assert.Fail("Expected no exception, got " + e.Message);
+            }
+        }
+        #endregion
+
+        #region USER07_UserRelatedObjectsTest
+        [TestMethod]
+        [TestCategory("Integration - User")]
+        [Description("Tests retrieving related objects from the User retrieved from the UserFilter property in App.config")]
+        public void USER07_UserRelatedObjectsTest()
         {
             // Arrange
             User manager;
 
             // Act
-            manager = await UserController.GetUserById(_authToken, _userObject.Manager.Id);
-
+            try
+            {
+                manager = _userObject.Manager;
+            }
             // Assert
-            Assert.IsNotNull(manager);
-            Assert.IsFalse(manager.IsPartialUser);
+            catch (Exception e)
+            {
+                Assert.Fail("Expected no exception, got " + e.Message);
+            }
         }
         #endregion
     }
