@@ -24,7 +24,7 @@ namespace CiresonPortalAPI.Tests.Integration
 
         [TestMethod]
         [TestCategory("Integration - AuthorizationController")]
-        public async Task GetAuthorizationTokenTest()
+        public async Task AUTH01_GetAuthorizationTokenTest()
         {
             // Arrange
 
@@ -41,7 +41,7 @@ namespace CiresonPortalAPI.Tests.Integration
 
         [TestMethod]
         [TestCategory("Integration - AuthorizationController")]
-        public async Task GetUserRightsTest()
+        public async Task AUTH02_GetUserRightsTest()
         {
             // Arrange
             ConsoleUser userRights;
