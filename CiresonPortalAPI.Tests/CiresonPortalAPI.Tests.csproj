@@ -55,6 +55,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Integration\AuthorizationTokenTests.cs" />
+    <Compile Include="Integration\ConfigurationHelper.cs" />
+    <Compile Include="Integration\ConfigurationItems\UserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
