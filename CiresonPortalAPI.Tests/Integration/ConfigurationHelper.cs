@@ -35,5 +35,10 @@ namespace CiresonPortalAPI.Tests.Integration
         {
             get { return ConfigurationManager.AppSettings["PortalUrl"]; }
         }
+
+        public static string UserFilter
+        {
+            get { return ConfigurationManager.AppSettings["UserFilter"]; }
+        }
     }
 }
