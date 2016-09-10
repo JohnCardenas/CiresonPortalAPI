@@ -109,6 +109,8 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             {
                 Assert.Fail("Expected no exception, got " + e.Message);
             }
+
+            Assert.IsTrue(_locObject.ObjectStatus.Id == EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active);
         }
         #endregion
 
