@@ -32,7 +32,7 @@ namespace CiresonPortalAPI
             }
 
             string endpoint = (flatten ? LIST_ENDPOINT_FLAT : LIST_ENDPOINT_TREE);
-            endpoint += "/" + enumList.ToString() + "/" + (flatten ? "?itemFilter=" : "");
+            endpoint += "?id=" + enumList.ToString() + (flatten ? "&itemFilter=" : "");
 
             try
             {
