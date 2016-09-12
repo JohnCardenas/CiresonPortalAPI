@@ -24,6 +24,9 @@ using System.Runtime.InteropServices;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
+// Make internals visible to the test project
+[assembly: InternalsVisibleTo("CiresonPortalAPI.Tests")]
+
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("3f353bf2-c024-4020-aeea-85572db0f595")]
 
