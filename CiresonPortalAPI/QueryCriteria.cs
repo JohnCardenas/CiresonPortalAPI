@@ -121,10 +121,19 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>
-        /// Serializes this QueryCriteria to a JSON string
+        /// Serializes this QueryCriteria to a JSON string without formatting
         /// </summary>
         /// <returns></returns>
         public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.None);
+        }
+
+        /// <summary>
+        /// Serializes this QueryCriteria to a JSON string with human-readable formatting
+        /// </summary>
+        /// <returns></returns>
+        public string ToIndentedString()
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
