@@ -35,7 +35,7 @@ namespace CiresonPortalAPI
                 throw new InvalidCredentialException("AuthorizationToken is not valid.");
             }
 
-            string endpointUrl = CREATE_PROJECTION_BY_TEMPLATE_ENDPOINT + "/" + templateId.ToString("D") + "?createdById=" + creatingUserId.ToString("D");
+            string endpointUrl = CREATE_PROJECTION_BY_TEMPLATE_ENDPOINT + "?id=" + templateId.ToString("D") + "&createdById=" + creatingUserId.ToString("D");
 
             try
             {
