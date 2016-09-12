@@ -58,6 +58,7 @@
     <Compile Include="Integration\ConfigurationHelper.cs" />
     <Compile Include="Integration\ConfigurationItems\LocationTests.cs" />
     <Compile Include="Integration\ConfigurationItems\UserTests.cs" />
+    <Compile Include="Integration\EnumerationControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
