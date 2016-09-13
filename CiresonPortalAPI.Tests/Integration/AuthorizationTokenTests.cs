@@ -34,8 +34,8 @@ namespace CiresonPortalAPI.Tests.Integration
 
             // Assert
             Assert.IsNotNull(_authToken);
-            Assert.AreEqual(ConfigurationHelper.UserName, _authToken.UserName);
-            Assert.AreEqual(ConfigurationHelper.Domain, _authToken.Domain);
+            Assert.AreEqual(ConfigurationHelper.UserName,  _authToken.User.UserName);
+            Assert.AreEqual(ConfigurationHelper.Domain,    _authToken.User.Domain);
             Assert.AreEqual(ConfigurationHelper.PortalUrl, _authToken.PortalUrl);
             Assert.IsTrue(_authToken.IsValid);
         }
