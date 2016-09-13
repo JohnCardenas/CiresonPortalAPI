@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
@@ -147,7 +149,7 @@ namespace CiresonPortalAPI
                     CultureInfo culture = null;
                     T instanceType = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
 
-                    instanceType.OriginalObject = obj;
+                    instanceType.OriginalObject = DeepCopyExpando(obj);
                     instanceType.CurrentObject = obj;
                     instanceType.ReadOnly = false;
 
@@ -160,6 +162,19 @@ namespace CiresonPortalAPI
             {
                 throw; // Rethrow exceptions
             }
+        }
+
+        /// <summary>
+        /// Deep copies an ExpandoObject though serialization
+        /// </summary>
+        /// <param name="obj">ExpandoObject to copy</param>
+        /// <returns></returns>
+        private static ExpandoObject DeepCopyExpando(ExpandoObject obj)
+        {
+            string data = JsonConvert.SerializeObject(obj);
+            ExpandoObjectConverter converter = new ExpandoObjectConverter();
+
+            return JsonConvert.DeserializeObject<ExpandoObject>(data, converter);
         }
     }
 }
