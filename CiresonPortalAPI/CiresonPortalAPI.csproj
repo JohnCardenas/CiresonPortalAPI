@@ -61,6 +61,7 @@
     <Compile Include="ConfigurationItems\HardwareAsset.cs" />
     <Compile Include="ConfigurationItems\HardwareAssetController.cs" />
     <Compile Include="EnumerationController.cs" />
+    <Compile Include="ExpandoObjectExtensions.cs" />
     <Compile Include="WorkItems\Incident.cs" />
     <Compile Include="WorkItems\IncidentController.cs" />
     <Compile Include="ConfigurationItems\Location.cs" />

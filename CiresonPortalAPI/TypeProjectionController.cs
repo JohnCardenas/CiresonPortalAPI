@@ -149,7 +149,7 @@ namespace CiresonPortalAPI
                     CultureInfo culture = null;
                     T instanceType = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
 
-                    instanceType.OriginalObject = DeepCopyExpando(obj);
+                    instanceType.OriginalObject = obj.DeepCopy();
                     instanceType.CurrentObject = obj;
                     instanceType.ReadOnly = false;
 
@@ -162,19 +162,6 @@ namespace CiresonPortalAPI
             {
                 throw; // Rethrow exceptions
             }
-        }
-
-        /// <summary>
-        /// Deep copies an ExpandoObject though serialization
-        /// </summary>
-        /// <param name="obj">ExpandoObject to copy</param>
-        /// <returns></returns>
-        private static ExpandoObject DeepCopyExpando(ExpandoObject obj)
-        {
-            string data = JsonConvert.SerializeObject(obj);
-            ExpandoObjectConverter converter = new ExpandoObjectConverter();
-
-            return JsonConvert.DeserializeObject<ExpandoObject>(data, converter);
         }
     }
 }
