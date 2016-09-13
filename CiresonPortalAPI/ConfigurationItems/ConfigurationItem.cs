@@ -30,6 +30,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         public Enumeration ObjectStatus
         {
             get { return this.GetEnumeration("ObjectStatus"); }
+            internal set { this.SetEnumeration("ObjectStatus", value); }
         }
         #endregion // Read-Only Properties
 
