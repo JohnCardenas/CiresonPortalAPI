@@ -33,6 +33,17 @@ namespace CiresonPortalAPI.ConfigurationItems
         }
 
         /// <summary>
+        /// Returns a Location by ID
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="id">ID of the location</param>
+        /// <returns></returns>
+        public static async Task<Location> GetLocationById(AuthorizationToken authToken, Guid id)
+        {
+            return await ConfigurationItemController.GetConfigurationItemByBaseId<Location>(authToken, id);
+        }
+
+        /// <summary>
         /// Creates a new Location
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
