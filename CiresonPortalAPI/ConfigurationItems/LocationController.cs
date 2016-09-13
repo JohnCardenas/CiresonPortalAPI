@@ -31,5 +31,28 @@ namespace CiresonPortalAPI.ConfigurationItems
 
             return await TypeProjectionController.GetProjectionByCriteria<Location>(authToken, ConfigurationItemController.ExcludeInactiveItems<Location>(criteria));
         }
+
+        /// <summary>
+        /// Creates a new Location
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="name">Name of the Location</param>
+        /// <param name="displayName">DisplayName of the Location</param>
+        /// <returns></returns>
+        public static async Task<Location> CreateNewLocation(AuthorizationToken authToken, string name, string displayName)
+        {
+            return await ConfigurationItemController.CreateConfigurationItem<Location>(authToken, name, displayName);
+        }
+
+        /// <summary>
+        /// Marks a Location for deletion
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="location">Location to delete</param>
+        /// <returns></returns>
+        public static async Task<bool> DeleteLocation(AuthorizationToken authToken, Location location)
+        {
+            return await ConfigurationItemController.DeleteConfigurationItem(authToken, location);
+        }
     }
 }
