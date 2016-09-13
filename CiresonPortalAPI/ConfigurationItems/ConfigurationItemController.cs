@@ -138,5 +138,17 @@ namespace CiresonPortalAPI.ConfigurationItems
             T newCI = await TypeProjectionController.CreateProjectionByData<T>(authToken, ci);
             return await ConfigurationItemController.GetConfigurationItemByBaseId<T>(authToken, newCI.Id);
         }
+
+        /// <summary>
+        /// Marks a ConfigurationItem as deleted
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="item">ConfigurationItem to delete</param>
+        /// <returns></returns>
+        internal static async Task<bool> DeleteConfigurationItem(AuthorizationToken authToken, ConfigurationItem item)
+        {
+            item.ObjectStatus = new Enumeration(EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Deleted, "", "", false, false);
+            return await item.Commit(authToken);
+        }
     }
 }
