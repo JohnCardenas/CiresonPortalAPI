@@ -58,5 +58,16 @@ namespace CiresonPortalAPI.WorkItems
             TypeProjection projection = await TypeProjectionController.CreateProjectionByTemplate<Incident>(authToken, templateId, userId);
             return (Incident)projection;
         }
+
+        /// <summary>
+        /// Creates a new Incident for the user with the supplied TemplateID
+        /// </summary>
+        /// <param name="authToken">User AuthorizationToken</param>
+        /// <param name="templateId">TemplateID to use</param>
+        /// <returns></returns>
+        public static async Task<Incident> CreateNewIncident(AuthorizationToken authToken, Guid templateId)
+        {
+            return await CreateNewIncident(authToken, templateId, authToken.User.Id);
+        }
     }
 }
