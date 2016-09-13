@@ -14,7 +14,7 @@ using Newtonsoft.Json.Converters;
 
 namespace CiresonPortalAPI
 {
-    public static class TypeProjectionController
+    internal static class TypeProjectionController
     {
         const string GET_BY_CRITERIA_ENDPOINT = "/api/V3/Projection/GetProjectionByCriteria";
         const string CREATE_PROJECTION_BY_TEMPLATE_ENDPOINT = "/api/V3/Projection/CreateProjectionByTemplate";
