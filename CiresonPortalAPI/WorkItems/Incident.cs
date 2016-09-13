@@ -165,5 +165,10 @@ namespace CiresonPortalAPI.WorkItems
             set { this.SetRelatedObject("AssignedWorkItem", value, "AssignedToUser"); }
         }
         #endregion Relationship Properties
+
+        #region Constructors
+        internal Incident(ExpandoObject obj, bool existingObject = false, bool readOnly = true) : base(obj, existingObject, readOnly) { }
+        internal Incident() : base() { }
+        #endregion
     }
 }
