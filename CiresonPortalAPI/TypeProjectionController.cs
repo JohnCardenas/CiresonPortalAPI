@@ -47,9 +47,16 @@ namespace CiresonPortalAPI
                 ExpandoObjectConverter converter = new ExpandoObjectConverter();
                 dynamic jsonObject = JsonConvert.DeserializeObject<ExpandoObject>(result, converter);
 
+                // Instantiate!
                 BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
                 CultureInfo culture = null;
-                return (T)Activator.CreateInstance(typeof(T), flags, null, new object[] { jsonObject, false }, culture);
+                T instanceType = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
+
+                instanceType.CurrentObject = jsonObject;
+                instanceType.OriginalObject = jsonObject;
+                instanceType.ReadOnly = false;
+
+                return instanceType;
             }
             catch (Exception e)
             {
@@ -91,9 +98,16 @@ namespace CiresonPortalAPI
                 // Fetch the BaseId of the new object and create the projection
                 data.formJson.current.BaseId = new Guid(resultObj.BaseId);
 
+                // Instantiate
                 BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
                 CultureInfo culture = null;
-                return (T)Activator.CreateInstance(typeof(T), flags, null, new object[] { data.formJson.current, true, readOnly }, culture);
+                T instanceType = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
+
+                instanceType.CurrentObject = data.formJson.current;
+                instanceType.OriginalObject = data.formJson.current;
+                instanceType.ReadOnly = readOnly;
+
+                return instanceType;
             }
             catch (Exception e)
             {
