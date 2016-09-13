@@ -114,11 +114,27 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         }
         #endregion
 
-        #region LOC03_LocationRelatedObjectsTest
+        #region LOC03_CreateLocationTest
+        [TestMethod]
+        [TestCategory("Integration - LocationController")]
+        [Description("Tests creating a new Location")]
+        public async Task LOC03_CreateLocationTest()
+        {
+            // Arrange
+
+            // Act
+            _locObject = await LocationController.CreateNewLocation(_authToken, "TestLocation", "Test Location");
+
+            // Assert
+            Assert.IsNotNull(_locObject);
+        }
+        #endregion
+
+        #region LOC05_GetLocationRelatedObjectsTest
         [TestMethod]
         [TestCategory("Integration - Location")]
         [Description("Tests retrieving related objects")]
-        public void LOC03_LocationRelatedObjectsTest()
+        public void LOC05_GetLocationRelatedObjectsTest()
         {
             // Arrange
             Location parent;
@@ -135,6 +151,23 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             {
                 Assert.Fail("Expected no exception, got " + e.Message);
             }
+        }
+        #endregion
+
+        #region LOC06_DeleteLocationTest
+        [TestMethod]
+        [TestCategory("Integration - LocationController")]
+        [Description("Tests marking a Location as deleted")]
+        public async Task LOC06_DeleteLocationTest()
+        {
+            // Arrange
+            bool success;
+
+            // Act
+            success = await LocationController.DeleteLocation(_authToken, _locObject);
+
+            // Assert
+            Assert.IsTrue(success);
         }
         #endregion
     }
