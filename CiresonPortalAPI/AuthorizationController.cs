@@ -54,8 +54,14 @@ namespace CiresonPortalAPI
                 // Strip off beginning and ending quotes
                 result = result.TrimStart('\"').TrimEnd('\"');
 
-                // Return the authorization token
-                return new AuthorizationToken(portalUrl, credentials, languageCode, result, windowsAuthEnabled);
+                // Create a new authorization token
+                AuthorizationToken token = new AuthorizationToken(portalUrl, credentials, languageCode, result, windowsAuthEnabled);
+
+                // Fetch this user's properties
+                ConsoleUser user = await AuthorizationController.GetUserRights(token, userName, domain);
+                token.User = user;
+
+                return token;
             }
             catch
             {
@@ -129,7 +135,7 @@ namespace CiresonPortalAPI
         /// <returns></returns>
         public static async Task<ConsoleUser> GetUserRights(AuthorizationToken authToken)
         {
-            return await GetUserRights(authToken, authToken.UserName, authToken.Domain);
+            return await GetUserRights(authToken, authToken.User.UserName, authToken.User.Domain);
         }
 
         /// <summary>

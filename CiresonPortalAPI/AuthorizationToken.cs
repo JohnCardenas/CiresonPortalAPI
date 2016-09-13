@@ -22,25 +22,91 @@ namespace CiresonPortalAPI
     /// </summary>
     public class AuthorizationToken
     {
+        #region Constants
         const int EXPIRATION_SECONDS = 300;
+        #endregion // Constants
 
+        #region Fields
         private string            _sLanguageCode;
         private string            _sPortalUrl;
         private string            _sToken;
         private bool              _bWindowsAuthEnabled;
         private DateTime          _dExpirationTime;
         private PortalCredentials _oCredentials = null;
+        private ConsoleUser       _oConsoleUser = null;
+        #endregion // Fields
 
-        public   string            LanguageCode { get { return _sLanguageCode;  } }
-        public   string            PortalUrl    { get { return _sPortalUrl;     } }
-        internal string            Token        { get { return _sToken;         } }
-        internal PortalCredentials Credentials  { get { return _oCredentials;   } }
+        #region Properties
+        /// <summary>
+        /// Returns the language code of this user's auth token
+        /// </summary>
+        public string LanguageCode
+        {
+            get { return _sLanguageCode; }
+        }
 
-        public string UserName { get { return _oCredentials.Username; } }
-        public string Domain   { get { return _oCredentials.Domain;   } }
+        /// <summary>
+        /// Returns the URL of the portal that owns this token
+        /// </summary>
+        public string PortalUrl
+        {
+            get { return _sPortalUrl; }
+        }
 
-        internal bool WindowsAuthEnabled { get { return _bWindowsAuthEnabled; } }
+        /// <summary>
+        /// Returns the user associated with this token
+        /// </summary>
+        public ConsoleUser User
+        {
+            get { return _oConsoleUser; }
+            internal set { _oConsoleUser = value; }
+        }
 
+        /// <summary>
+        /// Returns the auth token string
+        /// </summary>
+        internal string Token
+        {
+            get { return _sToken; }
+        }
+
+        /// <summary>
+        /// Returns the credentials associated with this token
+        /// </summary>
+        internal PortalCredentials Credentials
+        {
+            get { return _oCredentials; }
+        }
+
+        /// <summary>
+        /// If true, Windows Auth is enabled on the portal associated with this token
+        /// </summary>
+        internal bool WindowsAuthEnabled
+        {
+            get { return _bWindowsAuthEnabled; }
+        }
+
+        /// <summary>
+        /// Return the user name associated with this token
+        /// </summary>
+        [Obsolete("AuthorizationToken.UserName is deprecated, please use AuthorizationToken.User.UserName instead.")]
+        public string UserName
+        {
+            get { return _oCredentials.Username; }
+        }
+
+        /// <summary>
+        /// Return the domain associated with this token
+        /// </summary>
+        [Obsolete("AuthorizationToken.Domain is deprecated, please use AuthorizationToken.User.Domain instead.")]
+        public string Domain
+        {
+            get { return _oCredentials.Domain; }
+        }
+
+        #endregion // Properties
+
+        #region Constructor
         /// <summary>
         /// Constructor
         /// </summary>
@@ -58,7 +124,9 @@ namespace CiresonPortalAPI
             _dExpirationTime     = DateTime.Now.AddSeconds(EXPIRATION_SECONDS);
             _bWindowsAuthEnabled = windowsAuthEnabled;
         }
+        #endregion // Constructor
 
+        #region General Methods
         /// <summary>
         /// Checks the state of the AuthorizationToken
         /// </summary>
@@ -75,5 +143,6 @@ namespace CiresonPortalAPI
                 return true;
             }
         }
+        #endregion // General Methods
     }
 }
