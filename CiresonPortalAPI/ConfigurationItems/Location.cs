@@ -111,9 +111,12 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <summary>
         /// Returns a list of all child Locations. Read only.
         /// </summary>
-        public List<Location> Children
+        public RelatedObjectList<Location> Children
         {
-            get { return this.GetRelatedObjectsList<Location>("Source_LocationContainsLocation"); }
+            get
+            {
+                return new RelatedObjectList<Location>(this, "Source_LocationContainsLocation");
+            }
         }
 
         /// <summary>
