@@ -14,14 +14,17 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
     public class LocationTests
     {
         #region Fields
+        private static List<Location> _objectsToCleanup;
         private static AuthorizationToken _authToken;
-        private static Location _locObject;
+        private static Location _location;
 
         private TestContext _testContextInstance;
         #endregion // Fields
 
         #region Constructor
-        public LocationTests() { }
+        public LocationTests()
+        {
+        }
         #endregion // Constructor
 
         #region Properties
@@ -46,17 +49,77 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {
+            _objectsToCleanup = new List<Location>();
+
             Task<AuthorizationToken> tokenTask = AuthorizationController.GetAuthorizationToken(ConfigurationHelper.PortalUrl, ConfigurationHelper.UserName, ConfigurationHelper.Password, ConfigurationHelper.Domain);
             tokenTask.Wait();
             _authToken = tokenTask.Result;
         }
         #endregion // Class Initializer
 
-        #region LOC01_GetAllLocationsTest
+        #region Class Cleanup
+        [ClassCleanup]
+        public static void Cleanup()
+        {
+            foreach (Location obj in _objectsToCleanup)
+            {
+                Task<bool> deleteTask = LocationController.DeleteLocation(_authToken, obj, false);
+            }
+        }
+        #endregion // Class Cleanup
+
+        #region LOC01_CreateLocationTest
+        [TestMethod]
+        [TestCategory("Integration - LocationController")]
+        [Description("Tests creating a new Location")]
+        public async Task LOC01_CreateLocationTest()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+
+            string strData;
+            Guid guidData;
+            Enumeration enumData;
+
+            // Act
+            _location = await LocationController.CreateNewLocation(_authToken, "TestLocation" + id.ToString(), "Test Location");
+            _objectsToCleanup.Add(_location);
+
+            try
+            {
+                strData = _location.AddressLine1;
+                strData = _location.AddressLine2;
+                strData = _location.City;
+                strData = _location.ContactEmail;
+                strData = _location.ContactFax;
+                strData = _location.ContactName;
+                strData = _location.ContactPhone;
+                strData = _location.Country;
+                strData = _location.DisplayName;
+                strData = _location.Notes;
+                strData = _location.PostalCode;
+                strData = _location.State;
+
+                guidData = _location.Id;
+
+                enumData = _location.ObjectStatus;
+            }
+            // Assert
+            catch (Exception e)
+            {
+                Assert.Fail("Expected no exception from property read test, got " + e.Message);
+            }
+
+            Assert.IsNotNull(_location);
+            Assert.IsTrue(_location.ObjectStatus.Id == EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active);
+        }
+        #endregion
+
+        #region LOC02_GetAllLocationsTest
         [TestMethod]
         [TestCategory("Integration - LocationController")]
         [Description("Tests a fetch of all location objects")]
-        public async Task LOC01_GetAllLocationsTest()
+        public async Task LOC02_GetAllLocationsTest()
         {
             // Arrange
             List<Location> locationList;
@@ -67,107 +130,95 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             // Assert
             Assert.IsNotNull(locationList);
             Assert.IsTrue(locationList.Count >= 1);
-
-            // Save
-            _locObject = locationList[0];
+            Assert.IsTrue(locationList.Contains(_location));
         }
         #endregion
 
-        #region LOC02_LocationPropertiesTest
+        #region LOC03_LocationPropertiesCommitTest
         [TestMethod]
         [TestCategory("Integration - Location")]
-        [Description("Tests exposing data from the underlying data model as properties")]
-        public void LOC02_LocationPropertiesTest()
+        [Description("Tests committing changes to this Location")]
+        public async Task LOC03_LocationPropertiesCommitTest()
         {
             // Arrange
-            string strData;
-            Guid guidData;
-            Enumeration enumData;
+            string testString = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[{]}\\|;:'\",<.>/?`~";
 
             // Act
-            try
-            {
-                strData = _locObject.AddressLine1;
-                strData = _locObject.AddressLine2;
-                strData = _locObject.City;
-                strData = _locObject.ContactEmail;
-                strData = _locObject.ContactFax;
-                strData = _locObject.ContactName;
-                strData = _locObject.ContactPhone;
-                strData = _locObject.Country;
-                strData = _locObject.DisplayName;
-                strData = _locObject.Notes;
-                strData = _locObject.PostalCode;
-                strData = _locObject.State;
+            _location.AddressLine1 = testString;
+            _location.AddressLine2 = testString;
+            _location.City = testString;
+            _location.ContactEmail = testString;
+            _location.ContactFax = testString;
+            _location.ContactName = testString;
+            _location.ContactPhone = testString;
+            _location.Country = testString;
+            _location.Notes = testString;
+            _location.PostalCode = testString;
+            _location.State = testString;
 
-                guidData = _locObject.Id;
+            await _location.Commit(_authToken);
+            await _location.Refresh(_authToken);
 
-                enumData = _locObject.ObjectStatus;
-            }
             // Assert
-            catch (Exception e)
-            {
-                Assert.Fail("Expected no exception, got " + e.Message);
-            }
-
-            Assert.IsTrue(_locObject.ObjectStatus.Id == EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active);
+            Assert.IsNotNull(_location);
+            Assert.AreEqual(testString, _location.AddressLine1);
+            Assert.AreEqual(testString, _location.AddressLine2);
+            Assert.AreEqual(testString, _location.City);
+            Assert.AreEqual(testString, _location.ContactEmail);
+            Assert.AreEqual(testString, _location.ContactFax);
+            Assert.AreEqual(testString, _location.ContactName);
+            Assert.AreEqual(testString, _location.ContactPhone);
+            Assert.AreEqual(testString, _location.Country);
+            Assert.AreEqual(testString, _location.Notes);
+            Assert.AreEqual(testString, _location.PostalCode);
+            Assert.AreEqual(testString, _location.State);
         }
         #endregion
 
-        #region LOC03_CreateLocationTest
-        [TestMethod]
-        [TestCategory("Integration - LocationController")]
-        [Description("Tests creating a new Location")]
-        public async Task LOC03_CreateLocationTest()
-        {
-            // Arrange
-
-            // Act
-            _locObject = await LocationController.CreateNewLocation(_authToken, "TestLocation", "Test Location");
-
-            // Assert
-            Assert.IsNotNull(_locObject);
-        }
-        #endregion
-
-        #region LOC05_GetLocationRelatedObjectsTest
+        #region LOC04_LocationRelatedObjectCommitTest
         [TestMethod]
         [TestCategory("Integration - Location")]
-        [Description("Tests retrieving related objects")]
-        public void LOC05_GetLocationRelatedObjectsTest()
+        [Description("Tests committing related objects")]
+        public async Task LOC04_LocationRelatedObjectCommitTest()
         {
             // Arrange
-            Location parent;
-            List<Location> children;
+            Guid id = Guid.NewGuid();
+            Location parentLocation = await LocationController.CreateNewLocation(_authToken, "TestParentLocation" + id.ToString(), "Test Parent Location");
+            Location childLocation1 = await LocationController.CreateNewLocation(_authToken, "TestChildLocation1" + id.ToString(), "Test Child Location 1");
+            Location childLocation2 = await LocationController.CreateNewLocation(_authToken, "TestChildLocation2" + id.ToString(), "Test Child Location 2");
 
             // Act
-            try
-            {
-                parent = _locObject.Parent;
-                children = _locObject.Children;
-            }
+            _location.Parent = parentLocation;
+            _location.Children.Add(childLocation1);
+            _location.Children.Add(childLocation2);
+
+            await _location.Commit(_authToken);
+            await _location.Refresh(_authToken);
+
             // Assert
-            catch (Exception e)
-            {
-                Assert.Fail("Expected no exception, got " + e.Message);
-            }
+            Assert.AreEqual(parentLocation, _location.Parent);
+            Assert.IsTrue(_location.Children.Contains(childLocation1));
+            Assert.IsTrue(_location.Children.Contains(childLocation2));
         }
         #endregion
 
-        #region LOC06_DeleteLocationTest
+        #region LOC05_DeleteLocationTest
         [TestMethod]
         [TestCategory("Integration - LocationController")]
         [Description("Tests marking a Location as deleted")]
-        public async Task LOC06_DeleteLocationTest()
+        public async Task LOC05_DeleteLocationTest()
         {
             // Arrange
-            bool success;
+            bool deleteLocation;
 
             // Act
-            success = await LocationController.DeleteLocation(_authToken, _locObject);
+            deleteLocation = await LocationController.DeleteLocation(_authToken, _location, false);
 
             // Assert
-            Assert.IsTrue(success);
+            Assert.IsTrue(deleteLocation);
+
+            if (deleteLocation)
+                _objectsToCleanup.Remove(_location);
         }
         #endregion
     }
