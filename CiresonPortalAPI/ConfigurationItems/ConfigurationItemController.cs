@@ -188,10 +188,18 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="item">ConfigurationItem to delete</param>
+        /// <param name="markPending">If true, mark the object as Pending Deletion instead of Deleted.</param>
         /// <returns></returns>
-        internal static async Task<bool> DeleteConfigurationItem(AuthorizationToken authToken, ConfigurationItem item)
+        internal static async Task<bool> DeleteConfigurationItem(AuthorizationToken authToken, ConfigurationItem item, bool markPending)
         {
-            item.ObjectStatus = new Enumeration(EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Deleted, "", "", false, false);
+            Guid deleteType;
+
+            if (markPending)
+                deleteType = EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.PendingDelete;
+            else
+                deleteType = EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Deleted;
+
+            item.ObjectStatus = new Enumeration(deleteType, "", "", false, false);
             return await item.Commit(authToken);
         }
     }
