@@ -60,10 +60,11 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="location">Location to delete</param>
+        /// <param name="markPending">If true, mark the object as Pending Deletion instead of Deleted.</param>
         /// <returns></returns>
-        public static async Task<bool> DeleteLocation(AuthorizationToken authToken, Location location)
+        public static async Task<bool> DeleteLocation(AuthorizationToken authToken, Location location, bool markPending = true)
         {
-            return await ConfigurationItemController.DeleteConfigurationItem(authToken, location);
+            return await ConfigurationItemController.DeleteConfigurationItem(authToken, location, markPending);
         }
     }
 }
