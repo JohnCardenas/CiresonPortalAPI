@@ -17,16 +17,11 @@ namespace CiresonPortalAPI
     /// <typeparam name="T">TypeProjection type</typeparam>
     public class RelatedObjectList<T> : IList<T> where T : TypeProjection
     {
-        #region Fields
-        TypeProjection _owner;
-        string _modelProperty;
-        #endregion // Fields
-
         #region Constructors
         public RelatedObjectList(TypeProjection owner, string modelProperty)
         {
-            _owner = owner;
-            _modelProperty = modelProperty;
+            Owner = owner;
+            ModelProperty = modelProperty;
         }
         #endregion // Constructors
 
@@ -44,7 +39,7 @@ namespace CiresonPortalAPI
         /// </summary>
         public bool IsReadOnly
         {
-            get { return _owner.ReadOnly; }
+            get { return Owner.ReadOnly; }
         }
 
         /// <summary>
@@ -60,7 +55,17 @@ namespace CiresonPortalAPI
             }
             set
             {
-                ProjectionList[index] = value.CurrentObject;
+                if (value == null)
+                    throw new ArgumentNullException("Cannot set a null value on a RelatedObjectList.");
+
+                if (IsReadOnly)
+                    throw new InvalidOperationException("Cannot add to a read-only list.");
+
+                if (!Contains(value))
+                {
+                    ProjectionList[index] = value.CurrentObject;
+                    Owner.IsDirty = true;
+                }
             }
         }
         #endregion // Properties
@@ -98,8 +103,17 @@ namespace CiresonPortalAPI
         /// <param name="item">The object to be added to the end of the list. Duplicates will be ignored.</param>
         public void Add(T item)
         {
+            if (IsReadOnly)
+                throw new InvalidOperationException("Cannot add to a read-only list.");
+
+            if (item == null)
+                throw new ArgumentNullException("Cannot add a null value on a RelatedObjectList.");
+
             if (!Contains(item))
+            {
                 ProjectionList.Add(item.CurrentObject);
+                Owner.IsDirty = true;
+            }
         }
 
         /// <summary>
@@ -109,8 +123,17 @@ namespace CiresonPortalAPI
         /// <param name="item">The object to insert. Duplicates will be ignored.</param>
         public void Insert(int index, T item)
         {
+            if (IsReadOnly)
+                throw new InvalidOperationException("Cannot insert into a read-only list.");
+
+            if (item == null)
+                throw new ArgumentNullException("Cannot insert a null value on a RelatedObjectList.");
+
             if (!Contains(item))
+            {
                 ProjectionList.Insert(index, item.CurrentObject);
+                Owner.IsDirty = true;
+            }
         }
 
         /// <summary>
@@ -119,7 +142,11 @@ namespace CiresonPortalAPI
         /// <param name="index">The zero-based index of the element to remove.</param>
         public void RemoveAt(int index)
         {
+            if (IsReadOnly)
+                throw new InvalidOperationException("Cannot remove from a read-only list.");
+
             ProjectionList.RemoveAt(index);
+            Owner.IsDirty = true;
         }
 
         /// <summary>
@@ -127,7 +154,11 @@ namespace CiresonPortalAPI
         /// </summary>
         public void Clear()
         {
+            if (IsReadOnly)
+                throw new InvalidOperationException("Cannot clear a read-only list.");
+
             ProjectionList.Clear();
+            Owner.IsDirty = true;
         }
 
         /// <summary>
@@ -147,10 +178,23 @@ namespace CiresonPortalAPI
         /// <returns></returns>
         public bool Remove(T item)
         {
+            if (IsReadOnly)
+                throw new InvalidOperationException("Cannot remove from a read-only list.");
+
+            if (item == null)
+                throw new ArgumentNullException("Cannot remove a null value on a RelatedObjectList.");
+
             foreach (ExpandoObject obj in ProjectionList)
             {
                 if (AreProjectionsEqual(obj, item.CurrentObject))
-                    return ProjectionList.Remove(obj);
+                {
+                    bool success = ProjectionList.Remove(obj);
+
+                    if (success)
+                        Owner.IsDirty = true;
+
+                    return success;
+                }
             }
 
             return false;
@@ -174,6 +218,42 @@ namespace CiresonPortalAPI
             return new RelatedObjectListEnumerator<T>(this);
         }
         #endregion // Public Methods
+
+        #region Private Properties
+        /// <summary>
+        /// Returns the list of related projection objects
+        /// </summary>
+        private List<object> ProjectionList
+        {
+            get
+            {
+                IDictionary<string, object> dict = Owner.CurrentObject as IDictionary<string, object>;
+
+                if (!dict.ContainsKey(ModelProperty))
+                {
+                    dict.Add(ModelProperty, new List<object>());
+                }
+
+                return (List<object>)dict[ModelProperty];
+            }
+        }
+
+        /// <summary>
+        /// Gets the owner of this RelatedObjectList.
+        /// </summary>
+        private TypeProjection Owner
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Property on the data model that holds related objects.
+        /// </summary>
+        private string ModelProperty
+        {
+            get; set;
+        }
+        #endregion // Private Properties
 
         #region Private Methods
         /// <summary>
@@ -219,26 +299,6 @@ namespace CiresonPortalAPI
             return false;
         }
         #endregion // Private Methods
-
-        #region Private Properties
-        /// <summary>
-        /// Returns the list of related projection objects
-        /// </summary>
-        private List<object> ProjectionList
-        {
-            get
-            {
-                IDictionary<string, object> dict = _owner.CurrentObject as IDictionary<string, object>;
-
-                if (!dict.ContainsKey(_modelProperty))
-                {
-                    dict.Add(_modelProperty, new List<object>());
-                }
-
-                return (List<object>)dict[_modelProperty];
-            }
-        }
-        #endregion // Private Properties
     }
 
     /// <summary>
