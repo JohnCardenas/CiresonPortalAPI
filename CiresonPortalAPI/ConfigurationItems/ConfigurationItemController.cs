@@ -64,6 +64,40 @@ namespace CiresonPortalAPI.ConfigurationItems
         }
 
         /// <summary>
+        /// Helper method to retrieve an object derived from the ConfigurationItem class, using its FullName
+        /// </summary>
+        /// <typeparam name="T">ConfigurationItem derived type</typeparam>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="name">FullName to find</param>
+        /// <returns></returns>
+        internal static async Task<T> GetConfigurationItemByName<T>(AuthorizationToken authToken, string name) where T : ConfigurationItem
+        {
+            QueryCriteriaExpression expr = new QueryCriteriaExpression
+            {
+                PropertyName = "FullName",
+                PropertyType = QueryCriteriaPropertyType.GenericProperty,
+                Operator = QueryCriteriaExpressionOperator.Equal,
+                Value = ClassConstants.GetClassNameByType<T>() + ":" + name
+            };
+
+            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.GetProjectionIdByType<T>())
+            {
+                GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression
+            };
+
+            criteria.Expressions.Add(expr);
+
+            List<T> retList = await TypeProjectionController.GetProjectionByCriteria<T>(authToken, criteria);
+
+            if (retList.Count == 0)
+                return null;
+            else if (retList.Count == 1)
+                return retList[0];
+            else
+                throw new CiresonApiException("More than one item found with identical full name");
+        }
+
+        /// <summary>
         /// Modifies a given QueryCriteria to exclude inactive items
         /// </summary>
         /// <typeparam name="T">Type of object to return</typeparam>
@@ -103,6 +137,16 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         internal static async Task<T> CreateConfigurationItem<T>(AuthorizationToken authToken, string name, string displayName, dynamic objProps = null) where T : ConfigurationItem
         {
+            // See if we have a CI matching this name first
+            T item = await GetConfigurationItemByName<T>(authToken, name);
+
+            if (item != null)
+            {
+                string fullName = ClassConstants.GetClassNameByType<T>() + ":" + name;
+                throw new CiresonDuplicateItemException("A configuration item by the name " + fullName + " already exists.");
+            }
+
+            // Setup the CI
             dynamic ci = new ExpandoObject();
 
             ci.formJson = new ExpandoObject();
