@@ -51,13 +51,13 @@ namespace CiresonPortalAPI
         public bool IsDirty
         {
             get { return _bDirtyObject; }
-            set { _bDirtyObject = value; }
+            internal set { _bDirtyObject = value; }
         }
 
         public bool ReadOnly
         {
             get { return _bReadOnly; }
-            set { _bReadOnly = value; }
+            internal set { _bReadOnly = value; }
         }
         #endregion // Properties
 
