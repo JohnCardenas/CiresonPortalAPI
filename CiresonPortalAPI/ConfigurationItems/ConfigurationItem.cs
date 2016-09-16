@@ -146,7 +146,7 @@ namespace CiresonPortalAPI.ConfigurationItems
             this.CurrentObject  = ci.CurrentObject;
             this.OriginalObject = ci.OriginalObject;
             this.ReadOnly       = ci.ReadOnly;
-            this.DirtyObject    = false;
+            this.IsDirty        = false;
 
             return true;
         }

@@ -48,7 +48,7 @@ namespace CiresonPortalAPI
             set { _oCurrentObject = value; }
         }
 
-        public bool DirtyObject
+        public bool IsDirty
         {
             get { return _bDirtyObject; }
             set { _bDirtyObject = value; }
@@ -86,7 +86,7 @@ namespace CiresonPortalAPI
         {
             this.CurrentObject = otherProjection.CurrentObject;
             this.OriginalObject = otherProjection.OriginalObject;
-            this.DirtyObject = otherProjection.DirtyObject;
+            this.IsDirty = otherProjection.IsDirty;
             this.ReadOnly = otherProjection.ReadOnly;
         }
 
@@ -112,7 +112,7 @@ namespace CiresonPortalAPI
             if (!authToken.IsValid)
                 throw new InvalidCredentialException("AuthorizationToken is not valid.");
 
-            if (!this.DirtyObject)
+            if (!this.IsDirty)
                 throw new CiresonApiException("Object is not dirty, Commit() aborted.");
 
             try
@@ -249,7 +249,7 @@ namespace CiresonPortalAPI
             }
 
             this.CurrentObject = (ExpandoObject)objectData;
-            this.DirtyObject = true;
+            this.IsDirty = true;
 
             if (String.IsNullOrEmpty(objectProperty))
                 NotifyPropertyChanged(modelProperty);
@@ -337,7 +337,7 @@ namespace CiresonPortalAPI
 
             objectData[modelProperty] = objectList;
             this.CurrentObject = (ExpandoObject)objectData;
-            this.DirtyObject = true;
+            this.IsDirty = true;
 
             if (String.IsNullOrEmpty(objectProperty))
                 NotifyPropertyChanged(modelProperty);
@@ -360,7 +360,7 @@ namespace CiresonPortalAPI
             objectData[modelProperty] = obj.CurrentObject;
 
             this.CurrentObject = (ExpandoObject)objectData;
-            this.DirtyObject = true;
+            this.IsDirty = true;
 
             if (String.IsNullOrEmpty(objectProperty))
                 NotifyPropertyChanged(modelProperty);
@@ -402,7 +402,7 @@ namespace CiresonPortalAPI
             objectData[modelProperty] = value.ToString();
 
             this.CurrentObject = (ExpandoObject)objectData;
-            this.DirtyObject = true;
+            this.IsDirty = true;
 
             if (String.IsNullOrEmpty(objectProperty))
                 NotifyPropertyChanged(modelProperty);
@@ -429,7 +429,7 @@ namespace CiresonPortalAPI
                 writer.WriteStartObject();
 
                 writer.WritePropertyName("isDirty");
-                writer.WriteValue(projection.DirtyObject);
+                writer.WriteValue(projection.IsDirty);
 
                 //"current" object
                 writer.WritePropertyName("current");

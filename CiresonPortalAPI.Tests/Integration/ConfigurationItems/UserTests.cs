@@ -131,7 +131,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             await _userObject.Refresh(_authToken);
 
             // Assert
-            Assert.IsFalse(_userObject.DirtyObject);
+            Assert.IsFalse(_userObject.IsDirty);
         }
         #endregion
 
