@@ -35,4 +35,14 @@ namespace CiresonPortalAPI
         public CiresonReadOnlyException(string message) : base(message) { }
         public CiresonReadOnlyException(string message, Exception inner) : base(message, inner) { }
     }
+
+    /// <summary>
+    /// This exception class is thrown when trying to create an object with duplicate IDs or names
+    /// </summary>
+    public class CiresonDuplicateItemException : CiresonException
+    {
+        public CiresonDuplicateItemException() { }
+        public CiresonDuplicateItemException(string message) : base(message) { }
+        public CiresonDuplicateItemException(string message, Exception inner) : base(message, inner) { }
+    }
 }
