@@ -10,7 +10,7 @@ using Newtonsoft.Json.Converters;
 
 namespace CiresonPortalAPI.ConfigurationItems
 {
-    public class PurchaseOrder : ConfigurationItem, IEquatable<ConfigurationItem>
+    public class PurchaseOrder : ConfigurationItem
     {
         #region Read-Only Properties
         /// <summary>
@@ -102,7 +102,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         internal PurchaseOrder() : base() { }
         #endregion // Constructors
 
-        #region General Methods
+        #region Public Methods
         /// <summary>
         /// Refreshes this PurchaseOrder from the portal. This will reset any changes made to the object.
         /// This method must be called before accessing properties of children in relationship collections in order to populate all properties.
@@ -113,6 +113,6 @@ namespace CiresonPortalAPI.ConfigurationItems
         {
             return await this.RefreshType<PurchaseOrder>(authToken);
         }
-        #endregion // General Methods
+        #endregion // Public Methods
     }
 }

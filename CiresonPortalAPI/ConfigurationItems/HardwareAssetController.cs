@@ -9,7 +9,29 @@ namespace CiresonPortalAPI.ConfigurationItems
 {
     public static class HardwareAssetController
     {
-        #region Finders
+        #region Public Methods
+        /// <summary>
+        /// Creates a new HardwareAsset with the specified parameters.
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="model">Model of the asset</param>
+        /// <param name="manufacturer">Manufacturer of the asset</param>
+        /// <param name="assetTag">Asset tag</param>
+        /// <param name="serialNumber">Asset's serial number</param>
+        /// <returns></returns>
+        public static async Task<HardwareAsset> Create(AuthorizationToken authToken, string model, string manufacturer, string assetTag, string serialNumber)
+        {
+            dynamic extraProps = new
+            {
+                Model = model,
+                Manufacturer = manufacturer,
+                AssetTag = assetTag,
+                SerialNumber = serialNumber,
+                HardwareAssetID = assetTag
+            };
+
+            return await TypeProjectionController.CreateBlankObject<HardwareAsset>(authToken, assetTag, assetTag, extraProps);
+        }
 
         /// <summary>
         /// Retrieves a list of HardwareAssets that match the given criteria
@@ -18,10 +40,10 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <param name="criteria">QueryCriteria to search for</param>
         /// <param name="includeInactiveItems">If true, override the criteria to exclude inactive items (this will set the grouping operator to AND!)</param>
         /// <returns></returns>
-        public static async Task<List<HardwareAsset>> GetHardwareAssetsByCriteria(AuthorizationToken authToken, QueryCriteria criteria, bool includeInactiveItems = false)
+        public static async Task<List<HardwareAsset>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria, bool includeInactiveItems = false)
         {
             criteria.ProjectionID = TypeProjectionConstants.HardwareAsset;
-            return await ConfigurationItemController.GetConfigurationItemsByCriteria<HardwareAsset>(authToken, criteria);
+            return await TypeProjectionController.GetByCriteria<HardwareAsset>(authToken, criteria);
         }
 
         /// <summary>
@@ -30,10 +52,10 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="assetTag">Asset's unique asset tag</param>
         /// <returns>HardwareAsset</returns>
-        public static async Task<List<HardwareAsset>> GetHardwareAssetsByAssetTag(AuthorizationToken authToken, string assetTag)
+        public static async Task<List<HardwareAsset>> GetByAssetTag(AuthorizationToken authToken, string assetTag)
         {
             QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "AssetTag"), assetTag);
-            return await HardwareAssetController.GetHardwareAssetsByCriteria(authToken, criteria);
+            return await GetByCriteria(authToken, criteria);
         }
 
         /// <summary>
@@ -42,10 +64,10 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="id">HardwareAssetID</param>
         /// <returns></returns>
-        public static async Task<HardwareAsset> GetHardwareAssetByID(AuthorizationToken authToken, string id)
+        public static async Task<HardwareAsset> GetByHardwareAssetID(AuthorizationToken authToken, string id)
         {
             QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "HardwareAssetID"), id);
-            List<HardwareAsset> assetList = await HardwareAssetController.GetHardwareAssetsByCriteria(authToken, criteria);
+            List<HardwareAsset> assetList = await GetByCriteria(authToken, criteria);
 
             if (assetList == null)
                 return null;
@@ -62,10 +84,10 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <param name="authToken"></param>
         /// <param name="serialNumber"></param>
         /// <returns></returns>
-        public static async Task<List<HardwareAsset>> GetHardwareAssetsBySerialNumber(AuthorizationToken authToken, string serialNumber)
+        public static async Task<List<HardwareAsset>> GetBySerialNumber(AuthorizationToken authToken, string serialNumber)
         {
             QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "SerialNumber"), serialNumber);
-            return await HardwareAssetController.GetHardwareAssetsByCriteria(authToken, criteria);
+            return await GetByCriteria(authToken, criteria);
         }
 
         /// <summary>
@@ -78,36 +100,11 @@ namespace CiresonPortalAPI.ConfigurationItems
         public static async Task<List<HardwareAsset>> GetHardwareAssetsByType(AuthorizationToken authToken, Enumeration assetType)
         {
             QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "HardwareAssetType"), assetType.Id.ToString());
-            return await HardwareAssetController.GetHardwareAssetsByCriteria(authToken, criteria);
+            return await GetByCriteria(authToken, criteria);
         }
-        #endregion Finders
+        #endregion // Public Methods
 
-        #region Creators
-        /// <summary>
-        /// Creates a new HardwareAsset
-        /// </summary>
-        /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="model">Model of the asset</param>
-        /// <param name="manufacturer">Manufacturer of the asset</param>
-        /// <param name="assetTag">Asset tag</param>
-        /// <param name="serialNumber">Asset's serial number</param>
-        /// <returns></returns>
-        public static async Task<HardwareAsset> CreateNewHardwareAsset(AuthorizationToken authToken, string model, string manufacturer, string assetTag, string serialNumber)
-        {
-            dynamic extraProps = new {
-                Model = model,
-                Manufacturer = manufacturer,
-                AssetTag = assetTag,
-                SerialNumber = serialNumber,
-                HardwareAssetID = assetTag
-            };
-
-            return await ConfigurationItemController.CreateConfigurationItem<HardwareAsset>(authToken, assetTag, assetTag, extraProps);
-        }
-        #endregion Creators
-
-        #region Helpers
-
+        #region Private Methods
         /// <summary>
         /// Helper method that returns a QueryCriteria used by the GetHardwareAssetBy.. methods
         /// </summary>
@@ -133,7 +130,6 @@ namespace CiresonPortalAPI.ConfigurationItems
 
             return criteria;
         }
-
-        #endregion Helpers
+        #endregion // Private Methods
     }
 }

@@ -122,7 +122,7 @@ namespace CiresonPortalAPI
 
                 return returnObj;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw; // Rethrow exceptions
             }

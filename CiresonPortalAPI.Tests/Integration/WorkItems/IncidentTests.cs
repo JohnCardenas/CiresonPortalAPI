@@ -11,7 +11,7 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
     /// Summary description for IncidentControllerTests
     /// </summary>
     [TestClass]
-    public class IncidentControllerTests
+    public class IncidentTests
     {
         #region Fields
         private TestContext _testContextInstance;
@@ -31,7 +31,7 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
         #endregion // Properties
 
         #region Constructor
-        public IncidentControllerTests() { }
+        public IncidentTests() { }
         #endregion // Constructor
 
         #region Class Initializer
@@ -47,7 +47,7 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
         #region IR01_CreateIncidentTest
         [TestMethod]
         [Description("Creates a new Incident")]
-        [TestCategory("Integration - IncidentController")]
+        [TestCategory("Integration - Incidents")]
         public async Task IR01_CreateIncidentTest()
         {
             // Arrange
@@ -57,7 +57,7 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
 
             // Act
             userId = (await AuthorizationController.GetUserRights(_authToken)).Id;
-            inc = await IncidentController.CreateNewIncident(_authToken, templateId, userId);
+            inc = await IncidentController.CreateObject(_authToken, templateId, userId);
 
             // Assert
             Assert.IsNotNull(inc);

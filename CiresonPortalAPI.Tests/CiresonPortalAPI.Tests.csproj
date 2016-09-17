@@ -58,8 +58,8 @@
     <Compile Include="Integration\ConfigurationHelper.cs" />
     <Compile Include="Integration\ConfigurationItems\LocationTests.cs" />
     <Compile Include="Integration\ConfigurationItems\UserTests.cs" />
-    <Compile Include="Integration\EnumerationControllerTests.cs" />
-    <Compile Include="Integration\WorkItems\IncidentControllerTests.cs" />
+    <Compile Include="Integration\EnumerationTests.cs" />
+    <Compile Include="Integration\WorkItems\IncidentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unit\QueryCriteriaTests.cs" />
   </ItemGroup>

@@ -9,10 +9,8 @@ using System.Dynamic;
 
 namespace CiresonPortalAPI.ConfigurationItems
 {
-    public class HardwareAsset : ConfigurationItem, IEquatable<ConfigurationItem>
+    public class HardwareAsset : ConfigurationItem
     {
-        //private PurchaseOrder _oPurchaseOrder = null;
-
         #region Read-Only Properties
 
         #endregion Read-Only Properties

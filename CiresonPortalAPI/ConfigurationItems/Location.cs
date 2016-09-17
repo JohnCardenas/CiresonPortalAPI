@@ -10,7 +10,7 @@ using Newtonsoft.Json.Converters;
 
 namespace CiresonPortalAPI.ConfigurationItems
 {
-    public class Location : ConfigurationItem, IEquatable<ConfigurationItem>
+    public class Location : ConfigurationItem
     {
         #region Read-Write Properties
 
@@ -134,7 +134,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         internal Location() : base() { }
         #endregion // Constructors
 
-        #region General Methods
+        #region Public Methods
         /// <summary>
         /// Refreshes this Location from the portal. This will reset any changes made to the object.
         /// This method must be called before accessing properties of children in relationship collections in order to populate all properties.
@@ -145,6 +145,6 @@ namespace CiresonPortalAPI.ConfigurationItems
         {
             return await this.RefreshType<Location>(authToken);
         }
-        #endregion // General Methods
+        #endregion // Public Methods
     }
 }

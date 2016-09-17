@@ -10,7 +10,7 @@ namespace CiresonPortalAPI.Tests.Integration
     /// Summary description for EnumerationControllerTests
     /// </summary>
     [TestClass]
-    public class EnumerationControllerTests
+    public class EnumerationTests
     {
         #region Fields
         private TestContext _testContextInstance;
@@ -30,7 +30,7 @@ namespace CiresonPortalAPI.Tests.Integration
         #endregion // Properties
 
         #region Constructor
-        public EnumerationControllerTests() { }
+        public EnumerationTests() { }
         #endregion // Constructor
 
         #region Class Initializer
@@ -46,7 +46,7 @@ namespace CiresonPortalAPI.Tests.Integration
         #region ENUM01_GetIncidentStatusListTest
         [TestMethod]
         [Description("Fetches a list of all Incident statuses")]
-        [TestCategory("Integration - EnumerationController")]
+        [TestCategory("Integration - Enumerations")]
         public async Task ENUM01_GetIncidentStatusListTest()
         {
             // Arrange
@@ -64,7 +64,7 @@ namespace CiresonPortalAPI.Tests.Integration
         #region ENUM02_GetIncidentStatusSortedListTest
         [TestMethod]
         [Description("Fetches a sorted list of all Incident statuses")]
-        [TestCategory("Integration - EnumerationController")]
+        [TestCategory("Integration - Enumerations")]
         public async Task ENUM02_GetIncidentStatusSortedListTest()
         {
             // Arrange
@@ -82,7 +82,7 @@ namespace CiresonPortalAPI.Tests.Integration
         #region ENUM03_GetIncidentStatusFlatListTest
         [TestMethod]
         [Description("Fetches a flat list of all Incident statuses")]
-        [TestCategory("Integration - EnumerationController")]
+        [TestCategory("Integration - Enumerations")]
         public async Task ENUM03_GetIncidentStatusFlatListTest()
         {
             // Arrange
@@ -100,7 +100,7 @@ namespace CiresonPortalAPI.Tests.Integration
         #region ENUM04_GetIncidentStatusSortedFlatListTest
         [TestMethod]
         [Description("Fetches a flat list of all Incident statuses")]
-        [TestCategory("Integration - EnumerationController")]
+        [TestCategory("Integration - Enumerations")]
         public async Task ENUM04_GetIncidentStatusSortedFlatListTest()
         {
             // Arrange

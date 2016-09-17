@@ -54,7 +54,6 @@
     <Compile Include="CiresonException.cs" />
     <Compile Include="ClassConstants.cs" />
     <Compile Include="ConfigurationItems\ConfigurationItem.cs" />
-    <Compile Include="ConfigurationItems\ConfigurationItemController.cs" />
     <Compile Include="ConsoleUser.cs" />
     <Compile Include="ConfigurationItems\PurchaseOrderController.cs" />
     <Compile Include="DynamicObjectHelpers.cs" />

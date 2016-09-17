@@ -77,7 +77,7 @@ namespace CiresonPortalAPI
 
                 return returnList;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw; // Rethrow exceptions
             }

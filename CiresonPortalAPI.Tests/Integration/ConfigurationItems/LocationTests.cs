@@ -63,14 +63,14 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         {
             foreach (Location obj in _objectsToCleanup)
             {
-                Task<bool> deleteTask = LocationController.DeleteLocation(_authToken, obj, false);
+                Task<bool> deleteTask = LocationController.Delete(_authToken, obj, false);
             }
         }
         #endregion // Class Cleanup
 
         #region LOC01_CreateLocationTest
         [TestMethod]
-        [TestCategory("Integration - LocationController")]
+        [TestCategory("Integration - Locations")]
         [Description("Tests creating a new Location")]
         public async Task LOC01_CreateLocationTest()
         {
@@ -82,7 +82,8 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             Enumeration enumData;
 
             // Act
-            _location = await LocationController.CreateNewLocation(_authToken, "TestLocation" + id.ToString(), "Test Location");
+            //_location = await ConfigurationItemController.CreateObject<Location>(_authToken, "TestLocation" + id.ToString(), "Test Location");
+            _location = await TypeProjectionController.CreateBlankObject<Location>(_authToken, "TestLocation" + id.ToString(), "Test Location");
             _objectsToCleanup.Add(_location);
 
             try
@@ -100,7 +101,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
                 strData = _location.PostalCode;
                 strData = _location.State;
 
-                guidData = _location.Id;
+                guidData = _location.BaseId;
 
                 enumData = _location.ObjectStatus;
             }
@@ -111,13 +112,13 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             }
 
             Assert.IsNotNull(_location);
-            Assert.IsTrue(_location.ObjectStatus.Id == EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active);
+            Assert.IsTrue(_location.ObjectStatus.Id == EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active);
         }
         #endregion
 
         #region LOC02_GetAllLocationsTest
         [TestMethod]
-        [TestCategory("Integration - LocationController")]
+        [TestCategory("Integration - Locations")]
         [Description("Tests a fetch of all location objects")]
         public async Task LOC02_GetAllLocationsTest()
         {
@@ -125,7 +126,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             List<Location> locationList;
 
             // Act
-            locationList = await LocationController.GetAllLocations(_authToken);
+            locationList = await LocationController.GetAll(_authToken);
 
             // Assert
             Assert.IsNotNull(locationList);
@@ -136,7 +137,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         #region LOC03_LocationPropertiesCommitTest
         [TestMethod]
-        [TestCategory("Integration - Location")]
+        [TestCategory("Integration - Locations")]
         [Description("Tests committing changes to this Location")]
         public async Task LOC03_LocationPropertiesCommitTest()
         {
@@ -177,15 +178,15 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         #region LOC04_LocationRelatedObjectCommitTest
         [TestMethod]
-        [TestCategory("Integration - Location")]
+        [TestCategory("Integration - Locations")]
         [Description("Tests committing related objects")]
         public async Task LOC04_LocationRelatedObjectCommitTest()
         {
             // Arrange
             Guid id = Guid.NewGuid();
-            Location parentLocation = await LocationController.CreateNewLocation(_authToken, "TestParentLocation" + id.ToString(), "Test Parent Location");
-            Location childLocation1 = await LocationController.CreateNewLocation(_authToken, "TestChildLocation1" + id.ToString(), "Test Child Location 1");
-            Location childLocation2 = await LocationController.CreateNewLocation(_authToken, "TestChildLocation2" + id.ToString(), "Test Child Location 2");
+            Location parentLocation = await LocationController.Create(_authToken, "TestParentLocation" + id.ToString(), "Test Parent Location");
+            Location childLocation1 = await LocationController.Create(_authToken, "TestChildLocation1" + id.ToString(), "Test Child Location 1");
+            Location childLocation2 = await LocationController.Create(_authToken, "TestChildLocation2" + id.ToString(), "Test Child Location 2");
 
             // Act
             _location.Parent = parentLocation;
@@ -204,7 +205,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         #region LOC05_DeleteLocationTest
         [TestMethod]
-        [TestCategory("Integration - LocationController")]
+        [TestCategory("Integration - Locations")]
         [Description("Tests marking a Location as deleted")]
         public async Task LOC05_DeleteLocationTest()
         {
@@ -212,7 +213,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             bool deleteLocation;
 
             // Act
-            deleteLocation = await LocationController.DeleteLocation(_authToken, _location, false);
+            deleteLocation = await LocationController.Delete(_authToken, _location, false);
 
             // Assert
             Assert.IsTrue(deleteLocation);

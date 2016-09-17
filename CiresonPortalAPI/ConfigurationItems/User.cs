@@ -9,7 +9,7 @@ using System.Dynamic;
 
 namespace CiresonPortalAPI.ConfigurationItems
 {
-    public class User : ConfigurationItem, IEquatable<ConfigurationItem>
+    public class User : ConfigurationItem
     {
         #region Fields
         bool   _isPartialUser = false;
@@ -314,7 +314,7 @@ namespace CiresonPortalAPI.ConfigurationItems
             if (this.IsPartialUser)
             {
                 // Fetch a full user object and replace the partial data model with the full one
-                User fullUser = await UserController.GetUserById(authToken, this.Id);
+                User fullUser = await UserController.GetUserById(authToken, this.BaseId);
                 this.CurrentObject = fullUser.CurrentObject;
                 this.IsPartialUser = false;
                 this.ReadOnly = true;

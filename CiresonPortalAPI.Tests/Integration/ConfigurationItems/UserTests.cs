@@ -49,7 +49,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         #region USER01_GetUserListTest
         [TestMethod]
-        [TestCategory("Integration - UserController")]
+        [TestCategory("Integration - Users")]
         [Description("Tests a fetch of user objects with a set limit")]
         public async Task USER01_GetUserListTest()
         {
@@ -67,7 +67,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         #region USER02_GetAnalystUserListTest
         [TestMethod]
-        [TestCategory("Integration - UserController")]
+        [TestCategory("Integration - Users")]
         [Description("Tests fetching only analyst users")]
         public async Task USER02_GetAnalystUserListTest()
         {
@@ -85,7 +85,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         #region USER03_GetUserByFilterTest
         [TestMethod]
-        [TestCategory("Integration - UserController")]
+        [TestCategory("Integration - Users")]
         [Description("Fetches a single user as indicated by the UserFilter property in App.config")]
         public async Task USER03_GetUserByFilterTest()
         {
@@ -104,7 +104,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         #region USER04_ExpandPartialUserTest
         [TestMethod]
-        [TestCategory("Integration - User")]
+        [TestCategory("Integration - Users")]
         [Description("Expands a partial user to include the full set of attributes")]
         public async Task USER04_ExpandPartialUserTest()
         {
@@ -121,7 +121,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         #region USER05_RefreshUserObjectTest
         [TestMethod]
-        [TestCategory("Integration - User")]
+        [TestCategory("Integration - Users")]
         [Description("Tests refresh functionality")]
         public async Task USER05_RefreshUserObjectTest()
         {
@@ -137,7 +137,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         #region USER06_UserPropertiesTest
         [TestMethod]
-        [TestCategory("Integration - User")]
+        [TestCategory("Integration - Users")]
         [Description("Tests exposing data from the underlying data model as properties")]
         public void USER06_UserPropertiesTest()
         {
@@ -179,7 +179,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
                 strData = _userObject.UserName;
                 strData = _userObject.Zip;
 
-                guidData = _userObject.Id;
+                guidData = _userObject.BaseId;
 
                 enumData = _userObject.ObjectStatus;
             }
@@ -193,7 +193,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
         #region USER07_UserRelatedObjectsTest
         [TestMethod]
-        [TestCategory("Integration - User")]
+        [TestCategory("Integration - Users")]
         [Description("Tests retrieving related objects from the User retrieved from the UserFilter property in App.config")]
         public void USER07_UserRelatedObjectsTest()
         {

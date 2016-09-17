@@ -12,8 +12,11 @@ namespace CiresonPortalAPI.ConfigurationItems
 {
     public static class UserController
     {
+        #region Constants
         const string USER_LIST_ENDPOINT = "/api/V3/User/GetUserList";
+        #endregion // Constants
 
+        #region Public Methods
         /// <summary>
         /// Returns a list of UserListItems, which contain an ID/Name pair
         /// </summary>
@@ -57,7 +60,7 @@ namespace CiresonPortalAPI.ConfigurationItems
 
                 return returnList;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw; // Rethrow exceptions
             }
@@ -74,7 +77,8 @@ namespace CiresonPortalAPI.ConfigurationItems
             if (!authToken.IsValid)
                 throw new InvalidCredentialException("AuthorizationToken is not valid.");
 
-            return await ConfigurationItemController.GetConfigurationItemByBaseId<User>(authToken, userId);
+            return await TypeProjectionController.GetByBaseId<User>(authToken, userId);
         }
+        #endregion // Public Methods
     }
 }

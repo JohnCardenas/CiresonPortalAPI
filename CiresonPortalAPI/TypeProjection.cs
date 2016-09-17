@@ -18,7 +18,7 @@ namespace CiresonPortalAPI
     /// TypeProjection
     /// </summary>
     [JsonConverter(typeof(TypeProjectionSerializer))]
-    public abstract class TypeProjection : INotifyPropertyChanged
+    public abstract class TypeProjection : INotifyPropertyChanged, IEquatable<TypeProjection>
     {
         #region Constants
         const string COMMIT_ENDPOINT = "/api/V3/Projection/Commit";
@@ -36,28 +36,73 @@ namespace CiresonPortalAPI
         #endregion // Fields
 
         #region Properties
+        /// <summary>
+        /// Data layer for the original object
+        /// </summary>
         internal dynamic OriginalObject
         {
             get { return _oOriginalObject; }
             set { _oOriginalObject = value; }
         }
 
+        /// <summary>
+        /// Data layer for modifications to this object
+        /// </summary>
         internal dynamic CurrentObject
         {
             get { return _oCurrentObject; }
             set { _oCurrentObject = value; }
         }
 
+        /// <summary>
+        /// If true, this object has changes uncommitted.
+        /// </summary>
         public bool IsDirty
         {
             get { return _bDirtyObject; }
             internal set { _bDirtyObject = value; }
         }
 
+        /// <summary>
+        /// If true, this object is read only.
+        /// </summary>
         public bool ReadOnly
         {
             get { return _bReadOnly; }
             internal set { _bReadOnly = value; }
+        }
+
+        /// <summary>
+        /// Gets the DisplayName of the TypeProjection. Read only.
+        /// </summary>
+        public string DisplayName
+        {
+            get { return this.GetPrimitiveValue<string>("DisplayName"); }
+        }
+
+        /// <summary>
+        /// Returns this object's BaseId. Read only.
+        /// </summary>
+        public Guid BaseId
+        {
+            get { return this.GetPrimitiveValue<Guid>("BaseId"); }
+        }
+
+        /// <summary>
+        /// Returns this object's FullName. Read only.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.GetPrimitiveValue<string>("FullName"); }
+        }
+
+        /// <summary>
+        /// Returns the status of this object
+        /// </summary>
+        public Enumeration ObjectStatus
+        {
+            get { return this.GetEnumeration("ObjectStatus"); }
+            internal set { this.SetEnumeration("ObjectStatus", value); }
         }
         #endregion // Properties
 
@@ -99,7 +144,87 @@ namespace CiresonPortalAPI
         }
         #endregion // Constructors
 
-        #region General Methods
+        #region Operator Overloads
+        /// <summary>
+        /// Overload equality check operator
+        /// </summary>
+        /// <param name="a">First operand to check for equality</param>
+        /// <param name="b">Second operand to check for equality</param>
+        /// <returns></returns>
+        public static bool operator ==(TypeProjection a, TypeProjection b)
+        {
+            return Equals(a, b);
+        }
+
+        /// <summary>
+        /// Overload non-equality check operator
+        /// </summary>
+        /// <param name="a">First operand to check for non-equality</param>
+        /// <param name="b">Second operand to check for non-equality</param>
+        /// <returns></returns>
+        public static bool operator !=(TypeProjection a, TypeProjection b)
+        {
+            return !Equals(a, b);
+        }
+        #endregion // Operator Overloads
+
+        #region Public Methods
+        /// <summary>
+        /// Equality check method
+        /// </summary>
+        /// <param name="other">Other TypeProjection to check for equality</param>
+        /// <returns></returns>
+        public bool Equals(TypeProjection other)
+        {
+            return Equals(this, other);
+        }
+
+        /// <summary>
+        /// Equality check method
+        /// </summary>
+        /// <param name="obj">Other object to check for equality</param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as TypeProjection);
+        }
+
+        /// <summary>
+        /// Equality check method
+        /// </summary>
+        /// <param name="a">First object to check for equality</param>
+        /// <param name="b">Second object to check for equality</param>
+        /// <returns></returns>
+        public static bool Equals(TypeProjection a, TypeProjection b)
+        {
+            // If both or null or the same instance, return true
+            if (System.Object.ReferenceEquals(a, b))
+                return true;
+
+            // If one is null but not both, return false
+            if (((object)a == null) || ((object)b == null))
+                return false;
+
+            // Return true if the IDs match
+            if (a.BaseId == b.BaseId)
+                return true;
+
+            // Return true if the FullNames match
+            if (a.FullName == b.FullName)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Hash code method
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.BaseId.GetHashCode();
+        }
+
         /// <summary>
         /// Attempts to commit the type projection to the portal. Throws an exception if not successful.
         /// </summary>
@@ -149,19 +274,24 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>
-        /// Emits a property changed event
+        /// Refreshes an object, discarding any changes that may have been made.
+        /// This method must be called before accessing properties of children in relationship collections in order to populate all properties.
         /// </summary>
-        /// <param name="propertyName">Name of the property to notify listeners</param>
-        protected void NotifyPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        #endregion // General Methods
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <returns></returns>
+        public abstract Task<bool> Refresh(AuthorizationToken authToken);
 
-        #region Enumeration Methods
+        /// <summary>
+        /// Returns the object's DisplayName.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return this.DisplayName;
+        }
+        #endregion // Public Methods
+
+        #region Protected Methods
         /// <summary>
         /// Gets an enumeration from the underlying data model.
         /// </summary>
@@ -257,9 +387,6 @@ namespace CiresonPortalAPI
                 NotifyPropertyChanged(objectProperty);
         }
 
-        #endregion // Enumeration Methods
-
-        #region Relationship Methods
         /// <summary>
         /// Gets a related object based on a relationship.
         /// </summary>
@@ -367,9 +494,7 @@ namespace CiresonPortalAPI
             else
                 NotifyPropertyChanged(objectProperty);
         }
-        #endregion // Relationship Methods
 
-        #region Primitive Methods
         /// <summary>
         /// Gets a primitive value by property name.
         /// </summary>
@@ -409,7 +534,51 @@ namespace CiresonPortalAPI
             else
                 NotifyPropertyChanged(objectProperty);
         }
-        #endregion // Primitive Methods
+
+        /// <summary>
+        /// Refreshes a TypeProjection from the database
+        /// </summary>
+        /// <typeparam name="T">TypeProjection derived type to refresh</typeparam>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <returns></returns>
+        protected async Task<bool> RefreshType<T>(AuthorizationToken authToken) where T : TypeProjection
+        {
+            TypeProjection p = await TypeProjectionController.GetByBaseId<T>(authToken, this.BaseId);
+
+            if (p == null)
+                return false;
+
+            this.CurrentObject = p.CurrentObject;
+            this.OriginalObject = p.OriginalObject;
+            this.ReadOnly = p.ReadOnly;
+            this.IsDirty = false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Emits a property changed event
+        /// </summary>
+        /// <param name="propertyName">Name of the property to notify listeners</param>
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion // Protected Methods
+    }
+
+    /// <summary>
+    /// TypeProjectionComparer, uses object FullNames
+    /// </summary>
+    public class TypeProjectionComparer : IComparer<TypeProjection>
+    {
+        public int Compare(TypeProjection a, TypeProjection b)
+        {
+            return string.Compare(a.ToString(), b.ToString());
+        }
     }
 
     /// <summary>
@@ -417,6 +586,12 @@ namespace CiresonPortalAPI
     /// </summary>
     public class TypeProjectionSerializer : JsonConverter
     {
+        /// <summary>
+        /// Serializes a TypeProjection to a JSON string
+        /// </summary>
+        /// <param name="writer">JsonWriter to use</param>
+        /// <param name="value">Object to convert</param>
+        /// <param name="serializer">JsonSerializer to use</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             TypeProjection projection = (TypeProjection)value;

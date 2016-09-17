@@ -8,16 +8,41 @@ namespace CiresonPortalAPI.WorkItems
 {
     public static class IncidentController
     {
+        #region Public Methods
+        /// <summary>
+        /// Creates a new Incident based on the supplied Template ID
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="templateId">TemplateID to use</param>
+        /// <param name="userId">ID of the user creating the Incident</param>
+        /// <returns></returns>
+        public static async Task<Incident> CreateObject(AuthorizationToken authToken, Guid templateId, Guid userId)
+        {
+            TypeProjection projection = await TypeProjectionController.CreateObjectFromTemplate<Incident>(authToken, templateId, userId);
+            return (Incident)projection;
+        }
+
+        /// <summary>
+        /// Creates a new Incident based on the supplied Template ID
+        /// </summary>
+        /// <param name="authToken">User AuthorizationToken</param>
+        /// <param name="templateId">TemplateID to use</param>
+        /// <returns></returns>
+        public static async Task<Incident> CreateObject(AuthorizationToken authToken, Guid templateId)
+        {
+            return await CreateObject(authToken, templateId, authToken.User.Id);
+        }
+
         /// <summary>
         /// Gets a list of Incidents based on the supplied criteria
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="criteria">QueryCriteria to search for</param>
         /// <returns></returns>
-        public static async Task<List<Incident>> GetIncidentsByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
+        public static async Task<List<Incident>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
             criteria.ProjectionID = TypeProjectionConstants.Incident;
-            return await TypeProjectionController.GetProjectionByCriteria<Incident>(authToken, criteria);
+            return await TypeProjectionController.GetByCriteria<Incident>(authToken, criteria);
         }
 
         /// <summary>
@@ -26,7 +51,7 @@ namespace CiresonPortalAPI.WorkItems
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="incidentID">ID of the Incident to retrieve</param>
         /// <returns>Incident</returns>
-        public static async Task<Incident> GetIncidentByID(AuthorizationToken authToken, string incidentID)
+        public static async Task<Incident> GetByID(AuthorizationToken authToken, string incidentID)
         {
             QueryCriteriaExpression expression = new QueryCriteriaExpression();
             expression.PropertyName = (new PropertyPathHelper(ClassConstants.Incident, "ID")).ToString();
@@ -38,7 +63,7 @@ namespace CiresonPortalAPI.WorkItems
             criteria.GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression;
             criteria.Expressions.Add(expression);
 
-            List<Incident> incidentList = await IncidentController.GetIncidentsByCriteria(authToken, criteria);
+            List<Incident> incidentList = await IncidentController.GetByCriteria(authToken, criteria);
 
             if (incidentList.Count == 0)
                 return null;
@@ -47,27 +72,16 @@ namespace CiresonPortalAPI.WorkItems
         }
 
         /// <summary>
-        /// Creates a new Incident based on the supplied Template ID
+        /// Marks an Incident for deletion
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="templateId">TemplateID to use</param>
-        /// <param name="userId">ID of the user creating the Incident</param>
+        /// <param name="incident">Incident to delete</param>
+        /// <param name="markPending">If true, mark the object as Pending Deletion instead of Deleted.</param>
         /// <returns></returns>
-        public static async Task<Incident> CreateNewIncident(AuthorizationToken authToken, Guid templateId, Guid userId)
+        public static async Task<bool> DeleteObject(AuthorizationToken authToken, Incident incident, bool markPending = true)
         {
-            TypeProjection projection = await TypeProjectionController.CreateProjectionByTemplate<Incident>(authToken, templateId, userId);
-            return (Incident)projection;
+            return await TypeProjectionController.DeleteObject(authToken, incident, markPending);
         }
-
-        /// <summary>
-        /// Creates a new Incident for the user with the supplied TemplateID
-        /// </summary>
-        /// <param name="authToken">User AuthorizationToken</param>
-        /// <param name="templateId">TemplateID to use</param>
-        /// <returns></returns>
-        public static async Task<Incident> CreateNewIncident(AuthorizationToken authToken, Guid templateId)
-        {
-            return await CreateNewIncident(authToken, templateId, authToken.User.Id);
-        }
+        #endregion // Public Methods
     }
 }

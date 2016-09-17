@@ -8,16 +8,17 @@ namespace CiresonPortalAPI.ConfigurationItems
 {
     public static class PurchaseOrderController
     {
+        #region Public Methods
         /// <summary>
         /// Gets a list of Purchase Orders based on the supplied criteria
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="criteria">QueryCriteria to search for</param>
         /// <returns></returns>
-        public static async Task<List<PurchaseOrder>> GetPurchaseOrdersByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
+        public static async Task<List<PurchaseOrder>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
             criteria.ProjectionID = TypeProjectionConstants.PurchaseOrder;
-            return await ConfigurationItemController.GetConfigurationItemsByCriteria<PurchaseOrder>(authToken, criteria);
+            return await TypeProjectionController.GetByCriteria<PurchaseOrder>(authToken, criteria);
         }
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="poTypeGuid">Purchase Order Type ID to search for</param>
         /// <returns></returns>
-        public static async Task<List<PurchaseOrder>> GetPurchaseOrdersByType(AuthorizationToken authToken, Guid poTypeGuid)
+        public static async Task<List<PurchaseOrder>> GetByOrderType(AuthorizationToken authToken, Guid poTypeGuid)
         {
             QueryCriteriaExpression expression = new QueryCriteriaExpression
             {
@@ -40,7 +41,7 @@ namespace CiresonPortalAPI.ConfigurationItems
             criteria.GroupingOperator = QueryCriteriaGroupingOperator.And;
             criteria.Expressions.Add(expression);
 
-            List<PurchaseOrder> purchaseOrderList = await PurchaseOrderController.GetPurchaseOrdersByCriteria(authToken, criteria);
+            List<PurchaseOrder> purchaseOrderList = await PurchaseOrderController.GetByCriteria(authToken, criteria);
 
             if (purchaseOrderList.Count == 0)
                 return null;
@@ -49,14 +50,15 @@ namespace CiresonPortalAPI.ConfigurationItems
         }
 
         /// <summary>
-        /// Overloaded method, takes an Enumeration instead of a GUID
+        /// Convenience method that returns a list of Purchase Orders with the specified order type
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="purchaseOrderType">Purchase Order Type to search for</param>
         /// <returns></returns>
         public static async Task<List<PurchaseOrder>> GetPurchaseOrdersByType(AuthorizationToken authToken, Enumeration purchaseOrderType)
         {
-            return await GetPurchaseOrdersByType(authToken, purchaseOrderType.Id);
+            return await GetByOrderType(authToken, purchaseOrderType.Id);
         }
+        #endregion // Public Methods
     }
 }

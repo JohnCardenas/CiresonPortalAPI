@@ -66,12 +66,9 @@ namespace CiresonPortalAPI
         private Guid    _oId;
         private string  _sText;
         private string  _sName;
-        private bool    _bChildrenLoaded = false;
         private bool    _bIsFlat;
         private bool    _bHasChildren;
         private decimal _dOrdinal;
-
-        private List<Enumeration> _lChildren;
 
         public Guid    Id      { get { return _oId;      } }
         public string  Text    { get { return _sText;    } }

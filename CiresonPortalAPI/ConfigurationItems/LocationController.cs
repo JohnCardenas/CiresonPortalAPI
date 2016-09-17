@@ -8,28 +8,58 @@ namespace CiresonPortalAPI.ConfigurationItems
 {
     public static class LocationController
     {
+        #region Public Methods
+        /// <summary>
+        /// Creates a new blank Location
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="name">Name of the Location</param>
+        /// <param name="displayName">DisplayName of the Location</param>
+        /// <returns></returns>
+        public static async Task<Location> Create(AuthorizationToken authToken, string name, string displayName)
+        {
+            return await TypeProjectionController.CreateBlankObject<Location>(authToken, name, displayName);
+        }
+
         /// <summary>
         /// Gets a list of Locations based on the supplied criteria
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="criteria">QueryCriteria to search for</param>
         /// <returns></returns>
-        public static async Task<List<Location>> GetLocationsByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
+        public static async Task<List<Location>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
-            criteria.ProjectionID = TypeProjectionConstants.PurchaseOrder;
-            return await ConfigurationItemController.GetConfigurationItemsByCriteria<Location>(authToken, criteria);
+            criteria.ProjectionID = TypeProjectionConstants.Location;
+            return await TypeProjectionController.GetByCriteria<Location>(authToken, criteria);
         }
 
         /// <summary>
-        /// Gets a list of all Locations that are active
+        /// Convenience method that gets a list of all Locations that are active
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <returns></returns>
-        public static async Task<List<Location>> GetAllLocations(AuthorizationToken authToken)
+        public static async Task<List<Location>> GetAll(AuthorizationToken authToken)
         {
-            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.Location);
+            PropertyPathHelper pathHelper = new PropertyPathHelper();
+            pathHelper.PropertyName = "ObjectStatus";
+            pathHelper.ObjectClass = ClassConstants.GetClassIdByType<Location>();
 
-            return await TypeProjectionController.GetProjectionByCriteria<Location>(authToken, ConfigurationItemController.ExcludeInactiveItems<Location>(criteria));
+            QueryCriteriaExpression expr = new QueryCriteriaExpression
+            {
+                PropertyName = pathHelper.ToString(),
+                PropertyType = QueryCriteriaPropertyType.Property,
+                Operator = QueryCriteriaExpressionOperator.Equal,
+                Value = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active.ToString("D")
+            };
+
+            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.Location)
+            {
+                GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression
+            };
+
+            criteria.Expressions.Add(expr);
+
+            return await GetByCriteria(authToken, criteria);
         }
 
         /// <summary>
@@ -38,21 +68,20 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="id">ID of the location</param>
         /// <returns></returns>
-        public static async Task<Location> GetLocationById(AuthorizationToken authToken, Guid id)
+        public static async Task<Location> GetByBaseId(AuthorizationToken authToken, Guid id)
         {
-            return await ConfigurationItemController.GetConfigurationItemByBaseId<Location>(authToken, id);
+            return await TypeProjectionController.GetByBaseId<Location>(authToken, id);
         }
 
         /// <summary>
-        /// Creates a new Location
+        /// Returns a Location by its FullName
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="name">Name of the Location</param>
-        /// <param name="displayName">DisplayName of the Location</param>
+        /// <param name="fullName">FullName to find</param>
         /// <returns></returns>
-        public static async Task<Location> CreateNewLocation(AuthorizationToken authToken, string name, string displayName)
+        public static async Task<Location> GetByFullName(AuthorizationToken authToken, string fullName)
         {
-            return await ConfigurationItemController.CreateConfigurationItem<Location>(authToken, name, displayName);
+            return await TypeProjectionController.GetByFullName<Location>(authToken, fullName);
         }
 
         /// <summary>
@@ -62,9 +91,10 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <param name="location">Location to delete</param>
         /// <param name="markPending">If true, mark the object as Pending Deletion instead of Deleted.</param>
         /// <returns></returns>
-        public static async Task<bool> DeleteLocation(AuthorizationToken authToken, Location location, bool markPending = true)
+        public static async Task<bool> Delete(AuthorizationToken authToken, Location location, bool markPending = true)
         {
-            return await ConfigurationItemController.DeleteConfigurationItem(authToken, location, markPending);
+            return await TypeProjectionController.DeleteObject(authToken, location, markPending);
         }
+        #endregion // Public Methods
     }
 }
