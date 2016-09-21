@@ -77,7 +77,7 @@ namespace CiresonPortalAPI.Tests.Unit
 
             QueryCriteriaExpression expr1 = new QueryCriteriaExpression
             {
-                PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder, "PurchaseOrderType")).ToString(),
+                PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder.Id, "PurchaseOrderType")).ToString(),
                 PropertyType = QueryCriteriaPropertyType.Property,
                 Operator = QueryCriteriaExpressionOperator.Equal,
                 Value = typeGuid.ToString("B")
@@ -85,7 +85,7 @@ namespace CiresonPortalAPI.Tests.Unit
 
             QueryCriteriaExpression expr2 = new QueryCriteriaExpression
             {
-                PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder, "PurchaseOrderNumber")).ToString(),
+                PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder.Id, "PurchaseOrderNumber")).ToString(),
                 PropertyType = QueryCriteriaPropertyType.Property,
                 Operator = QueryCriteriaExpressionOperator.Equal,
                 Value = poNumber

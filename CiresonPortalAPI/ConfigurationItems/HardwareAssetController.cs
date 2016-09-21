@@ -54,7 +54,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns>HardwareAsset</returns>
         public static async Task<List<HardwareAsset>> GetByAssetTag(AuthorizationToken authToken, string assetTag)
         {
-            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "AssetTag"), assetTag);
+            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset.Id, "AssetTag"), assetTag);
             return await GetByCriteria(authToken, criteria);
         }
 
@@ -66,7 +66,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         public static async Task<HardwareAsset> GetByHardwareAssetID(AuthorizationToken authToken, string id)
         {
-            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "HardwareAssetID"), id);
+            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset.Id, "HardwareAssetID"), id);
             List<HardwareAsset> assetList = await GetByCriteria(authToken, criteria);
 
             if (assetList == null)
@@ -86,7 +86,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         public static async Task<List<HardwareAsset>> GetBySerialNumber(AuthorizationToken authToken, string serialNumber)
         {
-            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "SerialNumber"), serialNumber);
+            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset.Id, "SerialNumber"), serialNumber);
             return await GetByCriteria(authToken, criteria);
         }
 
@@ -99,7 +99,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         public static async Task<List<HardwareAsset>> GetHardwareAssetsByType(AuthorizationToken authToken, Enumeration assetType)
         {
-            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset, "HardwareAssetType"), assetType.Id.ToString());
+            QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset.Id, "HardwareAssetType"), assetType.Id.ToString());
             return await GetByCriteria(authToken, criteria);
         }
         #endregion // Public Methods

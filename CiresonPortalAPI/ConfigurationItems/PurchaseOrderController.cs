@@ -31,7 +31,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         {
             QueryCriteriaExpression expression = new QueryCriteriaExpression
             {
-                PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder, "PurchaseOrderType")).ToString(),
+                PropertyName = (new PropertyPathHelper(ClassConstants.PurchaseOrder.Id, "PurchaseOrderType")).ToString(),
                 PropertyType = QueryCriteriaPropertyType.Property,
                 Operator = QueryCriteriaExpressionOperator.Equal,
                 Value = poTypeGuid.ToString("B")
