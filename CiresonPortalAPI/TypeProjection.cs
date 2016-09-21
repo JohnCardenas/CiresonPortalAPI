@@ -413,66 +413,6 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>
-        /// Gets a list of related objects based on a relationship.
-        /// </summary>
-        /// <typeparam name="T">Type of the related objects</typeparam>
-        /// <param name="modelProperty">Relationship's data model property name</param>
-        /// <returns></returns>
-        protected List<T> GetRelatedObjectsList<T>(string modelProperty) where T : TypeProjection
-        {
-            List<T> memberList = new List<T>();
-
-            if (DynamicObjectHelpers.HasProperty(this.CurrentObject, modelProperty))
-            {
-                var objectData = (IDictionary<string, object>)this.CurrentObject;
-                dynamic objectList = objectData[modelProperty];
-
-                foreach (dynamic obj in objectList)
-                {
-                    BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-                    CultureInfo culture = null;
-                    T relObj = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
-
-                    relObj.CurrentObject = obj;
-                    relObj.ReadOnly = true;
-
-                    memberList.Add(relObj);
-                }
-            }
-
-            return memberList;
-        }
-
-        /// <summary>
-        /// Sets a relationship to a list of TypeProjections
-        /// </summary>
-        /// <param name="modelProperty">Relationship's data model property name</param>
-        /// <param name="objects">List of objects to set</param>
-        /// <param name="objectProperty">Derived object's property name, if it is different than the data model property name.</param>
-        protected void SetRelatedObjectsList(string modelProperty, List<TypeProjection> objects, string objectProperty = null)
-        {
-            if (this.ReadOnly)
-                throw new CiresonReadOnlyException("Cannot set related objects; object is read-only.");
-
-            var objectData = (IDictionary<string, object>)this.CurrentObject;
-            var objectList = new dynamic[objects.Count];
-
-            for (int i = 0; i < objects.Count; i++)
-            {
-                objectList[i] = objects[i].CurrentObject;
-            }
-
-            objectData[modelProperty] = objectList;
-            this.CurrentObject = (ExpandoObject)objectData;
-            this.IsDirty = true;
-
-            if (String.IsNullOrEmpty(objectProperty))
-                NotifyPropertyChanged(modelProperty);
-            else
-                NotifyPropertyChanged(objectProperty);
-        }
-
-        /// <summary>
         /// Sets a relationship to the specified TypeProjection
         /// </summary>
         /// <param name="modelProperty">Relationship's data model property name</param>
