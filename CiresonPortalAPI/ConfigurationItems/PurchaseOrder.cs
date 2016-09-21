@@ -80,11 +80,14 @@ namespace CiresonPortalAPI.ConfigurationItems
 
         #region Relationship Properties
         /// <summary>
-        /// Returns a list of all child Purchase Orders. Read only.
+        /// Returns a list of all child Purchase Orders.
         /// </summary>
-        public List<PurchaseOrder> Children
+        public RelatedObjectList<PurchaseOrder> Children
         {
-            get { return this.GetRelatedObjectsList<PurchaseOrder>("Target_PurchaseOrderHasChildPurchaseOrder"); }
+            get
+            {
+                return new RelatedObjectList<PurchaseOrder>(this, "Target_PurchaseOrderHasChildPurchaseOrder");
+            }
         }
 
         /// <summary>
