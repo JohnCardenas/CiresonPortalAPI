@@ -26,23 +26,22 @@ namespace CiresonPortalAPI
             if (typeof(T) == typeof(CI.HardwareAsset))
                 return ClassConstants.HardwareAsset.Name;
 
-            else if (typeof(T) == typeof(CI.Location))
+            if (typeof(T) == typeof(CI.Location))
                 return ClassConstants.Location.Name;
 
-            else if (typeof(T) == typeof(CI.PurchaseOrder))
+            if (typeof(T) == typeof(CI.PurchaseOrder))
                 return ClassConstants.Purchase.Name;
 
-            else if (typeof(T) == typeof(CI.User))
+            if (typeof(T) == typeof(CI.User))
                 return ClassConstants.ADUser.Name;
 
             /**
              * Work Items
              */
-            else if (typeof(T) == typeof(WI.Incident))
+            if (typeof(T) == typeof(WI.Incident))
                 return ClassConstants.Incident.Name;
 
-            else
-                throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
+            throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
         }
 
         /// <summary>
@@ -58,23 +57,22 @@ namespace CiresonPortalAPI
             if (typeof(T) == typeof(CI.HardwareAsset))
                 return ClassConstants.HardwareAsset.Id;
 
-            else if (typeof(T) == typeof(CI.Location))
+            if (typeof(T) == typeof(CI.Location))
                 return ClassConstants.Location.Id;
 
-            else if (typeof(T) == typeof(CI.PurchaseOrder))
+            if (typeof(T) == typeof(CI.PurchaseOrder))
                 return ClassConstants.PurchaseOrder.Id;
 
-            else if (typeof(T) == typeof(CI.User))
+            if (typeof(T) == typeof(CI.User))
                 return ClassConstants.ADUser.Id;
 
             /**
              * Work Items
              */
-            else if (typeof(T) == typeof(WI.Incident))
+            if (typeof(T) == typeof(WI.Incident))
                 return ClassConstants.Incident.Id;
 
-            else
-                throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
+            throw new CiresonApiException("Unrecognized type " + typeof(T).FullName);
         }
 
         /// <summary>
