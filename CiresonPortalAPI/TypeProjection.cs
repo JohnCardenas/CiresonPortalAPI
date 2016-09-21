@@ -104,6 +104,14 @@ namespace CiresonPortalAPI
             get { return this.GetEnumeration("ObjectStatus"); }
             internal set { this.SetEnumeration("ObjectStatus", value); }
         }
+
+        /// <summary>
+        /// Returns the class name of this object. Read only.
+        /// </summary>
+        public string ClassName
+        {
+            get { return this.GetPrimitiveValue<string>("ClassName"); }
+        }
         #endregion // Properties
 
         #region Constructors
