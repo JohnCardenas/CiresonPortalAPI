@@ -275,7 +275,7 @@ namespace CiresonPortalAPI
         /// <typeparam name="T">Type of object to return</typeparam>
         /// <param name="criteria">QueryCriteria to adjust</param>
         /// <returns></returns>
-        private static QueryCriteria ExcludeInactiveItems<T>(QueryCriteria criteria)
+        private static QueryCriteria ExcludeInactiveItems<T>(QueryCriteria criteria) where T : TypeProjection
         {
             PropertyPathHelper pathHelper = new PropertyPathHelper();
             pathHelper.PropertyName = "ObjectStatus";
