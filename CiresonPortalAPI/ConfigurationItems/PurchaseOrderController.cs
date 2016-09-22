@@ -10,6 +10,18 @@ namespace CiresonPortalAPI.ConfigurationItems
     {
         #region Public Methods
         /// <summary>
+        /// Creates a new blank PurchaseOrder
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="name">Name of the PurchaseOrder</param>
+        /// <param name="displayName">DisplayName of the PurchaseOrder</param>
+        /// <returns></returns>
+        public static async Task<PurchaseOrder> Create(AuthorizationToken authToken, string name, string displayName)
+        {
+            return await TypeProjectionController.CreateBlankObject<PurchaseOrder>(authToken, name, displayName);
+        }
+
+        /// <summary>
         /// Gets a list of Purchase Orders based on the supplied criteria
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
@@ -19,6 +31,57 @@ namespace CiresonPortalAPI.ConfigurationItems
         {
             criteria.ProjectionID = TypeProjectionConstants.PurchaseOrder.Id;
             return await TypeProjectionController.GetByCriteria<PurchaseOrder>(authToken, criteria);
+        }
+
+        /// <summary>
+        /// Convenience method that gets a list of all PurchaseOrders that are active
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <returns></returns>
+        public static async Task<List<PurchaseOrder>> GetAll(AuthorizationToken authToken)
+        {
+            PropertyPathHelper pathHelper = new PropertyPathHelper();
+            pathHelper.PropertyName = "ObjectStatus";
+            pathHelper.ObjectClass = ClassConstants.GetClassIdByType<PurchaseOrder>();
+
+            QueryCriteriaExpression expr = new QueryCriteriaExpression
+            {
+                PropertyName = pathHelper.ToString(),
+                PropertyType = QueryCriteriaPropertyType.Property,
+                Operator = QueryCriteriaExpressionOperator.Equal,
+                Value = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active.ToString("D")
+            };
+
+            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.PurchaseOrder.Id)
+            {
+                GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression
+            };
+
+            criteria.Expressions.Add(expr);
+
+            return await GetByCriteria(authToken, criteria);
+        }
+
+        /// <summary>
+        /// Returns a PurchaseOrder by ID
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="id">ID of the PurchaseOrder</param>
+        /// <returns></returns>
+        public static async Task<PurchaseOrder> GetByBaseId(AuthorizationToken authToken, Guid id)
+        {
+            return await TypeProjectionController.GetByBaseId<PurchaseOrder>(authToken, id);
+        }
+
+        /// <summary>
+        /// Returns a PurchaseOrder by its FullName
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="fullName">FullName to find</param>
+        /// <returns></returns>
+        public static async Task<PurchaseOrder> GetByFullName(AuthorizationToken authToken, string fullName)
+        {
+            return await TypeProjectionController.GetByFullName<PurchaseOrder>(authToken, fullName);
         }
 
         /// <summary>
@@ -58,6 +121,18 @@ namespace CiresonPortalAPI.ConfigurationItems
         public static async Task<List<PurchaseOrder>> GetPurchaseOrdersByType(AuthorizationToken authToken, Enumeration purchaseOrderType)
         {
             return await GetByOrderType(authToken, purchaseOrderType.Id);
+        }
+
+        /// <summary>
+        /// Marks a PurchaseOrder for deletion
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="item">PurchaseOrder to delete</param>
+        /// <param name="markPending">If true, mark the object as Pending Deletion instead of Deleted.</param>
+        /// <returns></returns>
+        public static async Task<bool> Delete(AuthorizationToken authToken, PurchaseOrder item, bool markPending = true)
+        {
+            return await TypeProjectionController.DeleteObject(authToken, item, markPending);
         }
         #endregion // Public Methods
     }
