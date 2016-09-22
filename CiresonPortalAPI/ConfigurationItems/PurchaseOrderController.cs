@@ -17,7 +17,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         public static async Task<List<PurchaseOrder>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
-            criteria.ProjectionID = TypeProjectionConstants.PurchaseOrder;
+            criteria.ProjectionID = TypeProjectionConstants.PurchaseOrder.Id;
             return await TypeProjectionController.GetByCriteria<PurchaseOrder>(authToken, criteria);
         }
 
@@ -37,7 +37,7 @@ namespace CiresonPortalAPI.ConfigurationItems
                 Value = poTypeGuid.ToString("B")
             };
 
-            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.PurchaseOrder);
+            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.PurchaseOrder.Id);
             criteria.GroupingOperator = QueryCriteriaGroupingOperator.And;
             criteria.Expressions.Add(expression);
 

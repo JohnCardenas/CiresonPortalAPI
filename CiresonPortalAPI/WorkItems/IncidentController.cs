@@ -41,7 +41,7 @@ namespace CiresonPortalAPI.WorkItems
         /// <returns></returns>
         public static async Task<List<Incident>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
-            criteria.ProjectionID = TypeProjectionConstants.Incident;
+            criteria.ProjectionID = TypeProjectionConstants.Incident.Id;
             return await TypeProjectionController.GetByCriteria<Incident>(authToken, criteria);
         }
 
@@ -59,7 +59,7 @@ namespace CiresonPortalAPI.WorkItems
             expression.Operator = QueryCriteriaExpressionOperator.Equal;
             expression.Value = incidentID;
 
-            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.Incident);
+            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.Incident.Id);
             criteria.GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression;
             criteria.Expressions.Add(expression);
 

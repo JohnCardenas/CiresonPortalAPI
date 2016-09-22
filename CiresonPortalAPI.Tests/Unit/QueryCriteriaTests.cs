@@ -39,7 +39,7 @@ namespace CiresonPortalAPI.Tests.Unit
         {
             // Arrange
             Guid baseId = new Guid("{b3e98851-27ab-4d70-bb10-3cf71c80d838}");
-            string knownGood = "{\"Id\":\"" + TypeProjectionConstants.User.ToString("D") + "\",\"Criteria\":{\"Base\":{\"Expression\":{\"SimpleExpression\":{\"ValueExpressionLeft\":{\"GenericProperty\":\"Id\"},\"Operator\":\"Equal\",\"ValueExpressionRight\":{\"Value\":\"" + baseId.ToString("D") + "\"}}}}}}";
+            string knownGood = "{\"Id\":\"" + TypeProjectionConstants.User.Id.ToString("D") + "\",\"Criteria\":{\"Base\":{\"Expression\":{\"SimpleExpression\":{\"ValueExpressionLeft\":{\"GenericProperty\":\"Id\"},\"Operator\":\"Equal\",\"ValueExpressionRight\":{\"Value\":\"" + baseId.ToString("D") + "\"}}}}}}";
 
             QueryCriteriaExpression expr = new QueryCriteriaExpression
             {
@@ -49,7 +49,7 @@ namespace CiresonPortalAPI.Tests.Unit
                 Value = baseId.ToString("D")
             };
 
-            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.User)
+            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.User.Id)
             {
                 GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression
             };
@@ -91,7 +91,7 @@ namespace CiresonPortalAPI.Tests.Unit
                 Value = poNumber
             };
 
-            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.PurchaseOrder);
+            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.PurchaseOrder.Id);
             criteria.GroupingOperator = QueryCriteriaGroupingOperator.And;
             criteria.Expressions.Add(expr1);
             criteria.Expressions.Add(expr2);

@@ -29,7 +29,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         public static async Task<List<Location>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
-            criteria.ProjectionID = TypeProjectionConstants.Location;
+            criteria.ProjectionID = TypeProjectionConstants.Location.Id;
             return await TypeProjectionController.GetByCriteria<Location>(authToken, criteria);
         }
 
@@ -52,7 +52,7 @@ namespace CiresonPortalAPI.ConfigurationItems
                 Value = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active.ToString("D")
             };
 
-            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.Location)
+            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.Location.Id)
             {
                 GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression
             };

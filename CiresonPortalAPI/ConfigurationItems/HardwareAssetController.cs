@@ -42,7 +42,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         public static async Task<List<HardwareAsset>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria, bool includeInactiveItems = false)
         {
-            criteria.ProjectionID = TypeProjectionConstants.HardwareAsset;
+            criteria.ProjectionID = TypeProjectionConstants.HardwareAsset.Id;
             return await TypeProjectionController.GetByCriteria<HardwareAsset>(authToken, criteria);
         }
 
@@ -121,7 +121,7 @@ namespace CiresonPortalAPI.ConfigurationItems
                 Value = value
             };
 
-            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.HardwareAsset)
+            QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.HardwareAsset.Id)
             {
                 GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression
             };
