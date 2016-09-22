@@ -187,6 +187,10 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             Location childLocation1 = await LocationController.Create(_authToken, "TestChildLocation1" + id.ToString(), "Test Child Location 1");
             Location childLocation2 = await LocationController.Create(_authToken, "TestChildLocation2" + id.ToString(), "Test Child Location 2");
 
+            _objectsToCleanup.Add(parentLocation);
+            _objectsToCleanup.Add(childLocation1);
+            _objectsToCleanup.Add(childLocation2);
+
             // Act
             _location.Parent = parentLocation;
             _location.Children.Add(childLocation1);
