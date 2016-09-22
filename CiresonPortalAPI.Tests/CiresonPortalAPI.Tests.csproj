@@ -57,6 +57,7 @@
     <Compile Include="Integration\AuthorizationTokenTests.cs" />
     <Compile Include="Integration\ConfigurationHelper.cs" />
     <Compile Include="Integration\ConfigurationItems\LocationTests.cs" />
+    <Compile Include="Integration\ConfigurationItems\PurchaseOrderTests.cs" />
     <Compile Include="Integration\ConfigurationItems\UserTests.cs" />
     <Compile Include="Integration\EnumerationTests.cs" />
     <Compile Include="Integration\WorkItems\IncidentTests.cs" />
