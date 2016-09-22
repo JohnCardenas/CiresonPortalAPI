@@ -88,12 +88,12 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// Marks a Location for deletion
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="location">Location to delete</param>
+        /// <param name="item">Location to delete</param>
         /// <param name="markPending">If true, mark the object as Pending Deletion instead of Deleted.</param>
         /// <returns></returns>
-        public static async Task<bool> Delete(AuthorizationToken authToken, Location location, bool markPending = true)
+        public static async Task<bool> Delete(AuthorizationToken authToken, Location item, bool markPending = true)
         {
-            return await TypeProjectionController.DeleteObject(authToken, location, markPending);
+            return await TypeProjectionController.DeleteObject(authToken, item, markPending);
         }
         #endregion // Public Methods
     }
