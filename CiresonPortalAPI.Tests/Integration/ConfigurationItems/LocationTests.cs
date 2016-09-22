@@ -82,8 +82,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             Enumeration enumData;
 
             // Act
-            //_location = await ConfigurationItemController.CreateObject<Location>(_authToken, "TestLocation" + id.ToString(), "Test Location");
-            _location = await TypeProjectionController.CreateBlankObject<Location>(_authToken, "TestLocation" + id.ToString(), "Test Location");
+            _location = await LocationController.Create(_authToken, "TestLocation" + id.ToString(), "Test Location");
             _objectsToCleanup.Add(_location);
 
             try
