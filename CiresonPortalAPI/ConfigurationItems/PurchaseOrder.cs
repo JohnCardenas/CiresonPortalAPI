@@ -34,7 +34,7 @@ namespace CiresonPortalAPI.ConfigurationItems
                 if (value.HasValue)
                 {
                     if (value.Value < 0)
-                        throw new ArgumentOutOfRangeException("Cannot assign a negative value to a PurchaseOrder Amount.");
+                        throw new ArgumentOutOfRangeException("Amount", "Cannot assign a negative value to a PurchaseOrder Amount.");
                     else
                         this.SetPrimitiveValue<decimal?>("Amount", value.Value);
                 }
