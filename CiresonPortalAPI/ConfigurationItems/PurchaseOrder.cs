@@ -26,10 +26,16 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <summary>
         /// Gets or sets the Purchase Order's amount
         /// </summary>
-        public decimal Amount
+        public decimal? Amount
         {
-            get { return this.GetPrimitiveValue<decimal>("Amount"); }
-            set { this.SetPrimitiveValue<decimal>("Amount", value); }
+            get { return this.GetPrimitiveValue<decimal?>("Amount"); }
+            set
+            {
+                if (value.HasValue)
+                    this.SetPrimitiveValue<decimal?>("Amount", value.Value);
+                else
+                    this.SetPrimitiveValue<decimal?>("Amount", null);
+            }
         }
 
         /// <summary>
