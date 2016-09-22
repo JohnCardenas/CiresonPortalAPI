@@ -15,10 +15,18 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="name">Name of the PurchaseOrder</param>
         /// <param name="displayName">DisplayName of the PurchaseOrder</param>
+        /// <param name="orderNumber">PurchaseOrder number</param>
+        /// <param name="date">PurchaseOrder date</param>
         /// <returns></returns>
-        public static async Task<PurchaseOrder> Create(AuthorizationToken authToken, string name, string displayName)
+        public static async Task<PurchaseOrder> Create(AuthorizationToken authToken, string name, string displayName, string orderNumber, DateTime date)
         {
-            return await TypeProjectionController.CreateBlankObject<PurchaseOrder>(authToken, name, displayName);
+            dynamic extraProps = new
+            {
+                PurchaseOrderNumber = orderNumber,
+                PurchaseOrderDate = date
+            };
+
+            return await TypeProjectionController.CreateBlankObject<PurchaseOrder>(authToken, name, displayName, extraProps);
         }
 
         /// <summary>
