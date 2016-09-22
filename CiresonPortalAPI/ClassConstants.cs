@@ -30,7 +30,7 @@ namespace CiresonPortalAPI
                 return ClassConstants.Location.Name;
 
             if (typeof(T) == typeof(CI.PurchaseOrder))
-                return ClassConstants.Purchase.Name;
+                return ClassConstants.PurchaseOrder.Name;
 
             if (typeof(T) == typeof(CI.User))
                 return ClassConstants.ADUser.Name;
