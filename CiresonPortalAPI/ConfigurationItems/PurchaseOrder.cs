@@ -32,7 +32,12 @@ namespace CiresonPortalAPI.ConfigurationItems
             set
             {
                 if (value.HasValue)
-                    this.SetPrimitiveValue<decimal?>("Amount", value.Value);
+                {
+                    if (value.Value < 0)
+                        throw new ArgumentOutOfRangeException("Cannot assign a negative value to a PurchaseOrder Amount.");
+                    else
+                        this.SetPrimitiveValue<decimal?>("Amount", value.Value);
+                }
                 else
                     this.SetPrimitiveValue<decimal?>("Amount", null);
             }
