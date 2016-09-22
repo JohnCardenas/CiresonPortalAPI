@@ -14,10 +14,15 @@ namespace CiresonPortalAPI
     /// <summary>
     /// A RelatedObjectList is a list of TypeProjections related to another object.
     /// </summary>
-    /// <typeparam name="T">TypeProjection type</typeparam>
+    /// <typeparam name="T">Base TypeProjection type that is allowed in this relation list</typeparam>
     public class RelatedObjectList<T> : IList<T> where T : TypeProjection
     {
         #region Constructors
+        /// <summary>
+        /// Sets up a new RelatedObjectList based on the specified type projection's model property.
+        /// </summary>
+        /// <param name="owner">TypeProjection object that owns the related object list</param>
+        /// <param name="modelProperty">Data model property that contains the list of related objects</param>
         public RelatedObjectList(TypeProjection owner, string modelProperty)
         {
             Owner = owner;
@@ -61,6 +66,9 @@ namespace CiresonPortalAPI
                 if (IsReadOnly)
                     throw new InvalidOperationException("Cannot add to a read-only list.");
 
+                if (!IsOfType(typeof(T), value.GetType()))
+                    throw new InvalidOperationException("This RelatedObjectList only supports setting objects of type " + typeof(T).Name);
+
                 if (!Contains(value))
                 {
                     ProjectionList[index] = value.CurrentObject;
@@ -76,17 +84,19 @@ namespace CiresonPortalAPI
         /// </summary>
         /// <param name="item">The object to locate in the RelatedObjectList.</param>
         /// <returns></returns>
-        public int IndexOf(T item)
+        public int IndexOf(TypeProjection item)
         {
             return ProjectionList.IndexOf(item.CurrentObject);
         }
+
+        public int IndexOf(T item) { return IndexOf(item as TypeProjection); }
 
         /// <summary>
         /// Determines whether an object is in the RelatedObjectList.
         /// </summary>
         /// <param name="item">The object to locate in the RelatedObjectList.</param>
         /// <returns></returns>
-        public bool Contains(T item)
+        public bool Contains(TypeProjection item)
         {
             foreach (ExpandoObject obj in ProjectionList)
             {
@@ -97,17 +107,22 @@ namespace CiresonPortalAPI
             return false;
         }
 
+        public bool Contains(T item) { return Contains(item as TypeProjection); }
+
         /// <summary>
         /// Adds an object to the end of the RelatedObjectList
         /// </summary>
         /// <param name="item">The object to be added to the end of the list. Duplicates will be ignored.</param>
-        public void Add(T item)
+        public void Add(TypeProjection item)
         {
             if (IsReadOnly)
                 throw new InvalidOperationException("Cannot add to a read-only list.");
 
             if (item == null)
                 throw new ArgumentNullException("Cannot add a null value on a RelatedObjectList.");
+
+            if (!IsOfType(typeof(T), item.GetType()))
+                throw new InvalidOperationException("This RelatedObjectList only supports adding objects of type " + typeof(T).Name);
 
             if (!Contains(item))
             {
@@ -116,12 +131,14 @@ namespace CiresonPortalAPI
             }
         }
 
+        public void Add(T item) { Add(item as TypeProjection); }
+
         /// <summary>
         /// Inserts an object into the RelatedObjectList at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which an object should be inserted.</param>
         /// <param name="item">The object to insert. Duplicates will be ignored.</param>
-        public void Insert(int index, T item)
+        public void Insert(int index, TypeProjection item)
         {
             if (IsReadOnly)
                 throw new InvalidOperationException("Cannot insert into a read-only list.");
@@ -129,12 +146,17 @@ namespace CiresonPortalAPI
             if (item == null)
                 throw new ArgumentNullException("Cannot insert a null value on a RelatedObjectList.");
 
+            if (!IsOfType(typeof(T), item.GetType()))
+                throw new InvalidOperationException("This RelatedObjectList only supports inserting objects of type " + typeof(T).Name);
+
             if (!Contains(item))
             {
                 ProjectionList.Insert(index, item.CurrentObject);
                 Owner.IsDirty = true;
             }
         }
+
+        public void Insert(int index, T item) { Insert(index, item as TypeProjection); }
 
         /// <summary>
         /// Removes the object at the specified index of the RelatedObjectList.
@@ -176,13 +198,16 @@ namespace CiresonPortalAPI
         /// </summary>
         /// <param name="item">The object to remove from the RelatedObjectList.</param>
         /// <returns></returns>
-        public bool Remove(T item)
+        public bool Remove(TypeProjection item)
         {
             if (IsReadOnly)
                 throw new InvalidOperationException("Cannot remove from a read-only list.");
 
             if (item == null)
                 throw new ArgumentNullException("Cannot remove a null value on a RelatedObjectList.");
+
+            if (!IsOfType(typeof(T), item.GetType()))
+                throw new InvalidOperationException("This RelatedObjectList only supports removing objects of type " + typeof(T).Name);
 
             foreach (ExpandoObject obj in ProjectionList)
             {
@@ -199,6 +224,8 @@ namespace CiresonPortalAPI
 
             return false;
         }
+
+        public bool Remove (T item) { return Remove(item as TypeProjection); }
 
         /// <summary>
         /// Returns an enumerator that iterates through the RelatedObjectList.
@@ -263,14 +290,18 @@ namespace CiresonPortalAPI
         /// <returns></returns>
         private T ExpandoToProjection(ExpandoObject objData)
         {
+            string className = (objData as dynamic).ClassName;
+            Type projectionType = ClassConstants.GetTypeByClassName(className);
+
             // Instantiate
             BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
             CultureInfo culture = null;
-            T projection = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
+            T projection = (T)Activator.CreateInstance(projectionType, flags, null, null, culture);
 
             projection.CurrentObject = objData;
             projection.OriginalObject = objData;
             projection.ReadOnly = true;
+            projection.IsDirty = false;
 
             return projection;
         }
@@ -299,6 +330,28 @@ namespace CiresonPortalAPI
             return false;
         }
         #endregion // Private Methods
+
+        #region Static Methods
+        /// <summary>
+        /// Returns true if toCheck is the same type or a derived type of baseType
+        /// </summary>
+        /// <param name="baseType">Base type to check against</param>
+        /// <param name="toCheck">Type to check</param>
+        /// <remarks>Awesome piece of code adapted from http://stackoverflow.com/questions/457676/check-if-a-class-is-derived-from-a-generic-class</remarks>
+        /// <returns></returns>
+        internal static bool IsOfType(Type baseType, Type toCheck)
+        {
+            while (toCheck != null && toCheck != typeof(object))
+            {
+                var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
+                if (baseType == cur)
+                    return true;
+
+                toCheck = toCheck.BaseType;
+            }
+            return false;
+        }
+        #endregion
     }
 
     /// <summary>
