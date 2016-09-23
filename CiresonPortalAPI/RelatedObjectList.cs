@@ -298,7 +298,7 @@ namespace CiresonPortalAPI
             CultureInfo culture = null;
             T projection = (T)Activator.CreateInstance(projectionType, flags, null, null, culture);
 
-            projection.CurrentObject = objData;
+            projection.CurrentObject = objData.DeepCopy();
             projection.OriginalObject = objData;
             projection.ReadOnly = true;
             projection.IsDirty = false;

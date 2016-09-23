@@ -16,7 +16,7 @@ namespace CiresonPortalAPI.WorkItems
         /// <param name="templateId">TemplateID to use</param>
         /// <param name="userId">ID of the user creating the Incident</param>
         /// <returns></returns>
-        public static async Task<Incident> CreateObject(AuthorizationToken authToken, Guid templateId, Guid userId)
+        public static async Task<Incident> Create(AuthorizationToken authToken, Guid templateId, Guid userId)
         {
             TypeProjection projection = await TypeProjectionController.CreateObjectFromTemplate<Incident>(authToken, templateId, userId);
             return (Incident)projection;
@@ -28,9 +28,9 @@ namespace CiresonPortalAPI.WorkItems
         /// <param name="authToken">User AuthorizationToken</param>
         /// <param name="templateId">TemplateID to use</param>
         /// <returns></returns>
-        public static async Task<Incident> CreateObject(AuthorizationToken authToken, Guid templateId)
+        public static async Task<Incident> Create(AuthorizationToken authToken, Guid templateId)
         {
-            return await CreateObject(authToken, templateId, authToken.User.Id);
+            return await Create(authToken, templateId, authToken.User.Id);
         }
 
         /// <summary>
@@ -46,15 +46,15 @@ namespace CiresonPortalAPI.WorkItems
         }
 
         /// <summary>
-        /// Convenience method that returns an Incident by its ID
+        /// Convenience method that returns an Incident by its work item Id
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
         /// <param name="incidentID">ID of the Incident to retrieve</param>
         /// <returns>Incident</returns>
-        public static async Task<Incident> GetByID(AuthorizationToken authToken, string incidentID)
+        public static async Task<Incident> GetById(AuthorizationToken authToken, string incidentID)
         {
             QueryCriteriaExpression expression = new QueryCriteriaExpression();
-            expression.PropertyName = (new PropertyPathHelper(ClassConstants.Incident.Id, "ID")).ToString();
+            expression.PropertyName = (new PropertyPathHelper(ClassConstants.Incident.Id, "Id")).ToString();
             expression.PropertyType = QueryCriteriaPropertyType.Property;
             expression.Operator = QueryCriteriaExpressionOperator.Equal;
             expression.Value = incidentID;
@@ -69,18 +69,6 @@ namespace CiresonPortalAPI.WorkItems
                 return null;
 
             return incidentList[0];
-        }
-
-        /// <summary>
-        /// Marks an Incident for deletion
-        /// </summary>
-        /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="incident">Incident to delete</param>
-        /// <param name="markPending">If true, mark the object as Pending Deletion instead of Deleted.</param>
-        /// <returns></returns>
-        public static async Task<bool> DeleteObject(AuthorizationToken authToken, Incident incident, bool markPending = true)
-        {
-            return await TypeProjectionController.DeleteObject(authToken, incident, markPending);
         }
         #endregion // Public Methods
     }

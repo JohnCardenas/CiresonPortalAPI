@@ -57,7 +57,7 @@ namespace CiresonPortalAPI
                 CultureInfo culture = null;
                 T instanceType = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
 
-                instanceType.CurrentObject = jsonObject;
+                instanceType.CurrentObject = (jsonObject as ExpandoObject).DeepCopy();
                 instanceType.OriginalObject = jsonObject;
                 instanceType.ReadOnly = false;
 
@@ -101,8 +101,8 @@ namespace CiresonPortalAPI
             ci.formJson.current.DisplayName = displayName;
             ci.formJson.current.TimeAdded = "0001-01-01T00:00:00";
 
-            ci.formJson.current.ObjectStatus = new ExpandoObject();
-            ci.formJson.current.ObjectStatus.Id = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active;
+            //ci.formJson.current.ObjectStatus = new ExpandoObject();
+            //ci.formJson.current.ObjectStatus.Id = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active;
 
             // Merge another property object in
             if (objProps != null)
@@ -128,9 +128,8 @@ namespace CiresonPortalAPI
         /// </summary>
         /// <param name="authToken">AuthenticationToken to use</param>
         /// <param name="criteria">QueryCriteria rules</param>
-        /// <param name="excludeDeletedItems">If true, exclude items pending deletion.</param>
-        /// <returns>List of ExpandoObjects</returns>
-        internal static async Task<List<T>> GetByCriteria<T>(AuthorizationToken authToken, QueryCriteria criteria, bool excludeDeletedItems = true) where T : TypeProjection
+        /// <returns>List of TypeProjections</returns>
+        internal static async Task<List<T>> GetByCriteria<T>(AuthorizationToken authToken, QueryCriteria criteria) where T : TypeProjection
         {
             if (!authToken.IsValid)
             {
@@ -151,21 +150,13 @@ namespace CiresonPortalAPI
                 List<T> returnList = new List<T>();
                 foreach (ExpandoObject obj in objectList)
                 {
-                    // Exclude deleted items from the list
-                    if (excludeDeletedItems)
-                    {
-                        dynamic dynRef = obj;
-                        if (new Guid(dynRef.ObjectStatus.Id) != EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active)
-                            continue;
-                    }
-
                     // Instantiate and add to the list
                     BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
                     CultureInfo culture = null;
                     T instanceType = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
 
-                    instanceType.OriginalObject = obj.DeepCopy();
-                    instanceType.CurrentObject = obj;
+                    instanceType.CurrentObject = obj.DeepCopy();
+                    instanceType.OriginalObject = obj;
                     instanceType.ReadOnly = false;
 
                     returnList.Add(instanceType);
@@ -246,26 +237,6 @@ namespace CiresonPortalAPI
             else
                 throw new CiresonApiException("More than one item found with identical full name");
         }
-
-        /// <summary>
-        /// Marks a TypeProjection as deleted
-        /// </summary>
-        /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="item">TypeProjection to delete</param>
-        /// <param name="markPending">If true, mark the object as Pending Deletion instead of Deleted.</param>
-        /// <returns></returns>
-        internal static async Task<bool> DeleteObject(AuthorizationToken authToken, TypeProjection item, bool markPending)
-        {
-            Guid deleteType;
-
-            if (markPending)
-                deleteType = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.PendingDelete;
-            else
-                deleteType = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Deleted;
-
-            item.ObjectStatus = new Enumeration(deleteType, "", "", false, false);
-            return await item.Commit(authToken);
-        }
         #endregion // Internal Methods
 
         #region Private Methods
@@ -340,7 +311,7 @@ namespace CiresonPortalAPI
                 CultureInfo culture = null;
                 T instanceType = (T)Activator.CreateInstance(typeof(T), flags, null, null, culture);
 
-                instanceType.CurrentObject = data.formJson.current;
+                instanceType.CurrentObject = (data.formJson.current as ExpandoObject).DeepCopy();
                 instanceType.OriginalObject = data.formJson.current;
                 instanceType.ReadOnly = readOnly;
 

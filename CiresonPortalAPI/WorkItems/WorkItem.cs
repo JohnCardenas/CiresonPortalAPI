@@ -17,6 +17,26 @@ namespace CiresonPortalAPI.WorkItems
         {
             get { return this.GetPrimitiveValue<string>("Id"); }
         }
+
+        /// <summary>
+        /// Gets or sets the WorkItem's title.
+        /// </summary>
+        public string Title
+        {
+            get { return this.GetPrimitiveValue<string>("Title"); }
+            set { this.SetPrimitiveValue<string>("Title", value); }
+        }
+
+        /// <summary>
+        /// Returns this WorkItem's default display name.
+        /// </summary>
+        public override string DefaultDisplayName
+        {
+            get
+            {
+                return this.Id + " - " + this.Title;
+            }
+        }
         #endregion // Read-Only Properties
 
         #region Constructors

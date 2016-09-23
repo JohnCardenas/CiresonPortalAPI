@@ -78,6 +78,7 @@ namespace CiresonPortalAPI
         public string DisplayName
         {
             get { return this.GetPrimitiveValue<string>("DisplayName"); }
+            internal set { this.SetPrimitiveValue<string>("DisplayName", value); }
         }
 
         /// <summary>
@@ -97,20 +98,22 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>
-        /// Returns the status of this object
-        /// </summary>
-        public Enumeration ObjectStatus
-        {
-            get { return this.GetEnumeration("ObjectStatus"); }
-            internal set { this.SetEnumeration("ObjectStatus", value); }
-        }
-
-        /// <summary>
         /// Returns the class name of this object. Read only.
         /// </summary>
         public string ClassName
         {
             get { return this.GetPrimitiveValue<string>("ClassName"); }
+        }
+
+        /// <summary>
+        /// Returns the default DisplayName that should be set for this object. This should be overriden by derived classes.
+        /// </summary>
+        public virtual string DefaultDisplayName
+        {
+            get
+            {
+                return this.FullName;
+            }
         }
         #endregion // Properties
 
@@ -123,7 +126,7 @@ namespace CiresonPortalAPI
         /// <param name="readOnly">Should this object be read only?</param>
         internal TypeProjection(ExpandoObject obj, bool existingObject = false, bool readOnly = true)
         {
-            this.CurrentObject = obj;
+            this.CurrentObject = obj.DeepCopy();
 
             if (existingObject)
                 this.OriginalObject = obj;
@@ -137,7 +140,7 @@ namespace CiresonPortalAPI
         /// <param name="otherProjection"></param>
         internal TypeProjection(TypeProjection otherProjection)
         {
-            this.CurrentObject = otherProjection.CurrentObject;
+            this.CurrentObject = (otherProjection.CurrentObject as ExpandoObject).DeepCopy();
             this.OriginalObject = otherProjection.OriginalObject;
             this.IsDirty = otherProjection.IsDirty;
             this.ReadOnly = otherProjection.ReadOnly;
@@ -237,7 +240,7 @@ namespace CiresonPortalAPI
         /// Attempts to commit the type projection to the portal. Throws an exception if not successful.
         /// </summary>
         /// <param name="authToken">AuthorizationToken to use</param>
-        public async Task<bool> Commit(AuthorizationToken authToken)
+        public async virtual Task<bool> Commit(AuthorizationToken authToken)
         {
             if (this.ReadOnly)
                 throw new CiresonApiException("Cannot commit a read-only type projection.");
@@ -247,6 +250,10 @@ namespace CiresonPortalAPI
 
             if (!this.IsDirty)
                 throw new CiresonApiException("Object is not dirty, Commit() aborted.");
+
+            // Every object needs a DisplayName set
+            if (string.IsNullOrEmpty(this.DisplayName))
+                this.DisplayName = this.DefaultDisplayName;
 
             try
             {
@@ -263,6 +270,9 @@ namespace CiresonPortalAPI
                 // Throw an exception if we didn't succeed
                 if (!resultObj.success)
                     throw new CiresonApiException(resultObj.exception);
+
+                // Refresh object data from the server
+                await this.Refresh(authToken);
             }
             catch (Exception e)
             {
@@ -362,10 +372,10 @@ namespace CiresonPortalAPI
 
             var objectData = (IDictionary<string, object>)this.CurrentObject;
 
-            // Add a null value in case it doesn't exist already
+            // Add a new Expando if the model property doesn't exist
             if (!DynamicObjectHelpers.HasProperty(this.CurrentObject, modelProperty))
             {
-                objectData.Add(modelProperty, null);
+                objectData.Add(modelProperty, new ExpandoObject());
             }
 
             dynamic rawEnum = objectData[modelProperty];
@@ -496,7 +506,7 @@ namespace CiresonPortalAPI
             if (p == null)
                 return false;
 
-            this.CurrentObject = p.CurrentObject;
+            this.CurrentObject = (p.CurrentObject as ExpandoObject).DeepCopy();
             this.OriginalObject = p.OriginalObject;
             this.ReadOnly = p.ReadOnly;
             this.IsDirty = false;

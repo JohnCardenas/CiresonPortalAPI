@@ -38,7 +38,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         public static async Task<List<PurchaseOrder>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
             criteria.ProjectionID = TypeProjectionConstants.PurchaseOrder.Id;
-            return await TypeProjectionController.GetByCriteria<PurchaseOrder>(authToken, criteria);
+            return await ConfigurationItemController.GetByCriteria<PurchaseOrder>(authToken, criteria);
         }
 
         /// <summary>
@@ -68,28 +68,6 @@ namespace CiresonPortalAPI.ConfigurationItems
             criteria.Expressions.Add(expr);
 
             return await GetByCriteria(authToken, criteria);
-        }
-
-        /// <summary>
-        /// Returns a PurchaseOrder by ID
-        /// </summary>
-        /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="id">ID of the PurchaseOrder</param>
-        /// <returns></returns>
-        public static async Task<PurchaseOrder> GetByBaseId(AuthorizationToken authToken, Guid id)
-        {
-            return await TypeProjectionController.GetByBaseId<PurchaseOrder>(authToken, id);
-        }
-
-        /// <summary>
-        /// Returns a PurchaseOrder by its FullName
-        /// </summary>
-        /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="fullName">FullName to find</param>
-        /// <returns></returns>
-        public static async Task<PurchaseOrder> GetByFullName(AuthorizationToken authToken, string fullName)
-        {
-            return await TypeProjectionController.GetByFullName<PurchaseOrder>(authToken, fullName);
         }
 
         /// <summary>
@@ -140,7 +118,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         public static async Task<bool> Delete(AuthorizationToken authToken, PurchaseOrder item, bool markPending = true)
         {
-            return await TypeProjectionController.DeleteObject(authToken, item, markPending);
+            return await ConfigurationItemController.DeleteObject(authToken, item, markPending);
         }
         #endregion // Public Methods
     }

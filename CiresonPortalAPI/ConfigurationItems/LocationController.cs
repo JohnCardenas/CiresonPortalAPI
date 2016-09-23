@@ -30,7 +30,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         public static async Task<List<Location>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria)
         {
             criteria.ProjectionID = TypeProjectionConstants.Location.Id;
-            return await TypeProjectionController.GetByCriteria<Location>(authToken, criteria);
+            return await ConfigurationItemController.GetByCriteria<Location>(authToken, criteria);
         }
 
         /// <summary>
@@ -61,29 +61,7 @@ namespace CiresonPortalAPI.ConfigurationItems
 
             return await GetByCriteria(authToken, criteria);
         }
-
-        /// <summary>
-        /// Returns a Location by ID
-        /// </summary>
-        /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="id">ID of the location</param>
-        /// <returns></returns>
-        public static async Task<Location> GetByBaseId(AuthorizationToken authToken, Guid id)
-        {
-            return await TypeProjectionController.GetByBaseId<Location>(authToken, id);
-        }
-
-        /// <summary>
-        /// Returns a Location by its FullName
-        /// </summary>
-        /// <param name="authToken">AuthorizationToken to use</param>
-        /// <param name="fullName">FullName to find</param>
-        /// <returns></returns>
-        public static async Task<Location> GetByFullName(AuthorizationToken authToken, string fullName)
-        {
-            return await TypeProjectionController.GetByFullName<Location>(authToken, fullName);
-        }
-
+        
         /// <summary>
         /// Marks a Location for deletion
         /// </summary>
@@ -93,7 +71,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         /// <returns></returns>
         public static async Task<bool> Delete(AuthorizationToken authToken, Location item, bool markPending = true)
         {
-            return await TypeProjectionController.DeleteObject(authToken, item, markPending);
+            return await ConfigurationItemController.DeleteObject(authToken, item, markPending);
         }
         #endregion // Public Methods
     }

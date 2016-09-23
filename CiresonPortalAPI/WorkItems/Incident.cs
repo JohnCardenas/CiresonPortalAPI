@@ -57,9 +57,9 @@ namespace CiresonPortalAPI.WorkItems
         /// <summary>
         /// Gets the priority of this Incident. Read only.
         /// </summary>
-        public int Priority
+        public int? Priority
         {
-            get { return this.GetPrimitiveValue<int>("Priority"); }
+            get { return this.GetPrimitiveValue<int?>("Priority"); }
         }
 
         /// <summary>
@@ -159,15 +159,6 @@ namespace CiresonPortalAPI.WorkItems
         {
             get { return this.GetEnumeration("SupportGroup"); }
             set { this.SetEnumeration("SupportGroup", value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the Incident's title.
-        /// </summary>
-        public string Title
-        {
-            get { return this.GetPrimitiveValue<string>("Title"); }
-            set { this.SetPrimitiveValue<string>("Title", value); }
         }
 
         /// <summary>

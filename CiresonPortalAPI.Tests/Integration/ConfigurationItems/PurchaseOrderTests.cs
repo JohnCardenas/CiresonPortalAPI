@@ -114,30 +114,11 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         }
         #endregion
 
-        #region PO02_GetAllPurchaseOrdersTest
+        #region PO02_PurchaseOrderPropertiesCommitTest
         [TestMethod]
         [TestCategory("Integration - PurchaseOrders")]
-        [Description("Tests fetching a list of all PurchaseOrders")]
-        public async Task PO02_GetAllPurchaseOrdersTest()
-        {
-            // Arrange
-            List<PurchaseOrder> poList;
-
-            // Act
-            poList = await PurchaseOrderController.GetAll(_authToken);
-
-            // Assert
-            Assert.IsNotNull(poList);
-            Assert.IsTrue(poList.Count >= 1);
-            Assert.IsTrue(poList.Contains(_purchaseOrder));
-        }
-        #endregion
-
-        #region PO03_PurchaseOrderPropertiesCommitTest
-        [TestMethod]
-        [TestCategory("Integration - PurchaseOrders")]
-        [Description("Tests committing changes to this PurchaseOrder")]
-        public async Task PO03_PurchaseOrderPropertiesCommitTest()
+        [Description("Tests committing changes to the test PurchaseOrder")]
+        public async Task PO02_PurchaseOrderPropertiesCommitTest()
         {
             // Arrange
             DateTime date = DateTime.Parse(DateTime.Now.ToString()); // Convert current time to string first to remove unnecessary precision from the Ticks property
@@ -160,12 +141,30 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             }
 
             await _purchaseOrder.Commit(_authToken);
-            await _purchaseOrder.Refresh(_authToken);
 
             // Assert
             Assert.IsNotNull(_purchaseOrder);
             Assert.AreEqual(dec, _purchaseOrder.Amount);
             Assert.IsTrue(date.Equals(_purchaseOrder.OrderDate));
+        }
+        #endregion
+
+        #region PO03_GetAllPurchaseOrdersTest
+        [TestMethod]
+        [TestCategory("Integration - PurchaseOrders")]
+        [Description("Tests fetching a list of all PurchaseOrders")]
+        public async Task PO03_GetAllPurchaseOrdersTest()
+        {
+            // Arrange
+            List<PurchaseOrder> poList;
+
+            // Act
+            poList = await PurchaseOrderController.GetAll(_authToken);
+
+            // Assert
+            Assert.IsNotNull(poList);
+            Assert.IsTrue(poList.Count >= 1);
+            Assert.IsTrue(poList.Contains(_purchaseOrder));
         }
         #endregion
 
@@ -191,7 +190,6 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             _purchaseOrder.Children.Add(child2);
 
             await _purchaseOrder.Commit(_authToken);
-            await _purchaseOrder.Refresh(_authToken);
 
             // Assert
             Assert.AreEqual(parent, _purchaseOrder.Parent);

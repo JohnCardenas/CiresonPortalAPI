@@ -43,7 +43,7 @@ namespace CiresonPortalAPI.ConfigurationItems
         public static async Task<List<HardwareAsset>> GetByCriteria(AuthorizationToken authToken, QueryCriteria criteria, bool includeInactiveItems = false)
         {
             criteria.ProjectionID = TypeProjectionConstants.HardwareAsset.Id;
-            return await TypeProjectionController.GetByCriteria<HardwareAsset>(authToken, criteria);
+            return await ConfigurationItemController.GetByCriteria<HardwareAsset>(authToken, criteria);
         }
 
         /// <summary>

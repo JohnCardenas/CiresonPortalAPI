@@ -111,34 +111,15 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             }
 
             Assert.IsNotNull(_location);
-            Assert.IsTrue(_location.ObjectStatus.Id == EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active);
+            Assert.IsTrue(_location.IsActive);
         }
         #endregion
 
-        #region LOC02_GetAllLocationsTest
-        [TestMethod]
-        [TestCategory("Integration - Locations")]
-        [Description("Tests a fetch of all location objects")]
-        public async Task LOC02_GetAllLocationsTest()
-        {
-            // Arrange
-            List<Location> locationList;
-
-            // Act
-            locationList = await LocationController.GetAll(_authToken);
-
-            // Assert
-            Assert.IsNotNull(locationList);
-            Assert.IsTrue(locationList.Count >= 1);
-            Assert.IsTrue(locationList.Contains(_location));
-        }
-        #endregion
-
-        #region LOC03_LocationPropertiesCommitTest
+        #region LOC02_LocationPropertiesCommitTest
         [TestMethod]
         [TestCategory("Integration - Locations")]
         [Description("Tests committing changes to this Location")]
-        public async Task LOC03_LocationPropertiesCommitTest()
+        public async Task LOC02_LocationPropertiesCommitTest()
         {
             // Arrange
             string testString = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[{]}\\|;:'\",<.>/?`~";
@@ -157,7 +138,6 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             _location.State = testString;
 
             await _location.Commit(_authToken);
-            await _location.Refresh(_authToken);
 
             // Assert
             Assert.IsNotNull(_location);
@@ -172,6 +152,25 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             Assert.AreEqual(testString, _location.Notes);
             Assert.AreEqual(testString, _location.PostalCode);
             Assert.AreEqual(testString, _location.State);
+        }
+        #endregion
+
+        #region LOC03_GetAllLocationsTest
+        [TestMethod]
+        [TestCategory("Integration - Locations")]
+        [Description("Tests a fetch of all location objects")]
+        public async Task LOC03_GetAllLocationsTest()
+        {
+            // Arrange
+            List<Location> locationList;
+
+            // Act
+            locationList = await LocationController.GetAll(_authToken);
+
+            // Assert
+            Assert.IsNotNull(locationList);
+            Assert.IsTrue(locationList.Count >= 1);
+            Assert.IsTrue(locationList.Contains(_location));
         }
         #endregion
 
@@ -197,7 +196,6 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             _location.Children.Add(childLocation2);
 
             await _location.Commit(_authToken);
-            await _location.Refresh(_authToken);
 
             // Assert
             Assert.AreEqual(parentLocation, _location.Parent);
@@ -220,6 +218,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
 
             // Assert
             Assert.IsTrue(deleteLocation);
+            Assert.IsTrue(_location.IsDeleted);
 
             if (deleteLocation)
                 _objectsToCleanup.Remove(_location);
