@@ -169,6 +169,27 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
         }
         #endregion
 
+        #region IR04_IncidentRelatedObjectCommitTest
+        [TestMethod]
+        [TestCategory("Integration - Incidents")]
+        [Description("Attempts to commit changes to an Incident's related objects")]
+        public async Task IR04_IncidentRelatedObjectCommitTest()
+        {
+            // Arrange
+            User tokenUser = await UserController.GetUserById(_authToken, _authToken.User.Id);
+
+            // Act
+            _incident.AffectedUser = tokenUser;
+            _incident.AssignedToUser = tokenUser;
+
+            await _incident.Commit(_authToken);
+
+            // Assert
+            Assert.AreEqual(_incident.AffectedUser, tokenUser);
+            Assert.AreEqual(_incident.AssignedToUser, tokenUser);
+        }
+        #endregion
+
         public static async Task<List<Enumeration>> GetIncidentClassifications()
         {
             return await EnumerationController.GetEnumerationList(_authToken, EnumerationConstants.Incidents.Lists.Classification, false, false, false);
