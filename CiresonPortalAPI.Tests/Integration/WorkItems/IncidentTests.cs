@@ -190,6 +190,24 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
         }
         #endregion
 
+        #region IR99_IncidentCloseTest
+        [TestMethod]
+        [TestCategory("Integration - Incidents")]
+        [Description("Attempts to close an Incident")]
+        public async Task IR99_IncidentCloseTest()
+        {
+            // Arrange
+            _incident.Status = new Enumeration(EnumerationConstants.Incidents.BuiltinValues.Status.Closed, "Closed", "Closed", false, false);
+
+            // Act
+            bool status = await _incident.Commit(_authToken);
+
+            // Assert
+            Assert.IsTrue(status);
+            Assert.AreEqual(EnumerationConstants.Incidents.BuiltinValues.Status.Closed, _incident.Status.Id);
+        }
+        #endregion
+
         public static async Task<List<Enumeration>> GetIncidentClassifications()
         {
             return await EnumerationController.GetEnumerationList(_authToken, EnumerationConstants.Incidents.Lists.Classification, false, false, false);
