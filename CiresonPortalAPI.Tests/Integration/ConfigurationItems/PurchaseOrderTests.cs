@@ -198,11 +198,11 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         }
         #endregion
 
-        #region PO05_DeletePurchaseOrderTest
+        #region PO99_DeletePurchaseOrderTest
         [TestMethod]
         [TestCategory("Integration - PurchaseOrders")]
         [Description("Tests deleting PurchaseOrders")]
-        public async Task PO05_DeletePurchaseOrderTest()
+        public async Task PO99_DeletePurchaseOrderTest()
         {
             // Arrange
             bool deleted;

@@ -204,11 +204,11 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         }
         #endregion
 
-        #region LOC05_DeleteLocationTest
+        #region LOC99_DeleteLocationTest
         [TestMethod]
         [TestCategory("Integration - Locations")]
         [Description("Tests marking a Location as deleted")]
-        public async Task LOC05_DeleteLocationTest()
+        public async Task LOC99_DeleteLocationTest()
         {
             // Arrange
             bool deleteLocation;
