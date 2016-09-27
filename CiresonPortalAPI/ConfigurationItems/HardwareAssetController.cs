@@ -102,6 +102,18 @@ namespace CiresonPortalAPI.ConfigurationItems
             QueryCriteria criteria = BuildCriteria(new PropertyPathHelper(ClassConstants.HardwareAsset.Id, "HardwareAssetType"), assetType.Id.ToString());
             return await GetByCriteria(authToken, criteria);
         }
+
+        /// <summary>
+        /// Marks a HardwareAsset for deletion
+        /// </summary>
+        /// <param name="authToken">AuthorizationToken to use</param>
+        /// <param name="item">HardwareAsset to delete</param>
+        /// <param name="markPending">If true, mark the object as Pending Deletion instead of Deleted.</param>
+        /// <returns></returns>
+        public static async Task<bool> Delete(AuthorizationToken authToken, HardwareAsset item, bool markPending = true)
+        {
+            return await ConfigurationItemController.DeleteObject(authToken, item, markPending);
+        }
         #endregion // Public Methods
 
         #region Private Methods
