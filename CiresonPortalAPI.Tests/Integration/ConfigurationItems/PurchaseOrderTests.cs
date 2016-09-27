@@ -55,7 +55,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         {
             foreach (PurchaseOrder obj in _objectsToCleanup)
             {
-                Task<bool> deleteTask = PurchaseOrderController.Delete(_authToken, obj, false);
+                PurchaseOrderController.Delete(_authToken, obj, false).Wait();
             }
         }
         #endregion // Class Cleanup

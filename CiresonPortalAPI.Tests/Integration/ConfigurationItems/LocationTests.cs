@@ -63,7 +63,7 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         {
             foreach (Location obj in _objectsToCleanup)
             {
-                Task<bool> deleteTask = LocationController.Delete(_authToken, obj, false);
+                LocationController.Delete(_authToken, obj, false).Wait();
             }
         }
         #endregion // Class Cleanup
