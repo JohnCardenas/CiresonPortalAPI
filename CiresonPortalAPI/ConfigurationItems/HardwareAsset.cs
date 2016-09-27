@@ -12,7 +12,13 @@ namespace CiresonPortalAPI.ConfigurationItems
     public class HardwareAsset : ConfigurationItem
     {
         #region Read-Only Properties
-
+        /// <summary>
+        /// Gets this hardware asset's unique hardware asset ID. Read only.
+        /// </summary>
+        public string HardwareAssetID
+        {
+            get { return this.GetPrimitiveValue<string>("HardwareAssetID"); }
+        }
         #endregion Read-Only Properties
 
         #region Read-Write Properties
@@ -23,15 +29,6 @@ namespace CiresonPortalAPI.ConfigurationItems
         {
             get { return this.GetPrimitiveValue<string>("AssetTag"); }
             set { this.SetPrimitiveValue<string>("AssetTag", value); }
-        }
-
-        /// <summary>
-        /// Gets or sets this hardware asset's unique hardware asset ID.
-        /// </summary>
-        public string HardwareAssetID
-        {
-            get { return this.GetPrimitiveValue<string>("HardwareAssetID"); }
-            set { this.SetPrimitiveValue<string>("HardwareAssetID", value); }
         }
 
         /// <summary>
