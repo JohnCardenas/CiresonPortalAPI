@@ -439,12 +439,16 @@ namespace CiresonPortalAPI
         protected void SetRelatedObject(string modelProperty, TypeProjection obj, string objectProperty = null)
         {
             if (this.ReadOnly)
-                throw new CiresonReadOnlyException("Cannot set related object; object is read-only.");
+                throw new CiresonReadOnlyException("Cannot set relationship; object is read-only.");
 
             var objectData = (IDictionary<string, object>)this.CurrentObject;
-            objectData[modelProperty] = obj.CurrentObject;
 
-            this.CurrentObject = (ExpandoObject)objectData;
+            if (obj == null)
+                objectData[modelProperty] = null;
+            else
+                objectData[modelProperty] = obj.CurrentObject;
+
+            //this.CurrentObject = (ExpandoObject)objectData;
             this.IsDirty = true;
 
             if (String.IsNullOrEmpty(objectProperty))
