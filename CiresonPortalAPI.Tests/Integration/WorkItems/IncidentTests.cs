@@ -16,7 +16,6 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
     {
         #region Fields
         private static AuthorizationToken _authToken;
-        private static List<Incident> _incidentsToCleanup;
         private static Incident _incident;
 
         private TestContext _testContextInstance;
@@ -42,8 +41,6 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {
-            _incidentsToCleanup = new List<Incident>();
-
             Task<AuthorizationToken> tokenTask = AuthorizationController.GetAuthorizationToken(ConfigurationHelper.PortalUrl, ConfigurationHelper.UserName, ConfigurationHelper.Password, ConfigurationHelper.Domain);
             tokenTask.Wait();
             _authToken = tokenTask.Result;
@@ -59,10 +56,6 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
         [ClassCleanup]
         public static void Cleanup()
         {
-            foreach (Incident obj in _incidentsToCleanup)
-            {
-                //Task<bool> deleteTask = IncidentController.Delete(_authToken, obj, false);
-            }
         }
         #endregion // Class Cleanup
 
@@ -75,7 +68,22 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
             // Arrange
             Guid templateId = TemplateConstants.Incident.Default;
             Guid userId = _authToken.User.Id;
+            
+            // Act
+            _incident = await IncidentController.Create(_authToken, templateId, userId);
+            
+            // Assert
+            Assert.IsNotNull(_incident, "Failed to create a new Incident");
+        }
+        #endregion
 
+        #region IR02_IncidentReadPropertyTest
+        [TestMethod]
+        [TestCategory("Integration - Incidents")]
+        [Description("Tests reading all Incident properties")]
+        public void IR02_IncidentReadPropertyTest()
+        {
+            // Arrange
             User userData;
             Enumeration enumData;
             DateTime? dateData;
@@ -84,9 +92,6 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
             int? intData;
 
             // Act
-            _incident = await IncidentController.Create(_authToken, templateId, userId);
-            _incidentsToCleanup.Add(_incident);
-
             try
             {
                 userData = _incident.AffectedUser;
@@ -117,45 +122,100 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
 
                 intData = _incident.Priority;
             }
+
+            // Assert
             catch (Exception e)
             {
                 Assert.Fail("Expected no exception from property read test, got " + e.Message);
             }
-
-            // Assert
-            Assert.IsNotNull(_incident);
         }
         #endregion
 
-        #region IR02_IncidentPropertiesCommitTest
+        #region IR03_SetIncidentEnumerationCommitTest
         [TestMethod]
         [TestCategory("Integration - Incidents")]
-        [Description("Tests committing changes to the test Incident")]
-        public async Task IR02_IncidentPropertiesCommitTest()
+        [Description("Tests setting enumeration changes to an Incident")]
+        public async Task IR03_SetIncidentEnumerationCommitTest()
+        {
+            // Arrange
+            Enumeration classification = (await GetIncidentClassifications())[0];
+            Enumeration source = (await GetIncidentSources())[0];
+            _incident.Classification = classification;
+            _incident.Source = source;
+
+            // Act
+            await _incident.Commit(_authToken);
+
+            // Assert
+            Assert.AreEqual(classification, _incident.Classification, "Incident.Classification does not match test data");
+            Assert.AreEqual(source, _incident.Source,                 "Incident.Source does not match test data");
+        }
+        #endregion
+
+        #region IR04_ClearIncidentEnumerationCommitTest
+        [TestMethod]
+        [TestCategory("Integration - Incidents")]
+        [Description("Clears and commits Incident enumerations")]
+        public async Task IR04_ClearIncidentEnumerationCommitTest()
+        {
+            // Arrange
+            _incident.Classification = null;
+            _incident.Source = null;
+
+            // Act
+            await _incident.Commit(_authToken);
+
+            // Assert
+            Assert.IsNull(_incident.Classification, "Incident.Classification was not cleared successfully");
+            Assert.IsNull(_incident.Source,         "Incident.Source was not cleared successfully");
+        }
+        #endregion
+
+        #region IR05_SetIncidentPrimitivesCommitTest
+        [TestMethod]
+        [TestCategory("Integration - Incidents")]
+        [Description("Tests committing changes Incident primitive properties")]
+        public async Task IR05_SetIncidentPrimitivesCommitTest()
         {
             // Arrange
             string testString = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[{]}\\|;:'\",<.>/?`~";
 
-            // Act
             _incident.Title = testString;
             _incident.Description = testString;
-            _incident.Classification = (await GetIncidentClassifications())[0];
-            _incident.Source = (await GetIncidentSources())[0];
 
+            // Act
             await _incident.Commit(_authToken);
 
             // Assert
-            Assert.IsNotNull(_incident);
-            Assert.AreEqual(testString, _incident.Title);
-            Assert.AreEqual(testString, _incident.Description);
+            Assert.AreEqual(testString, _incident.Title,       "Incident.Title does not match test data");
+            Assert.AreEqual(testString, _incident.Description, "Incident.Description does not match test data");
         }
         #endregion
 
-        #region IR03_GetIncidentByIdTest
+        #region IR06_ClearIncidentPrimitivesCommitTest
+        [TestMethod]
+        [TestCategory("Integration - Incidents")]
+        [Description("Clears and commits Incident primitive properties")]
+        public async Task IR06_ClearIncidentPrimitivesCommitTest()
+        {
+            // Arrange
+            _incident.Title = null;
+            _incident.Description = null;
+
+            // Act
+            await _incident.Commit(_authToken);
+
+            // Assert
+            Assert.IsTrue(string.IsNullOrEmpty(_incident.Title),       "Incident.Title was not cleared successfully");
+            Assert.IsTrue(string.IsNullOrEmpty(_incident.Description), "Incident.Description was not cleared successfully");
+        }
+        #endregion
+        
+        #region IR07_GetIncidentByIdTest
         [TestMethod]
         [TestCategory("Integration - Incidents")]
         [Description("Attempts to fetch the test Incident by its Id")]
-        public async Task IR03_GetIncidentByIdTest()
+        public async Task IR07_GetIncidentByIdTest()
         {
             // Arrange 
             Incident inc;
@@ -164,33 +224,82 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
             inc = await IncidentController.GetById(_authToken, _incident.Id);
 
             // Assert
-            Assert.IsNotNull(inc);
-            Assert.AreEqual(_incident, inc);
+            Assert.IsNotNull(inc, "Failed to fetch the Incident by its WorkItemID");
+            Assert.AreEqual(_incident, inc, "Failed to fetch a matching Incident");
         }
         #endregion
 
-        #region IR04_IncidentRelatedObjectCommitTest
+        #region IR08_SetIncidentAffectedUserCommitTest
         [TestMethod]
         [TestCategory("Integration - Incidents")]
-        [Description("Attempts to commit changes to an Incident's related objects")]
-        public async Task IR04_IncidentRelatedObjectCommitTest()
+        [Description("Sets and commits Incident.AffectedUser")]
+        public async Task IR08_SetIncidentAffectedUserCommitTest()
         {
             // Arrange
-            User tokenUser = await UserController.GetUserById(_authToken, _authToken.User.Id);
+            User user = await UserController.GetUserById(_authToken, _authToken.User.Id);
+            _incident.AffectedUser = user;
 
             // Act
-            _incident.AffectedUser = tokenUser;
-            _incident.AssignedToUser = tokenUser;
-
             await _incident.Commit(_authToken);
 
             // Assert
-            Assert.AreEqual(_incident.AffectedUser, tokenUser);
-            Assert.AreEqual(_incident.AssignedToUser, tokenUser);
+            Assert.AreEqual(user, _incident.AffectedUser, "Incident.AffectedUser does not match test data");
         }
         #endregion
 
-        #region IR99_IncidentCloseTest
+        #region IR09_ClearIncidentAffectedUserCommitTest
+        [TestMethod]
+        [TestCategory("Integration - Incidents")]
+        [Description("Clears and commits Incident.AffectedUser")]
+        public async Task IR09_ClearIncidentAffectedUserCommitTest()
+        {
+            // Arrange
+            _incident.AffectedUser = null;
+
+            // Act
+            await _incident.Commit(_authToken);
+
+            // Assert
+            Assert.IsNull(_incident.AffectedUser, "Incident.AffectedUser was not cleared successfully");
+        }
+        #endregion
+
+        #region IR10_SetIncidentAssignedToUserCommitTest
+        [TestMethod]
+        [TestCategory("Integration - Incidents")]
+        [Description("Sets and commits Incident.AssignedToUser")]
+        public async Task IR10_SetIncidentAssignedToUserCommitTest()
+        {
+            // Arrange
+            User user = await UserController.GetUserById(_authToken, _authToken.User.Id);
+            _incident.AssignedToUser = user;
+
+            // Act
+            await _incident.Commit(_authToken);
+
+            // Assert
+            Assert.AreEqual(user, _incident.AssignedToUser, "Incident.AssignedToUser does not match test data");
+        }
+        #endregion
+
+        #region IR11_ClearIncidentAssignedToUserCommitTest
+        [TestMethod]
+        [TestCategory("Integration - Incidents")]
+        [Description("Clears and commits Incident.AssignedToUser")]
+        public async Task IR11_ClearIncidentAssignedToUserCommitTest()
+        {
+            // Arrange
+            _incident.AssignedToUser = null;
+
+            // Act
+            await _incident.Commit(_authToken);
+
+            // Assert
+            Assert.IsNull(_incident.AssignedToUser, "Incident.AssignedToUser was not cleared successfully");
+        }
+        #endregion
+        
+        #region IR99_CloseIncidentTest
         [TestMethod]
         [TestCategory("Integration - Incidents")]
         [Description("Attempts to close an Incident")]
