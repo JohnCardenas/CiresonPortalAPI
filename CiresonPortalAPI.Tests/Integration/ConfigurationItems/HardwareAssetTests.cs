@@ -313,17 +313,15 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         [TestMethod]
         [TestCategory("Integration - HardwareAssets")]
         [Description("Tests marking a HardwareAsset as deleted")]
-        public async Task HWA99_DeleteLocationTest()
+        public async Task HWA99_DeleteHardwareAssetTest()
         {
             // Arrange
-            bool deleteLocation;
 
             // Act
-            deleteLocation = await HardwareAssetController.Delete(_authToken, _asset, false);
+            await HardwareAssetController.Delete(_authToken, _asset, false);
 
             // Assert
-            Assert.IsTrue(deleteLocation);
-            Assert.IsTrue(_asset.IsDeleted);
+            Assert.IsTrue(_asset.IsDeleted, "HardwareAsset.IsDeleted evaluated to false");
 
             if (_asset.IsDeleted)
                 _objectsToCleanup.Remove(_asset);
