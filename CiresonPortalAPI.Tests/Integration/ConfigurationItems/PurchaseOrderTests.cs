@@ -70,6 +70,23 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             Guid id = Guid.NewGuid();
             string poName = "TestPurchaseOrder" + id.ToString();
 
+            // Act
+            _purchaseOrder = await PurchaseOrderController.Create(_authToken, poName, "Test PurchaseOrder", poName, DateTime.Today);
+            _objectsToCleanup.Add(_purchaseOrder);
+
+            // Assert
+            Assert.IsNotNull(_purchaseOrder, "Failed to create new PurchaseOrder");
+            Assert.IsTrue(_purchaseOrder.IsActive, "PurchaseOrder.IsActive evaluated to false");
+        }
+        #endregion
+
+        #region PO02_PurchaseOrderReadPropertyTest
+        [TestMethod]
+        [TestCategory("Integration - PurchaseOrders")]
+        [Description("Tests reading PurchaseOrder properties")]
+        public void PO02_PurchaseOrderReadPropertyTest()
+        {
+            // Arrange
             string strData;
             decimal? decData;
             Guid guidData;
@@ -79,9 +96,6 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             RelatedObjectList<PurchaseOrder> children;
 
             // Act
-            _purchaseOrder = await PurchaseOrderController.Create(_authToken, poName, "Test PurchaseOrder", poName, DateTime.Today);
-            _objectsToCleanup.Add(_purchaseOrder);
-
             try
             {
                 dateData = _purchaseOrder.OrderDate;
@@ -103,22 +117,20 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
                 parent = _purchaseOrder.Parent;
                 children = _purchaseOrder.Children;
             }
+
             // Assert
             catch (Exception e)
             {
                 Assert.Fail("Expected no exception from property read test, got " + e.Message);
             }
-
-            Assert.IsNotNull(_purchaseOrder);
-            Assert.IsTrue(_purchaseOrder.ObjectStatus.Id == EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active);
         }
         #endregion
 
-        #region PO02_PurchaseOrderPropertiesCommitTest
+        #region PO03_SetPurchaseOrderPrimitivesCommitTest
         [TestMethod]
         [TestCategory("Integration - PurchaseOrders")]
-        [Description("Tests committing changes to the test PurchaseOrder")]
-        public async Task PO02_PurchaseOrderPropertiesCommitTest()
+        [Description("Tests committing changes to primitive PurchaseOrder properties")]
+        public async Task PO03_SetPurchaseOrderPrimitivesCommitTest()
         {
             // Arrange
             DateTime date = DateTime.Parse(DateTime.Now.ToString()); // Convert current time to string first to remove unnecessary precision from the Ticks property
@@ -143,17 +155,35 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             await _purchaseOrder.Commit(_authToken);
 
             // Assert
-            Assert.IsNotNull(_purchaseOrder);
-            Assert.AreEqual(dec, _purchaseOrder.Amount);
-            Assert.IsTrue(date.Equals(_purchaseOrder.OrderDate));
+            Assert.AreEqual(dec, _purchaseOrder.Amount, "Expected PurchaseOrder.Amount = " + dec + ", got: " + _purchaseOrder.Amount);
+            Assert.IsTrue(date.Equals(_purchaseOrder.OrderDate), "PurchaseOrder.PurchaseDate does not match test data");
         }
         #endregion
 
-        #region PO03_GetAllPurchaseOrdersTest
+        #region PO04_ClearPurchaseOrderPrimitivesCommitTest
+        [TestMethod]
+        [TestCategory("Integration - PurchaseOrders")]
+        [Description("Clears and commits primitive PurchaseOrder properties")]
+        public async Task PO04_ClearPurchaseOrderPrimitivesCommitTest()
+        {
+            // Arrange
+            _purchaseOrder.Amount = null;
+            _purchaseOrder.OrderDate = null;
+
+            // Act
+            await _purchaseOrder.Commit(_authToken);
+
+            // Assert
+            Assert.IsNull(_purchaseOrder.Amount,    "PurchaseOrder.Amount was not cleared successfully");
+            Assert.IsNull(_purchaseOrder.OrderDate, "PurchaseOrder.OrderDate was not cleared successfully");
+        }
+        #endregion
+
+        #region PO05_GetAllPurchaseOrdersTest
         [TestMethod]
         [TestCategory("Integration - PurchaseOrders")]
         [Description("Tests fetching a list of all PurchaseOrders")]
-        public async Task PO03_GetAllPurchaseOrdersTest()
+        public async Task PO05_GetAllPurchaseOrdersTest()
         {
             // Arrange
             List<PurchaseOrder> poList;
@@ -162,41 +192,95 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
             poList = await PurchaseOrderController.GetAll(_authToken);
 
             // Assert
-            Assert.IsNotNull(poList);
-            Assert.IsTrue(poList.Count >= 1);
-            Assert.IsTrue(poList.Contains(_purchaseOrder));
+            Assert.IsNotNull(poList, "Expected a List<PurchaseOrder>, got null");
+            Assert.IsTrue(poList.Count >= 1, "Expected at least one member of this list, got " + poList.Count);
+            Assert.IsTrue(poList.Contains(_purchaseOrder), "List does not contain the test PurchaseOrder");
         }
         #endregion
 
-        #region PO04_PurchaseOrderRelatedObjectCommitTest
+        #region PO06_SetPurchaseOrderParentCommitTest
         [TestMethod]
         [TestCategory("Integration - PurchaseOrders")]
-        [Description("Tests making the changes to the relationships of PurchaseOrders")]
-        public async Task PO04_PurchaseOrderRelatedObjectCommitTest()
+        [Description("Performs a commit test on a PurchaseOrder.Parent")]
+        public async Task PO06_SetPurchaseOrderParentCommitTest()
         {
             // Arrange
             Guid id = Guid.NewGuid();
             PurchaseOrder parent = await PurchaseOrderController.Create(_authToken, "TestParentPO" + id.ToString(), "Test ParentPO", "TestParentPO" + id.ToString(), DateTime.Now);
-            PurchaseOrder child1 = await PurchaseOrderController.Create(_authToken, "TestChildPO1" + id.ToString(), "Test ChildPO1", "TestChildPO1" + id.ToString(), DateTime.Now);
-            PurchaseOrder child2 = await PurchaseOrderController.Create(_authToken, "TestChildPO2" + id.ToString(), "Test ChildPO2", "TestChildPO2" + id.ToString(), DateTime.Now);
-
             _objectsToCleanup.Add(parent);
-            _objectsToCleanup.Add(child1);
-            _objectsToCleanup.Add(child2);
+            _purchaseOrder.Parent = parent;
 
             // Act
-            _purchaseOrder.Parent = parent;
-            _purchaseOrder.Children.Add(child1);
-            _purchaseOrder.Children.Add(child2);
-
             await _purchaseOrder.Commit(_authToken);
 
             // Assert
-            Assert.AreEqual(parent, _purchaseOrder.Parent);
-            Assert.IsTrue(_purchaseOrder.Children.Contains(child1));
-            Assert.IsTrue(_purchaseOrder.Children.Contains(child2));
+            Assert.AreEqual(parent, _purchaseOrder.Parent, "PuchaseOrder.Parent does not match the test data");
         }
         #endregion
+
+        #region PO07_ClearPurchaseOrderParentCommitTest
+        [TestMethod]
+        [TestCategory("Integration - PurchaseOrders")]
+        [Description("Clears and commits PurchaseOrder.Parent")]
+        public async Task PO07_ClearPurchaseOrderParentCommitTest()
+        {
+            // Arrange
+            _purchaseOrder.Parent = null;
+
+            // Act
+            await _purchaseOrder.Commit(_authToken);
+
+            // Assert
+            Assert.IsNull(_purchaseOrder.Parent, "PurchaseOrder.Parent was not cleared successfully");
+        }
+        #endregion
+
+        #region PO08_SetPurchaseOrderChildrenCommitTest
+        [TestMethod]
+        [TestCategory("Integration - PurchaseOrders")]
+        [Description("Performs a commit test on PurchaseOrder.Children")]
+        public async Task PO08_PurchaseOrderRelatedObjectCommitTest()
+        {
+            // Arrange
+            Guid id = Guid.NewGuid();
+            
+            PurchaseOrder child1 = await PurchaseOrderController.Create(_authToken, "TestChildPO1" + id.ToString(), "Test ChildPO1", "TestChildPO1" + id.ToString(), DateTime.Now);
+            PurchaseOrder child2 = await PurchaseOrderController.Create(_authToken, "TestChildPO2" + id.ToString(), "Test ChildPO2", "TestChildPO2" + id.ToString(), DateTime.Now);
+
+            _objectsToCleanup.Add(child1);
+            _objectsToCleanup.Add(child2);
+
+            _purchaseOrder.Children.Add(child1);
+            _purchaseOrder.Children.Add(child2);
+
+            // Act
+            await _purchaseOrder.Commit(_authToken);
+
+            // Assert
+            Assert.AreEqual(2, _purchaseOrder.Children.Count, "Expected 2 PurchaseOrder.Children, got " + _purchaseOrder.Children.Count);
+            Assert.IsTrue(_purchaseOrder.Children.Contains(child1), "PurchaseOrder.Children does not contain the first test child");
+            Assert.IsTrue(_purchaseOrder.Children.Contains(child2), "PurchaseOrder.Children does not contain the second test child");
+        }
+        #endregion
+
+        #region PO09_ClearPurchaseOrderChildrenCommitTest
+        [TestMethod]
+        [TestCategory("Integration - PurchaseOrders")]
+        [Description("Clears and commits PurchaseOrder.Children")]
+        public async Task PO09_ClearPurchaseOrderChildrenCommitTest()
+        {
+            // Arrange
+            _purchaseOrder.Children.Clear();
+
+            // Act
+            await _purchaseOrder.Commit(_authToken);
+
+            // Assert
+            Assert.AreEqual(0, _purchaseOrder.Children.Count, "Expected 0 PurchaseOrder.Children, got " + _purchaseOrder.Children.Count);
+        }
+        #endregion
+
+
 
         #region PO99_DeletePurchaseOrderTest
         [TestMethod]
@@ -205,15 +289,14 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         public async Task PO99_DeletePurchaseOrderTest()
         {
             // Arrange
-            bool deleted;
 
             // Act
-            deleted = await PurchaseOrderController.Delete(_authToken, _purchaseOrder, false);
+            await PurchaseOrderController.Delete(_authToken, _purchaseOrder, false);
 
             // Assert
-            Assert.IsTrue(deleted);
+            Assert.IsTrue(_purchaseOrder.IsDeleted, "PurchaseOrder.IsDeleted evaluated to false");
 
-            if (deleted)
+            if (_purchaseOrder.IsDeleted)
                 _objectsToCleanup.Remove(_purchaseOrder);
         }
         #endregion
