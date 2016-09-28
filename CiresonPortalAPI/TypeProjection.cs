@@ -486,9 +486,13 @@ namespace CiresonPortalAPI
                 throw new CiresonReadOnlyException("Cannot set primitive value; object is read-only.");
 
             var objectData = (IDictionary<string, object>)this.CurrentObject;
-            objectData[modelProperty] = value.ToString();
 
-            this.CurrentObject = (ExpandoObject)objectData;
+            if (value == null)
+                objectData[modelProperty] = null;
+            else
+                objectData[modelProperty] = value.ToString();
+
+            //this.CurrentObject = (ExpandoObject)objectData;
             this.IsDirty = true;
 
             if (String.IsNullOrEmpty(objectProperty))
