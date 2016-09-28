@@ -17,18 +17,18 @@ namespace CiresonPortalAPI
     /// <typeparam name="T">Base TypeProjection type that is allowed in this relation list</typeparam>
     public class RelatedObjectList<T> : IList<T> where T : TypeProjection
     {
-        #region Constructors
+        #region Constructor
         /// <summary>
         /// Sets up a new RelatedObjectList based on the specified type projection's model property.
         /// </summary>
         /// <param name="owner">TypeProjection object that owns the related object list</param>
         /// <param name="modelProperty">Data model property that contains the list of related objects</param>
-        public RelatedObjectList(TypeProjection owner, string modelProperty)
+        internal RelatedObjectList(TypeProjection owner, string modelProperty)
         {
             Owner = owner;
             ModelProperty = modelProperty;
         }
-        #endregion // Constructors
+        #endregion // Constructor
 
         #region Public Properties
         /// <summary>
@@ -366,7 +366,7 @@ namespace CiresonPortalAPI
         #endregion // Fields
 
         #region Constructor
-        public RelatedObjectListEnumerator(RelatedObjectList<T> list)
+        internal RelatedObjectListEnumerator(RelatedObjectList<T> list)
         {
             _list = list;
             Reset();
