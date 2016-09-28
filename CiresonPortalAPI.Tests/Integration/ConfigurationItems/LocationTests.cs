@@ -292,6 +292,23 @@ namespace CiresonPortalAPI.Tests.Integration.ConfigurationItems
         }
         #endregion
 
+        #region LOC09_ClearLocationChildrenCommitTest
+        [TestMethod]
+        [TestCategory("Integration - Locations")]
+        [Description("Clears and commits Location.Children")]
+        public async Task LOC09_ClearLocationChildrenCommitTest()
+        {
+            // Arrange
+            _location.Children.Clear();
+
+            // Act
+            await _location.Commit(_authToken);
+
+            // Assert
+            Assert.AreEqual(0, _location.Children.Count, "Expected 0 Location.Children, got " + _location.Children.Count);
+        }
+        #endregion
+
         #region LOC99_DeleteLocationTest
         [TestMethod]
         [TestCategory("Integration - Locations")]
