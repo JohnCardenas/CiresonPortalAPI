@@ -274,7 +274,7 @@ namespace CiresonPortalAPI
                 // Refresh object data from the server
                 await this.Refresh(authToken);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw; // Rethrow exceptions
             }

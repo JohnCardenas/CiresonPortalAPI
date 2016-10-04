@@ -100,8 +100,8 @@ namespace CiresonPortalAPI
                 }
             }
             // Rethrow expected exceptions, crash out for bugs
-            catch (InvalidCredentialException e) { throw; }
-            catch (CiresonApiException e) { throw; }
+            catch (InvalidCredentialException) { throw; }
+            catch (CiresonApiException) { throw; }
         }
 
         /// <summary>

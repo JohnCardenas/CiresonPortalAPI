@@ -317,7 +317,7 @@ namespace CiresonPortalAPI
 
                 return instanceType;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw; // Rethrow exceptions
             }
