@@ -157,8 +157,8 @@ namespace CiresonPortalAPI.WorkItems
         /// </summary>
         public Enumeration SupportGroup
         {
-            get { return this.GetEnumeration("SupportGroup"); }
-            set { this.SetEnumeration("SupportGroup", value); }
+            get { return this.GetEnumeration("TierQueue"); }
+            set { this.SetEnumeration("TierQueue", value); }
         }
 
         /// <summary>
