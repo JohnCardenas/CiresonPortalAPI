@@ -87,7 +87,7 @@ namespace CiresonPortalAPI.ConfigurationItems
             };
 
             QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.PurchaseOrder.Id);
-            criteria.GroupingOperator = QueryCriteriaGroupingOperator.And;
+            criteria.GroupingOperator = QueryCriteriaGroupingOperator.SimpleExpression;
             criteria.Expressions.Add(expression);
 
             List<PurchaseOrder> purchaseOrderList = await PurchaseOrderController.GetByCriteria(authToken, criteria);
