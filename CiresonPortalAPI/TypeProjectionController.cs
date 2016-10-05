@@ -257,7 +257,7 @@ namespace CiresonPortalAPI
                 PropertyName = pathHelper.ToString(),
                 PropertyType = QueryCriteriaPropertyType.Property,
                 Operator = QueryCriteriaExpressionOperator.Equal,
-                Value = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active.ToString("D")
+                Value = EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active.ToString("D")
             };
 
             QueryCriteria newCriteria = criteria;

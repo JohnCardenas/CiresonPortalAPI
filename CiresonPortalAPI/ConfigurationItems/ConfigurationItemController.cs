@@ -38,9 +38,9 @@ namespace CiresonPortalAPI.ConfigurationItems
             Guid deleteType;
 
             if (markPending)
-                deleteType = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.PendingDelete;
+                deleteType = EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.PendingDelete;
             else
-                deleteType = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Deleted;
+                deleteType = EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Deleted;
 
             item.ObjectStatus = new Enumeration(deleteType, "", "", false, false);
             item.AllowCommitDeleted = true;

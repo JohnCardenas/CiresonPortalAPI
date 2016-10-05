@@ -57,7 +57,7 @@ namespace CiresonPortalAPI.ConfigurationItems
                 PropertyName = pathHelper.ToString(),
                 PropertyType = QueryCriteriaPropertyType.Property,
                 Operator = QueryCriteriaExpressionOperator.Equal,
-                Value = EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active.ToString("D")
+                Value = EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active.ToString("D")
             };
 
             QueryCriteria criteria = new QueryCriteria(TypeProjectionConstants.PurchaseOrder.Id)

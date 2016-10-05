@@ -143,16 +143,16 @@ namespace CiresonPortalAPI
         }
 
         /// <summary>
-        /// Enumerations for base Type Projections
+        /// Enumerations for base Configuration Items
         /// </summary>
-        public static class TypeProjection
+        public static class ConfigItem
         {
             /// <summary>
             /// Configuration Item lists
             /// </summary>
             public static class Lists
             {
-                /// <summary>System.Object.ObjectStatusEnum</summary>
+                /// <summary>System.ConfigItem.ObjectStatusEnum</summary>
                 public static Guid ObjectStatus { get { return new Guid("{3dc28152-62a3-bd53-ccc1-66e0ad3df8e8}"); } }
             }
 
@@ -162,17 +162,17 @@ namespace CiresonPortalAPI
             public static class BuiltinValues
             {
                 /// <summary>
-                /// System.Object.ObjectStatusEnum built-in values
+                /// System.ConfigItem.ObjectStatusEnum built-in values
                 /// </summary>
                 public static class ObjectStatus
                 {
-                    /// <summary>System.Object.ObjectStatusEnum.Active</summary>
+                    /// <summary>System.ConfigItem.ObjectStatusEnum.Active</summary>
                     public static Guid Active { get { return new Guid("{acdcedb7-100c-8c91-d664-4629a218bd94}"); } }
 
-                    /// <summary>System.Object.ObjectStatusEnum.Deleted</summary>
+                    /// <summary>System.ConfigItem.ObjectStatusEnum.Deleted</summary>
                     public static Guid Deleted { get { return new Guid("{eec83e3c-0106-d4c0-99ea-93b75fd23020}"); } }
 
-                    /// <summary>System.Object.ObjectStatusEnum.PendingDelete</summary>
+                    /// <summary>System.ConfigItem.ObjectStatusEnum.PendingDelete</summary>
                     public static Guid PendingDelete { get { return new Guid("{47101e64-237f-12c8-e3f5-ec5a665412fb}"); } }
                 }
             }

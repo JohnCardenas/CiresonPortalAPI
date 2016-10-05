@@ -20,7 +20,7 @@ namespace CiresonPortalAPI.ConfigurationItems
                 if (ObjectStatus == null)
                     return false;
 
-                return ObjectStatus.Id == EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active;
+                return ObjectStatus.Id == EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active;
             }
         }
 
@@ -34,8 +34,8 @@ namespace CiresonPortalAPI.ConfigurationItems
                 if (ObjectStatus == null)
                     return false;
 
-                return (ObjectStatus.Id == EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Deleted ||
-                        ObjectStatus.Id == EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.PendingDelete);
+                return (ObjectStatus.Id == EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Deleted ||
+                        ObjectStatus.Id == EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.PendingDelete);
             }
         }
 
@@ -84,7 +84,7 @@ namespace CiresonPortalAPI.ConfigurationItems
 
             // Any object with a null ObjectStatus is a brand new object and needs to have the status set to Active
             if (this.ObjectStatus == null)
-                this.ObjectStatus = new Enumeration(EnumerationConstants.TypeProjection.BuiltinValues.ObjectStatus.Active, "Active", "Active", false, false);
+                this.ObjectStatus = new Enumeration(EnumerationConstants.ConfigItem.BuiltinValues.ObjectStatus.Active, "Active", "Active", false, false);
 
             return base.Commit(authToken);
         }
