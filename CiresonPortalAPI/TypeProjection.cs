@@ -6,6 +6,7 @@ using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
@@ -364,8 +365,8 @@ namespace CiresonPortalAPI
         /// </summary>
         /// <param name="modelProperty">Enumeration's data model property name</param>
         /// <param name="value">New enumeration value</param>
-        /// <param name="objectProperty">Derived object's property name, if it is different than the data model property name.</param>
-        protected void SetEnumeration(string modelProperty, Enumeration value, string objectProperty = null)
+        /// <param name="objectProperty">Derived object's property name, if it is different than the data model property name. Note that this will automatically be set to the caller's member name.</param>
+        protected void SetEnumeration(string modelProperty, Enumeration value, [CallerMemberName] string objectProperty = null)
         {
             if (this.ReadOnly)
                 throw new CiresonReadOnlyException("Cannot set enumeration; this object is read-only.");
