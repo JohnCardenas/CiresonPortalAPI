@@ -179,16 +179,19 @@ namespace CiresonPortalAPI.Tests.Integration.WorkItems
         {
             // Arrange
             string testString = "1234567890 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^&*()-_=+[{]}\\|;:'\",<.>/?`~";
+            DateTime testDate = DateTime.Parse(DateTime.Now.ToString()); // Convert current time to string first to remove unnecessary precision from the Ticks property
 
             _incident.Title = testString;
             _incident.Description = testString;
+            _incident.FirstResponseDate = testDate;
 
             // Act
             await _incident.Commit(_authToken);
 
             // Assert
-            Assert.AreEqual(testString, _incident.Title,       "Incident.Title does not match test data");
-            Assert.AreEqual(testString, _incident.Description, "Incident.Description does not match test data");
+            Assert.AreEqual(testString, _incident.Title,             "Incident.Title does not match test data");
+            Assert.AreEqual(testString, _incident.Description,       "Incident.Description does not match test data");
+            Assert.AreEqual(testDate,   _incident.FirstResponseDate, "Incident.FirstResponseDate does not match test data");
         }
         #endregion
 
