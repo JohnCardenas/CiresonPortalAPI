@@ -39,14 +39,6 @@ namespace CiresonPortalAPI.WorkItems
         }
 
         /// <summary>
-        /// Gets the date the Incident was first responded to. Read only.
-        /// </summary>
-        public DateTime? FirstResponseDate
-        {
-            get { return this.GetPrimitiveValue<DateTime?>("FirstResponseDate"); }
-        }
-
-        /// <summary>
         /// Gets the date the Incident was last modified. Read only.
         /// </summary>
         public DateTime? LastModifiedDate
@@ -105,6 +97,15 @@ namespace CiresonPortalAPI.WorkItems
         {
             get { return this.GetPrimitiveValue<bool>("Escalated"); }
             set { this.SetPrimitiveValue("Escalated", value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the date the Incident was first responded to (Acknowledged).
+        /// </summary>
+        public DateTime? FirstResponseDate
+        {
+            get { return this.GetPrimitiveValue<DateTime?>("FirstResponseDate"); }
+            set { this.SetPrimitiveValue("FirstResponseDate", value); }
         }
 
         /// <summary>
